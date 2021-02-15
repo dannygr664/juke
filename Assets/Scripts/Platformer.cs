@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 //using UnityEngine.Audio;
 
 public class Platformer : MonoBehaviour
@@ -44,6 +45,10 @@ public class Platformer : MonoBehaviour
 
     public float musicTransitionTime;
     public float newTrackSampleTime;
+
+    [SerializeField]
+    [ParamRef]
+    private string timeSignatureParam = null;
 
     //AudioMixerSnapshot currentSnapshot;
 
@@ -214,6 +219,18 @@ public class Platformer : MonoBehaviour
 
         //    colorTransitionCounter = 0.0f;
         //}
+        else if (collision.CompareTag("4-4Background"))
+        {
+            MusicManager.instance.UpdateTimeSignature(0);
+        }
+        else if (collision.CompareTag("3-4Background"))
+        {
+            MusicManager.instance.UpdateTimeSignature(1);
+        }
+        else if (collision.CompareTag("2-4Background"))
+        {
+            MusicManager.instance.UpdateTimeSignature(2);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -225,6 +242,11 @@ public class Platformer : MonoBehaviour
             speed = normalSpeed;
             rb.gravityScale = 1.0f;
         }
+    }
+
+    private void SetTimeSignature(float timeSignature)
+    {
+        RuntimeManager.StudioSystem.setParameterByName(timeSignatureParam, timeSignature);
     }
 
     IEnumerator PlayNewTrack()

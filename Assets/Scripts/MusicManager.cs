@@ -24,17 +24,32 @@ public class MusicManager : MonoBehaviour
     public class TimelineInfo
     {
         public int currentBeat = 0;
+        public int timeSignatureUpper = 4;
+        //public int timeSignatureLower;
         public FMOD.StringWrapper lastMarker = new FMOD.StringWrapper();
     }
 
     public delegate void BeatEventDelegate();
     public static event BeatEventDelegate beatUpdated;
 
+    public delegate void TimeSignatureListenerDelegate();
+    public static event TimeSignatureListenerDelegate timeSignatureUpdated;
+
     public delegate void MarkerListenerDelegate();
     public static event MarkerListenerDelegate markerUpdated;
 
     public static int lastBeat = 0;
+    public static int lastTimeSignatureUpper = 4;
+    //public static int lastTimeSignatureLower;
     public static string lastMarkerString = null;
+
+    public void UpdateTimeSignature(int timeSignature)
+    {
+        if (music != null)
+        {
+            musicInstance.setParameterByName("TimeSignature", timeSignature);
+        }
+    }
 
     private void Awake()
     {
@@ -80,6 +95,17 @@ public class MusicManager : MonoBehaviour
                 beatUpdated();
             }
         }
+
+        if (lastTimeSignatureUpper != timelineInfo.timeSignatureUpper) //|| lastTimeSignatureLower != timelineInfo.timeSignatureLower)
+        {
+            lastTimeSignatureUpper = timelineInfo.timeSignatureUpper;
+            //lastTimeSignatureLower = timelineInfo.timeSignatureLower;
+
+            if (timeSignatureUpdated != null)
+            {
+                timeSignatureUpdated();
+            }
+        }
     }
 
     private void OnDestroy()
@@ -93,7 +119,7 @@ public class MusicManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnGUI()
     {
-        GUILayout.Box($"Current Beat = {timelineInfo.currentBeat}, Last Marker = {(string)timelineInfo.lastMarker}");
+        GUILayout.Box($"Current Beat = {timelineInfo.currentBeat}, Last Marker = {(string)timelineInfo.lastMarker}, Time Signature Upper = {timelineInfo.timeSignatureUpper}");
     }
 #endif
 
@@ -120,6 +146,8 @@ public class MusicManager : MonoBehaviour
                     {
                         var parameter = (FMOD.Studio.TIMELINE_BEAT_PROPERTIES)Marshal.PtrToStructure(parameterPtr, typeof(FMOD.Studio.TIMELINE_BEAT_PROPERTIES));
                         timelineInfo.currentBeat = parameter.beat;
+                        timelineInfo.timeSignatureUpper = parameter.timesignatureupper;
+                        //timelineInfo.timeSignatureLower = parameter.timesignaturelower;
                     }
                     break;
                 case FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_MARKER:
