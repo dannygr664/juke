@@ -5,53 +5,66 @@ using FMODUnity;
 
 public class Platformer : MonoBehaviour
 {
-    public float normalSpeed;
-    public float fastSpeed;
-    public float slowSpeed;
-    float speed;
-    public float jumpForce;
-
-    bool isFrozen;
-
-    float horizontal;
-    bool isSpaceDown;
-
-    Rigidbody2D rb;
-    Transform trans;
+    [SerializeField]
+    private float normalSpeed;
 
     [SerializeField]
-    private Vector3 scaleChange;
+    private float fastSpeed;
 
-    Animator animator;
+    [SerializeField]
+    private float slowSpeed;
 
-    bool isGrounded = false;
-    public Transform isGroundedChecker;
-    public float checkGroundRadius;
-    public LayerMask groundLayer;
+    private float speed;
 
-    public float fallMultiplier = 2.5f;
-    public float lowJumpMultiplier = 2f;
+    [SerializeField]
+    private float jumpForce;
 
-    public float rememberGroundedFor;
-    float lastTimeGrounded;
+    private bool isFrozen;
 
-    public int defaultAdditionalJumps = 1;
-    int additionalJumps;
+    private float horizontal;
+    private bool isSpaceDown;
 
-    public float musicTransitionTime;
-    public float newTrackSampleTime;
+    private Rigidbody2D rb;
+
+    private Animator animator;
+
+    private bool isGrounded = false;
+
+    [SerializeField]
+    private Transform isGroundedChecker;
+
+    [SerializeField]
+    private float checkGroundRadius;
+
+    [SerializeField]
+    private LayerMask groundLayer;
+
+    [SerializeField]
+    private float fallMultiplier = 2.5f;
+
+    [SerializeField]
+    private float lowJumpMultiplier = 2f;
+
+    [SerializeField]
+    private float rememberGroundedFor;
+
+    private float lastTimeGrounded;
+
+    [SerializeField] [Range(0, 100)]
+    private int defaultAdditionalJumps = 1;
+
+    private int additionalJumps;
 
     private void Awake()
     {
         speed = normalSpeed;
         isFrozen = false;
         rb = GetComponent<Rigidbody2D>();
-        trans = GetComponent<Transform>();
         animator = GetComponent<Animator>();
         MusicManager.beatUpdated += Pulse;
     }
 
-    void Update()
+    private void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
 
@@ -82,13 +95,13 @@ public class Platformer : MonoBehaviour
         MusicManager.beatUpdated -= Pulse;
     }
 
-    void Move()
+    private void Move()
     {
         float moveBy = horizontal * speed;
         rb.velocity = new Vector2(moveBy, rb.velocity.y);
     }
 
-    void Jump()
+    private void Jump()
     {
         if (isSpaceDown && (isGrounded || Time.time - lastTimeGrounded <= rememberGroundedFor || additionalJumps > 0))
         {
@@ -97,7 +110,7 @@ public class Platformer : MonoBehaviour
         }
     }
 
-    void BetterJump()
+    private void BetterJump()
     {
         if (rb.velocity.y < 0)
         {
@@ -109,7 +122,7 @@ public class Platformer : MonoBehaviour
         }
     }
 
-    void CheckIfGrounded()
+    private void CheckIfGrounded()
     {
         Collider2D collider = Physics2D.OverlapCircle(isGroundedChecker.position, checkGroundRadius, groundLayer);
         if (collider != null)
