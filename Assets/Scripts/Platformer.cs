@@ -17,6 +17,10 @@ public class Platformer : MonoBehaviour
     bool isSpaceDown;
 
     Rigidbody2D rb;
+    Transform trans;
+
+    [SerializeField]
+    private Vector3 scaleChange;
 
     bool isGrounded = false;
     public Transform isGroundedChecker;
@@ -39,11 +43,13 @@ public class Platformer : MonoBehaviour
     [ParamRef]
     private string timeSignatureParam = null;
 
-    void Start()
+    private void Awake()
     {
         speed = normalSpeed;
         isFrozen = false;
         rb = GetComponent<Rigidbody2D>();
+        trans = GetComponent<Transform>();
+        MusicManager.beatUpdated += Pulse;
     }
 
     void Update()
@@ -70,6 +76,11 @@ public class Platformer : MonoBehaviour
             BetterJump();
         }
         isSpaceDown = false;
+    }
+
+    private void OnDestroy()
+    {
+        MusicManager.beatUpdated -= Pulse;
     }
 
     void Move()
@@ -160,5 +171,17 @@ public class Platformer : MonoBehaviour
             speed = normalSpeed;
             rb.gravityScale = 1.0f;
         }
+    }
+
+    private void Pulse()
+    {
+        StartCoroutine("PulseAnimation");
+    }
+
+    IEnumerator PulseAnimation()
+    {
+        trans.localScale += scaleChange;
+        yield return new WaitForSeconds(0.01f);
+        trans.localScale -= scaleChange;
     }
 }

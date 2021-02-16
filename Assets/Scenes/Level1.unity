@@ -3238,13 +3238,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 525818051}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70f98e27e4d1d4c57a27f113b0c4396b, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b74c37993fbb40d58332b5d943742a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   normalSpeed: 4
   fastSpeed: 8
   slowSpeed: 2
   jumpForce: 10
+  scaleChange: {x: 0, y: 0, z: 0}
   isGroundedChecker: {fileID: 1779949512}
   checkGroundRadius: 0.5
   groundLayer:
@@ -3256,6 +3257,7 @@ MonoBehaviour:
   defaultAdditionalJumps: 100
   musicTransitionTime: 0.1
   newTrackSampleTime: 4
+  timeSignatureParam: 
 --- !u!70 &525818054
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -3620,6 +3622,7 @@ MonoBehaviour:
   fastSpeed: 8
   slowSpeed: 2
   jumpForce: 10
+  scaleChange: {x: 0.05, y: 0.05, z: 0}
   isGroundedChecker: {fileID: 1824563739}
   checkGroundRadius: 0.5
   groundLayer:
