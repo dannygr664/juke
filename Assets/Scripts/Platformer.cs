@@ -22,6 +22,8 @@ public class Platformer : MonoBehaviour
     [SerializeField]
     private Vector3 scaleChange;
 
+    Animator animator;
+
     bool isGrounded = false;
     public Transform isGroundedChecker;
     public float checkGroundRadius;
@@ -39,16 +41,13 @@ public class Platformer : MonoBehaviour
     public float musicTransitionTime;
     public float newTrackSampleTime;
 
-    [SerializeField]
-    [ParamRef]
-    private string timeSignatureParam = null;
-
     private void Awake()
     {
         speed = normalSpeed;
         isFrozen = false;
         rb = GetComponent<Rigidbody2D>();
         trans = GetComponent<Transform>();
+        animator = GetComponent<Animator>();
         MusicManager.beatUpdated += Pulse;
     }
 
@@ -175,13 +174,6 @@ public class Platformer : MonoBehaviour
 
     private void Pulse()
     {
-        StartCoroutine("PulseAnimation");
-    }
-
-    IEnumerator PulseAnimation()
-    {
-        trans.localScale += scaleChange;
-        yield return new WaitForSeconds(0.01f);
-        trans.localScale -= scaleChange;
+        animator.Play("Player_Pulsing");
     }
 }
