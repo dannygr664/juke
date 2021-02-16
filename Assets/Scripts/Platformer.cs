@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
-//using UnityEngine.Audio;
 
 public class Platformer : MonoBehaviour
 {
@@ -33,16 +32,6 @@ public class Platformer : MonoBehaviour
     public int defaultAdditionalJumps = 1;
     int additionalJumps;
 
-    //public AudioMixerSnapshot normalG;
-
-    //public float colorTransitionSpeed;
-    //Color backgroundColorG;
-    //Color platformColorG;
-    //Color playerColorG;
-    //float colorTransitionCounter;
-
-    //bool comingFromLeft;
-
     public float musicTransitionTime;
     public float newTrackSampleTime;
 
@@ -50,24 +39,13 @@ public class Platformer : MonoBehaviour
     [ParamRef]
     private string timeSignatureParam = null;
 
-    //AudioMixerSnapshot currentSnapshot;
-
-    // Start is called before the first frame update
     void Start()
     {
-        //currentSnapshot = normal;
         speed = normalSpeed;
         isFrozen = false;
         rb = GetComponent<Rigidbody2D>();
-        //playerRenderer = GetComponent<SpriteShapeRenderer>();
-        //ColorUtility.TryParseHtmlString("#F0EDE3", out backgroundColorG);
-        //ColorUtility.TryParseHtmlString("#424660", out platformColorG);
-        //ColorUtility.TryParseHtmlString("#B4935D", out playerColorG);
-        //colorTransitionCounter = 1.0f;
-        //comingFromLeft = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
@@ -81,29 +59,6 @@ public class Platformer : MonoBehaviour
         {
             CheckIfGrounded();
         }
-
-        //if (colorTransitionCounter < 1.0f)
-        //{
-        //    if (comingFromLeft)
-        //    {
-        //        platform.color = Color.Lerp(Color.black, platformColorG, colorTransitionCounter);
-        //        background.color = Color.Lerp(Color.white, backgroundColorG, colorTransitionCounter);
-        //        playerRenderer.color = Color.Lerp(Color.black, playerColorG, colorTransitionCounter);
-        //    }
-        //    else
-        //    {
-        //        platform.color = Color.Lerp(platformColorG, Color.black, colorTransitionCounter);
-        //        background.color = Color.Lerp(backgroundColorG, Color.white, colorTransitionCounter);
-        //        playerRenderer.color = Color.Lerp(playerColorG, Color.black, colorTransitionCounter);
-        //    }
-
-        //    colorTransitionCounter += Time.deltaTime * colorTransitionSpeed;
-
-        //    if (colorTransitionCounter >= 1.0f)
-        //    {
-        //        comingFromLeft = !comingFromLeft;
-        //    }
-        //}
     }
 
     private void FixedUpdate()
@@ -166,59 +121,24 @@ public class Platformer : MonoBehaviour
     {
         if (collision.CompareTag("FastBackground"))
         {
-            //if (currentSnapshot != fast)
-            //{
-                //fast.TransitionTo(musicTransitionTime);
-                //currentSnapshot = fast;
-                speed = fastSpeed;
-                rb.gravityScale = 1.0f;
-            //}
+            speed = fastSpeed;
+            rb.gravityScale = 1.0f;
         }
         else if (collision.CompareTag("SlowBackground"))
         {
-            //if (currentSnapshot != slow)
-            //{
-                //slow.TransitionTo(musicTransitionTime);
-                //currentSnapshot = slow;
-                speed = slowSpeed;
-                rb.gravityScale = 1.0f;
-            //}
+            speed = slowSpeed;
+            rb.gravityScale = 1.0f;
         }
         else if (collision.CompareTag("HighBackground"))
         {
-            //if (currentSnapshot != high)
-            //{
-                //high.TransitionTo(musicTransitionTime);
-                //currentSnapshot = high;
-                speed = normalSpeed;
-                rb.gravityScale = 0.5f;
-            //}
+            speed = normalSpeed;
+            rb.gravityScale = 0.5f;
         }
         else if (collision.CompareTag("LowBackground"))
         {
-            //if (currentSnapshot != low)
-            //{
-            //    low.TransitionTo(musicTransitionTime);
-            //    currentSnapshot = low;
-                speed = normalSpeed;
-                rb.gravityScale = 2.0f;
-            //}
+            speed = normalSpeed;
+            rb.gravityScale = 2.0f;
         }
-        //else if (collision.CompareTag("Jukebox"))
-        //{
-            //if (currentSnapshot == normal)
-            //{
-            //    normalG.TransitionTo(musicTransitionTime);
-            //    currentSnapshot = normalG;
-            //}
-            //else if (currentSnapshot == normalG)
-            //{
-            //    normal.TransitionTo(musicTransitionTime);
-            //    currentSnapshot = normal;
-            //}
-
-        //    colorTransitionCounter = 0.0f;
-        //}
         else if (collision.CompareTag("4-4Background"))
         {
             MusicManager.instance.UpdateTimeSignature(0);
@@ -237,24 +157,8 @@ public class Platformer : MonoBehaviour
     {
         if (collision.CompareTag("FastBackground") || collision.CompareTag("SlowBackground") || collision.CompareTag("HighBackground") || collision.CompareTag("LowBackground"))  //&& currentSnapshot != normal)
         {
-            //normal.TransitionTo(musicTransitionTime);
-            //currentSnapshot = normal;
             speed = normalSpeed;
             rb.gravityScale = 1.0f;
         }
-    }
-
-    private void SetTimeSignature(float timeSignature)
-    {
-        RuntimeManager.StudioSystem.setParameterByName(timeSignatureParam, timeSignature);
-    }
-
-    IEnumerator PlayNewTrack()
-    {
-        isFrozen = true;
-        //normalG.TransitionTo(musicTransitionTime);
-        yield return new WaitForSeconds(newTrackSampleTime);
-        //currentSnapshot.TransitionTo(musicTransitionTime);
-        isFrozen = false;
     }
 }
