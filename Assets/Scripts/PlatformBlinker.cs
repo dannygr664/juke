@@ -10,7 +10,6 @@ public class PlatformBlinker : MonoBehaviour
     Color platformColor;
 
     public int blinkInterval;
-    public float blinkTime;
 
     int blinkCounter;
 
