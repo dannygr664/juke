@@ -88,6 +88,8 @@ public class Platformer : MonoBehaviour
             BetterJump();
         }
         isSpaceDown = false;
+
+        animator.SetBool("IsWalking", rb.velocity.x != 0 && isGrounded);
     }
 
     private void OnDestroy()
