@@ -6,7 +6,7 @@ using UnityEngine.U2D;
 public class PlatformBlinker : MonoBehaviour
 {
     BoxCollider2D collider;
-    SpriteShapeRenderer renderer;
+    SpriteRenderer renderer;
     Color platformColor;
 
     public int blinkInterval;
@@ -16,7 +16,7 @@ public class PlatformBlinker : MonoBehaviour
     private void Awake()
     {
         collider = GetComponent<BoxCollider2D>();
-        renderer = GetComponent<SpriteShapeRenderer>();
+        renderer = GetComponent<SpriteRenderer>();
         platformColor = renderer.color;
         collider.isTrigger = false;
         blinkCounter = blinkInterval - 1;

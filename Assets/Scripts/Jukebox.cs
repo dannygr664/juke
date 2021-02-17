@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D;
 
 public class Jukebox : MonoBehaviour
 {
     private SpriteRenderer renderer;
 
-    public SpriteShapeRenderer background;
-    public SpriteShapeRenderer platform;
+    public SpriteRenderer background;
+    public SpriteRenderer platform;
     public SpriteRenderer player;
 
     public float colorTransitionSpeed;
