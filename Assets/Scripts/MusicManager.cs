@@ -39,8 +39,10 @@ public class MusicManager : MonoBehaviour
     public static event MarkerListenerDelegate markerUpdated;
 
     public static int lastBeat = 0;
+
     public static int lastTimeSignatureUpper = 4;
-    //public static int lastTimeSignatureLower;
+    //public static int lastTimeSignatureLower; 
+
     public static string lastMarkerString = null;
 
     public void UpdateTimeSignature(int timeSignature)

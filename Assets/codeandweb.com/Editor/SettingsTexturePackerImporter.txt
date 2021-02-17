@@ -1,10 +1,10 @@
 version: 2
 importPivots: 1
 tpsheetFileNames:
-- Assets/Art/Sprites/Juke_Player_v0.4.tpsheet
+- Assets/Art/Sprites/Old/Juke_Player_v0.4.tpsheet
 - Assets/codeandweb.com/Example/SpriteSheet/sprites.tpsheet
 textureFileNames:
-- Assets/Art/Sprites/Juke_Player_v0.4.png
+- Assets/Art/Sprites/Old/Juke_Player_v0.4.png
 - Assets/codeandweb.com/Example/SpriteSheet/sprites.png
 normalmapFileNames:
 - 

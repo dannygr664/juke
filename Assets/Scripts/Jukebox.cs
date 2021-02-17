@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.U2D;
 
 public class Jukebox : MonoBehaviour
 {
-    public SpriteShapeRenderer background;
-    public SpriteShapeRenderer platform;
-    public SpriteShapeRenderer player;
+    private SpriteRenderer renderer;
+
+    public SpriteRenderer background;
+    public SpriteRenderer platform;
+    public SpriteRenderer player;
 
     public float colorTransitionSpeed;
     Color backgroundColorG;
@@ -20,6 +21,7 @@ public class Jukebox : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        renderer = GetComponent<SpriteRenderer>();
         ColorUtility.TryParseHtmlString("#F0EDE3", out backgroundColorG);
         ColorUtility.TryParseHtmlString("#424660", out platformColorG);
         ColorUtility.TryParseHtmlString("#B4935D", out playerColorG);
@@ -37,12 +39,14 @@ public class Jukebox : MonoBehaviour
                 platform.color = Color.Lerp(Color.black, platformColorG, colorTransitionCounter);
                 background.color = Color.Lerp(Color.white, backgroundColorG, colorTransitionCounter);
                 player.color = Color.Lerp(Color.black, playerColorG, colorTransitionCounter);
+                renderer.color = Color.Lerp(Color.white, Color.black, colorTransitionCounter);
             }
             else
             {
                 platform.color = Color.Lerp(platformColorG, Color.black, colorTransitionCounter);
                 background.color = Color.Lerp(backgroundColorG, Color.white, colorTransitionCounter);
                 player.color = Color.Lerp(playerColorG, Color.black, colorTransitionCounter);
+                renderer.color = Color.Lerp(Color.black, Color.white, colorTransitionCounter);
             }
 
             colorTransitionCounter += Time.deltaTime * colorTransitionSpeed;
@@ -53,5 +57,13 @@ public class Jukebox : MonoBehaviour
     {
         colorTransitionCounter = 0.0f;
         comingFromLeft = !comingFromLeft;
+        if (comingFromLeft)
+        {
+            renderer.sortingOrder = 1;
+        }
+        else
+        {
+            renderer.sortingOrder = -1;
+        }
     }
 }
