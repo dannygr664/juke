@@ -4,49 +4,50 @@ using UnityEngine;
 
 public class Jukebox : MonoBehaviour
 {
-    private SpriteRenderer renderer;
+    private SpriteRenderer jukebox;
 
     public SpriteRenderer background;
     public SpriteRenderer platform;
     public SpriteRenderer player;
 
     public float colorTransitionSpeed;
-    Color backgroundColorG;
-    Color platformColorG;
-    Color playerColorG;
+
+    public Color oldBackgroundColor = Color.white;
+    public Color oldPlatformColor = Color.black;
+    public Color oldPlayerColor = Color.black;
+
+    public Color newBackgroundColor = Color.white;
+    public Color newPlatformColor = Color.black;
+    public Color newPlayerColor = Color.black;
+
     float colorTransitionCounter;
 
     bool comingFromLeft;
 
-    // Start is called before the first frame update
     void Start()
     {
-        renderer = GetComponent<SpriteRenderer>();
-        ColorUtility.TryParseHtmlString("#F0EDE3", out backgroundColorG);
-        ColorUtility.TryParseHtmlString("#424660", out platformColorG);
-        ColorUtility.TryParseHtmlString("#B4935D", out playerColorG);
+        jukebox = GetComponent<SpriteRenderer>();
         colorTransitionCounter = 1.0f;
         comingFromLeft = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (colorTransitionCounter < 1.0f)
         {
             if (comingFromLeft)
             {
-                platform.color = Color.Lerp(Color.black, platformColorG, colorTransitionCounter);
-                background.color = Color.Lerp(Color.white, backgroundColorG, colorTransitionCounter);
-                player.color = Color.Lerp(Color.black, playerColorG, colorTransitionCounter);
-                renderer.color = Color.Lerp(Color.white, Color.black, colorTransitionCounter);
+                platform.color = Color.Lerp(oldPlatformColor, newPlatformColor, colorTransitionCounter);
+                background.color = Color.Lerp(oldBackgroundColor, newBackgroundColor, colorTransitionCounter);
+                player.color = Color.Lerp(oldPlayerColor, newPlayerColor, colorTransitionCounter);
+                jukebox.color = Color.Lerp(newPlayerColor, oldPlayerColor, colorTransitionCounter);
             }
             else
             {
-                platform.color = Color.Lerp(platformColorG, Color.black, colorTransitionCounter);
-                background.color = Color.Lerp(backgroundColorG, Color.white, colorTransitionCounter);
-                player.color = Color.Lerp(playerColorG, Color.black, colorTransitionCounter);
-                renderer.color = Color.Lerp(Color.black, Color.white, colorTransitionCounter);
+                platform.color = Color.Lerp(newPlatformColor, oldPlatformColor, colorTransitionCounter);
+                background.color = Color.Lerp(newBackgroundColor, oldBackgroundColor, colorTransitionCounter);
+                player.color = Color.Lerp(newPlayerColor, oldPlayerColor, colorTransitionCounter);
+                jukebox.color = Color.Lerp(oldPlayerColor, newPlayerColor, colorTransitionCounter);
             }
 
             colorTransitionCounter += Time.deltaTime * colorTransitionSpeed;
@@ -59,11 +60,11 @@ public class Jukebox : MonoBehaviour
         comingFromLeft = !comingFromLeft;
         if (comingFromLeft)
         {
-            renderer.sortingOrder = 1;
+            jukebox.sortingOrder = 1;
         }
         else
         {
-            renderer.sortingOrder = -1;
+            jukebox.sortingOrder = -1;
         }
     }
 }
