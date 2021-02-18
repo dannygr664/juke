@@ -4,17 +4,16 @@ using UnityEngine;
 
 public class JumpThroughPlatform : MonoBehaviour
 {
-    BoxCollider2D collider;
+    BoxCollider2D platformCollider;
 
     bool isSpaceDown;
 
     private void Start()
     {
-        collider = GetComponent<BoxCollider2D>();
-        collider.isTrigger = false;
+        platformCollider = GetComponent<BoxCollider2D>();
+        platformCollider.isTrigger = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!isSpaceDown)
@@ -28,7 +27,7 @@ public class JumpThroughPlatform : MonoBehaviour
         if (isSpaceDown)
         {
             isSpaceDown = false;
-            collider.isTrigger = true;
+            platformCollider.isTrigger = true;
             StartCoroutine("EnableCollider");
         }
     }
@@ -36,6 +35,6 @@ public class JumpThroughPlatform : MonoBehaviour
     IEnumerator EnableCollider()
     {
         yield return new WaitForSeconds(0.5f);
-        collider.isTrigger = false;
+        platformCollider.isTrigger = false;
     }
 }

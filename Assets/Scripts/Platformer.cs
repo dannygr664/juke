@@ -1,23 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FMODUnity;
 
 public class Platformer : MonoBehaviour
 {
     [SerializeField]
-    private float normalSpeed;
+    private float normalSpeed = 8.0f;
 
     [SerializeField]
-    private float fastSpeed;
+    private float fastSpeed = 16.0f;
 
     [SerializeField]
-    private float slowSpeed;
+    private float slowSpeed = 4.0f;
 
     private float speed;
 
     [SerializeField]
-    private float jumpForce;
+    private float jumpForce = 10.0f;
 
     private bool isFrozen;
 
@@ -34,7 +33,7 @@ public class Platformer : MonoBehaviour
     private Transform isGroundedChecker;
 
     [SerializeField]
-    private float checkGroundRadius;
+    private float checkGroundRadius = 0.5f;
 
     [SerializeField]
     private LayerMask groundLayer;
@@ -46,7 +45,7 @@ public class Platformer : MonoBehaviour
     private float lowJumpMultiplier = 2f;
 
     [SerializeField]
-    private float rememberGroundedFor;
+    private float rememberGroundedFor = 0.1f;
 
     private float lastTimeGrounded;
 
@@ -61,7 +60,7 @@ public class Platformer : MonoBehaviour
         isFrozen = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        MusicManager.beatUpdated += Pulse;
+        // MusicManager.beatUpdated += Pulse;
     }
 
     private void Update()
@@ -92,10 +91,10 @@ public class Platformer : MonoBehaviour
         animator.SetBool("IsWalking", rb.velocity.x != 0 && isGrounded);
     }
 
-    private void OnDestroy()
-    {
-        MusicManager.beatUpdated -= Pulse;
-    }
+    //private void OnDestroy()
+    //{
+    //    MusicManager.beatUpdated -= Pulse;
+    //}
 
     private void Move()
     {
@@ -187,8 +186,8 @@ public class Platformer : MonoBehaviour
         }
     }
 
-    private void Pulse()
-    {
-        animator.Play("Player_Pulsing");
-    }
+    //private void Pulse()
+    //{
+    //    animator.Play("Player_Pulsing");
+    //}
 }

@@ -5,8 +5,8 @@ using UnityEngine.U2D;
 
 public class PlatformBlinker : MonoBehaviour
 {
-    BoxCollider2D collider;
-    SpriteRenderer renderer;
+    BoxCollider2D platformCollider;
+    SpriteRenderer platformRenderer;
     Color platformColor;
 
     public int blinkInterval;
@@ -15,10 +15,10 @@ public class PlatformBlinker : MonoBehaviour
 
     private void Awake()
     {
-        collider = GetComponent<BoxCollider2D>();
-        renderer = GetComponent<SpriteRenderer>();
-        platformColor = renderer.color;
-        collider.isTrigger = false;
+        platformCollider = GetComponent<BoxCollider2D>();
+        platformRenderer = GetComponent<SpriteRenderer>();
+        platformColor = platformRenderer.color;
+        platformCollider.isTrigger = false;
         blinkCounter = blinkInterval - 1;
         MusicManager.beatUpdated += Blink;
         MusicManager.timeSignatureUpdated += UpdateBlinkRate;
@@ -36,15 +36,15 @@ public class PlatformBlinker : MonoBehaviour
         {
             if (blinkCounter == (blinkInterval - 1))
             {
-                collider.isTrigger = false;
-                renderer.color = new Color(platformColor.r, platformColor.g, platformColor.b, 1.0f);
+                platformCollider.isTrigger = false;
+                platformRenderer.color = new Color(platformColor.r, platformColor.g, platformColor.b, 1.0f);
             }
             blinkCounter--;
         }
         else
         {
-            collider.isTrigger = true;
-            renderer.color = new Color(platformColor.r, platformColor.g, platformColor.b, 0.2f);
+            platformCollider.isTrigger = true;
+            platformRenderer.color = new Color(platformColor.r, platformColor.g, platformColor.b, 0.2f);
 
             blinkCounter = blinkInterval - 1;
         }
