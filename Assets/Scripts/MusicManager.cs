@@ -18,6 +18,10 @@ public class MusicManager : MonoBehaviour
 
     private FMOD.Studio.EventInstance musicInstance;
 
+    [SerializeField] [Range(0.0f, 1.0f)]
+    private float initialVolume = 0.0f;
+    private float volume;
+
     private FMOD.Studio.EVENT_CALLBACK beatCallback;
 
     [StructLayout(LayoutKind.Sequential)]
@@ -61,6 +65,8 @@ public class MusicManager : MonoBehaviour
         {
             musicInstance = RuntimeManager.CreateInstance(music);
             musicInstance.start();
+            musicInstance.setVolume(initialVolume);
+            volume = initialVolume;
         }
     }
 
@@ -107,6 +113,34 @@ public class MusicManager : MonoBehaviour
             {
                 timeSignatureUpdated();
             }
+        }
+
+        
+
+    }
+
+    private void FixedUpdate()
+    {
+        if (Input.GetKey(KeyCode.Q))
+        {
+            volume = Mathf.Clamp(volume + 0.01f, 0.0f, 1.0f);
+            FMOD.RESULT result = musicInstance.setVolume(volume);
+            if (result != FMOD.RESULT.OK)
+            {
+                print(result);
+            }
+            print($"Volume: {volume}");
+        }
+
+        if (Input.GetKey(KeyCode.Z))
+        {
+            volume = Mathf.Clamp(volume - 0.01f, 0.0f, 1.0f);
+            FMOD.RESULT result = musicInstance.setVolume(volume);
+            if (result != FMOD.RESULT.OK)
+            {
+                print(result);
+            }
+            print($"Volume: {volume}");
         }
     }
 

@@ -20,6 +20,9 @@ public class Jukebox : MonoBehaviour
     public Color newPlatformColor = Color.black;
     public Color newPlayerColor = Color.black;
 
+    private Sprite quarterRest;
+    private Sprite quarterNote;
+
     float colorTransitionCounter;
 
     bool comingFromLeft;
@@ -27,6 +30,8 @@ public class Jukebox : MonoBehaviour
     void Start()
     {
         jukebox = GetComponent<SpriteRenderer>();
+        quarterRest = Resources.Load<Sprite>("Quarter_Rest_Genre1_0");
+        quarterNote = Resources.Load<Sprite>("Quarter_Note_Genre1_0");
         colorTransitionCounter = 1.0f;
         comingFromLeft = false;
     }
@@ -61,10 +66,12 @@ public class Jukebox : MonoBehaviour
         if (comingFromLeft)
         {
             jukebox.sortingOrder = 1;
+            player.sprite = quarterRest;
         }
         else
         {
             jukebox.sortingOrder = -1;
+            player.sprite = quarterNote;
         }
     }
 }
