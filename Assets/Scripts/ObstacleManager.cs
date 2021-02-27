@@ -8,16 +8,27 @@ public class ObstacleManager : MonoBehaviour
     private ExplodingWall wall;
     private bool isWallDestroyed;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         isWallDestroyed = false;
+        MusicManager.beatUpdated += CheckObstacles;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        if (MusicManager.instance.Volume > 0.8f && !isWallDestroyed)
+    }
+
+    private void CheckObstacles()
+    {
+        if (!isWallDestroyed)
+        {
+            CheckWall();
+        }
+    }
+
+    private void CheckWall()
+    {
+        if (MusicManager.instance.Volume > 0.8f)
         {
             Destroy(wall.gameObject);
             isWallDestroyed = true;

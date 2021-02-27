@@ -148,6 +148,8 @@ public class MusicManager : MonoBehaviour
             {
                 volumeSlider.value = Volume;
             }
+
+            print(Volume);
         }
 
         if (Input.GetKey(KeyCode.Z))
@@ -162,6 +164,8 @@ public class MusicManager : MonoBehaviour
             {
                 volumeSlider.value = Volume;
             }
+
+            print(Volume);
         }
     }
 
