@@ -38,13 +38,13 @@ public class MusicManager : MonoBehaviour
     }
 
     public delegate void BeatEventDelegate();
-    public static event BeatEventDelegate beatUpdated;
+    public static event BeatEventDelegate BeatUpdated;
 
     public delegate void TimeSignatureListenerDelegate();
-    public static event TimeSignatureListenerDelegate timeSignatureUpdated;
+    public static event TimeSignatureListenerDelegate TimeSignatureUpdated;
 
     public delegate void MarkerListenerDelegate();
-    public static event MarkerListenerDelegate markerUpdated;
+    public static event MarkerListenerDelegate MarkerUpdated;
 
     public static int lastBeat = 0;
 
@@ -103,20 +103,14 @@ public class MusicManager : MonoBehaviour
         {
             lastMarkerString = timelineInfo.lastMarker;
 
-            if (markerUpdated != null)
-            {
-                markerUpdated();
-            }
+            MarkerUpdated?.Invoke();
         }
 
         if (lastBeat != timelineInfo.currentBeat)
         {
             lastBeat = timelineInfo.currentBeat;
 
-            if (beatUpdated != null)
-            {
-                beatUpdated();
-            }
+            BeatUpdated?.Invoke();
         }
 
         if (lastTimeSignatureUpper != timelineInfo.timeSignatureUpper) //|| lastTimeSignatureLower != timelineInfo.timeSignatureLower)
@@ -124,14 +118,8 @@ public class MusicManager : MonoBehaviour
             lastTimeSignatureUpper = timelineInfo.timeSignatureUpper;
             //lastTimeSignatureLower = timelineInfo.timeSignatureLower;
 
-            if (timeSignatureUpdated != null)
-            {
-                timeSignatureUpdated();
-            }
+            TimeSignatureUpdated?.Invoke();
         }
-
-        
-
     }
 
     private void UpdateVolume()
@@ -148,8 +136,6 @@ public class MusicManager : MonoBehaviour
             {
                 volumeSlider.value = Volume;
             }
-
-            print(Volume);
         }
 
         if (Input.GetKey(KeyCode.Z))
@@ -164,8 +150,6 @@ public class MusicManager : MonoBehaviour
             {
                 volumeSlider.value = Volume;
             }
-
-            print(Volume);
         }
     }
 

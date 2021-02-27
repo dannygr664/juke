@@ -20,14 +20,14 @@ public class PlatformBlinker : MonoBehaviour
         platformColor = platformRenderer.color;
         platformCollider.isTrigger = false;
         blinkCounter = blinkInterval - 1;
-        MusicManager.beatUpdated += Blink;
-        MusicManager.timeSignatureUpdated += UpdateBlinkRate;
+        MusicManager.BeatUpdated += Blink;
+        MusicManager.TimeSignatureUpdated += UpdateBlinkRate;
     }
 
     private void OnDestroy()
     {
-        MusicManager.beatUpdated -= Blink;
-        MusicManager.timeSignatureUpdated -= UpdateBlinkRate;
+        MusicManager.BeatUpdated -= Blink;
+        MusicManager.TimeSignatureUpdated -= UpdateBlinkRate;
     }
 
     private void Blink()

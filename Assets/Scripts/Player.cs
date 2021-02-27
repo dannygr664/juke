@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
         isFrozen = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        MusicManager.beatUpdated += Pulse;
+        MusicManager.BeatUpdated += Pulse;
     }
 
     private void Update()
@@ -97,7 +97,7 @@ public class Player : MonoBehaviour
 
     private void OnDestroy()
     {
-        MusicManager.beatUpdated -= Pulse;
+        MusicManager.BeatUpdated -= Pulse;
     }
 
     private void Move()

@@ -11,11 +11,16 @@ public class ObstacleManager : MonoBehaviour
     private void Start()
     {
         isWallDestroyed = false;
-        MusicManager.beatUpdated += CheckObstacles;
+        MusicManager.BeatUpdated += CheckObstacles;
     }
 
     private void Update()
     {
+    }
+
+    private void OnDestroy()
+    {
+        MusicManager.BeatUpdated -= CheckObstacles;
     }
 
     private void CheckObstacles()

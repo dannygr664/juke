@@ -13,12 +13,12 @@ public class NoteAnimator : MonoBehaviour
 
     private void Update()
     {
-        MusicManager.beatUpdated += Dance;
+        MusicManager.BeatUpdated += Dance;
     }
 
     private void OnDestroy()
     {
-        MusicManager.beatUpdated -= Dance;
+        MusicManager.BeatUpdated -= Dance;
     }
 
     private void Dance()
