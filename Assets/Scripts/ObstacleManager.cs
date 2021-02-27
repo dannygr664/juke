@@ -6,6 +6,7 @@ public class ObstacleManager : MonoBehaviour
 {
     [SerializeField]
     private ExplodingWall wall;
+
     private bool isWallDestroyed;
 
     private void Start()
@@ -35,7 +36,8 @@ public class ObstacleManager : MonoBehaviour
     {
         if (MusicManager.instance.Volume > 0.8f)
         {
-            Destroy(wall.gameObject);
+            wall.Explode();
+            Destroy(wall.gameObject, wall.explosion.main.duration);
             isWallDestroyed = true;
             MusicManager.instance.UpdateComplexity(1);
         }

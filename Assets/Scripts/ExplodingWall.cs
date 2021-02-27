@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class ExplodingWall : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private SpriteRenderer renderer;
+    private Collider2D collider;
+
+    public ParticleSystem explosion;
+
+    private void Start()
     {
-        
+        renderer = GetComponent<SpriteRenderer>();
+        collider = GetComponent<Collider2D>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Explode()
     {
+        renderer.color = Color.clear;
+        collider.isTrigger = true;
+        explosion.Play();
     }
 }

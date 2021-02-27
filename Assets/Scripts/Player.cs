@@ -54,6 +54,9 @@ public class Player : MonoBehaviour
     private int additionalJumps;
 
     [SerializeField]
+    private GameObject heart;
+
+    private Animator heartbeatAnimator;
     private ParticleSystem heartbeat;
 
     private void Awake()
@@ -62,6 +65,8 @@ public class Player : MonoBehaviour
         isFrozen = false;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        heartbeatAnimator = heart.GetComponent<Animator>();
+        heartbeat = heart.GetComponentInChildren<ParticleSystem>();
         MusicManager.BeatUpdated += Pulse;
     }
 
@@ -192,14 +197,19 @@ public class Player : MonoBehaviour
 
     private void Pulse()
     {
+        float volume = MusicManager.instance.Volume;
+        animator.SetFloat("Volume", volume);
         animator.Play("Player_Pulse");
+        heartbeatAnimator.Play("Heartbeat");
+        
     }
 
     private void UpdateHeartbeat()
     {
         float volume = MusicManager.instance.Volume;
         animator.SetFloat("Volume", volume);
-        float newScale = Mathf.Lerp(0.3f, 3.0f, Mathf.InverseLerp(0.0f, 1.0f, volume));
-        heartbeat.transform.localScale = new Vector3(newScale, newScale);
+        // float newScale = Mathf.Lerp(0.3f, 3.0f, Mathf.InverseLerp(0.0f, 1.0f, volume));
+        //var main = heartbeat.main;
+        //main.startSize = newScale;
     }
 }
