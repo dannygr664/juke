@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     private bool isSpaceDown;
 
     private Rigidbody2D rb;
+    private Animator animator;
 
     private bool isGrounded = false;
 
@@ -52,12 +53,16 @@ public class Player : MonoBehaviour
 
     private int additionalJumps;
 
+    [SerializeField]
+    private ParticleSystem heartbeat;
+
     private void Awake()
     {
         speed = normalSpeed;
         isFrozen = false;
         rb = GetComponent<Rigidbody2D>();
-        // MusicManager.beatUpdated += Pulse;
+        animator = GetComponent<Animator>();
+        MusicManager.beatUpdated += Pulse;
     }
 
     private void Update()
@@ -73,6 +78,8 @@ public class Player : MonoBehaviour
         {
             CheckIfGrounded();
         }
+
+        UpdateHeartbeat();
     }
 
     private void FixedUpdate()
@@ -88,10 +95,10 @@ public class Player : MonoBehaviour
         // animator.SetBool("IsWalking", rb.velocity.x != 0 && isGrounded);
     }
 
-    //private void OnDestroy()
-    //{
-    //    MusicManager.beatUpdated -= Pulse;
-    //}
+    private void OnDestroy()
+    {
+        MusicManager.beatUpdated -= Pulse;
+    }
 
     private void Move()
     {
@@ -183,8 +190,16 @@ public class Player : MonoBehaviour
         }
     }
 
-    //private void Pulse()
-    //{
-    //    animator.Play("Player_Pulsing");
-    //}
+    private void Pulse()
+    {
+        animator.Play("Player_Pulse");
+    }
+
+    private void UpdateHeartbeat()
+    {
+        float volume = MusicManager.instance.Volume;
+        animator.SetFloat("Volume", volume);
+        float newScale = Mathf.Lerp(0.3f, 3.0f, Mathf.InverseLerp(0.0f, 1.0f, volume));
+        heartbeat.transform.localScale = new Vector3(newScale, newScale);
+    }
 }
