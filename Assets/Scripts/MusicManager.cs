@@ -24,7 +24,7 @@ public class MusicManager : MonoBehaviour
 
     [SerializeField] [Range(0.0f, 1.0f)]
     private float initialVolume = 0.0f;
-    private float volume;
+    public float Volume { get; private set; }
 
     private FMOD.Studio.EVENT_CALLBACK beatCallback;
 
@@ -53,6 +53,14 @@ public class MusicManager : MonoBehaviour
 
     public static string lastMarkerString = null;
 
+    public void UpdateComplexity(int complexity)
+    {
+        if (music != null)
+        {
+            musicInstance.setParameterByName("Complexity", complexity);
+        }
+    }
+
     public void UpdateTimeSignature(int timeSignature)
     {
         if (music != null)
@@ -71,7 +79,7 @@ public class MusicManager : MonoBehaviour
             musicInstance.start();
             musicInstance.setVolume(initialVolume);
             volumeSlider.value = initialVolume;
-            volume = initialVolume;
+            Volume = initialVolume;
         }
     }
 
@@ -89,6 +97,8 @@ public class MusicManager : MonoBehaviour
 
     private void Update()
     {
+        UpdateVolume();
+
         if (lastMarkerString != timelineInfo.lastMarker)
         {
             lastMarkerString = timelineInfo.lastMarker;
@@ -124,33 +134,33 @@ public class MusicManager : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
+    private void UpdateVolume()
     {
         if (Input.GetKey(KeyCode.Q))
         {
-            volume = Mathf.Clamp(volume + 0.01f, 0.0f, 1.0f);
-            FMOD.RESULT result = musicInstance.setVolume(volume);
+            Volume = Mathf.Clamp(Volume + 0.0005f, 0.0f, 1.0f);
+            FMOD.RESULT result = musicInstance.setVolume(Volume);
             if (result != FMOD.RESULT.OK)
             {
                 print(result);
             }
             else
             {
-                volumeSlider.value = volume;
+                volumeSlider.value = Volume;
             }
         }
 
         if (Input.GetKey(KeyCode.Z))
         {
-            volume = Mathf.Clamp(volume - 0.01f, 0.0f, 1.0f);
-            FMOD.RESULT result = musicInstance.setVolume(volume);
+            Volume = Mathf.Clamp(Volume - 0.0005f, 0.0f, 1.0f);
+            FMOD.RESULT result = musicInstance.setVolume(Volume);
             if (result != FMOD.RESULT.OK)
             {
                 print(result);
             }
             else
             {
-                volumeSlider.value = volume;
+                volumeSlider.value = Volume;
             }
         }
     }

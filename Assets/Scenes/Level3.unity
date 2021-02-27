@@ -523,7 +523,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 478852499}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -26.6982, y: -42.81, z: 0}
+  m_LocalPosition: {x: -26.3, y: -42.81, z: 0}
   m_LocalScale: {x: 1, y: 7.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -765,6 +765,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 671554225}
   m_CullTransparentMesh: 0
+--- !u!1 &692782251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 692782253}
+  - component: {fileID: 692782252}
+  m_Layer: 0
+  m_Name: ObstacleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &692782252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692782251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41559bd4afd504ce9b7e347392c642ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wall: {fileID: 478852503}
+--- !u!4 &692782253
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692782251}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -11.748911, y: -37.828087, z: -199.34782}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &850585140
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -775,7 +819,7 @@ PrefabInstance:
     - target: {fileID: 4219675008161727433, guid: 77d981ced718f436291755d0b782bf67,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -21.59
+      value: 8.6
       objectReference: {fileID: 0}
     - target: {fileID: 4219675008161727433, guid: 77d981ced718f436291755d0b782bf67,
         type: 3}
@@ -830,7 +874,7 @@ PrefabInstance:
     - target: {fileID: 4219675008161727433, guid: 77d981ced718f436291755d0b782bf67,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 37.38164
+      value: 107.93949
       objectReference: {fileID: 0}
     - target: {fileID: 4219675008161727435, guid: 77d981ced718f436291755d0b782bf67,
         type: 3}
@@ -955,7 +999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:

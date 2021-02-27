@@ -13,6 +13,5 @@ public class ExplodingWall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 }
