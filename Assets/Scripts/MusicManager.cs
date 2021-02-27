@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using FMODUnity;
 using System;
 using System.Runtime.InteropServices;
@@ -17,6 +18,9 @@ public class MusicManager : MonoBehaviour
     private GCHandle timelineHandler;
 
     private FMOD.Studio.EventInstance musicInstance;
+
+    [SerializeField]
+    private Slider volumeSlider;
 
     [SerializeField] [Range(0.0f, 1.0f)]
     private float initialVolume = 0.0f;
@@ -66,6 +70,7 @@ public class MusicManager : MonoBehaviour
             musicInstance = RuntimeManager.CreateInstance(music);
             musicInstance.start();
             musicInstance.setVolume(initialVolume);
+            volumeSlider.value = initialVolume;
             volume = initialVolume;
         }
     }
@@ -129,7 +134,10 @@ public class MusicManager : MonoBehaviour
             {
                 print(result);
             }
-            print($"Volume: {volume}");
+            else
+            {
+                volumeSlider.value = volume;
+            }
         }
 
         if (Input.GetKey(KeyCode.Z))
@@ -140,7 +148,10 @@ public class MusicManager : MonoBehaviour
             {
                 print(result);
             }
-            print($"Volume: {volume}");
+            else
+            {
+                volumeSlider.value = volume;
+            }
         }
     }
 
