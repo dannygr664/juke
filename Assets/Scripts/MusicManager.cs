@@ -78,7 +78,12 @@ public class MusicManager : MonoBehaviour
             musicInstance = RuntimeManager.CreateInstance(music);
             musicInstance.start();
             musicInstance.setVolume(initialVolume);
-            volumeSlider.value = initialVolume;
+
+            if (volumeSlider != null)
+            {
+                volumeSlider.value = initialVolume;
+            }
+
             Volume = initialVolume;
         }
     }
@@ -97,7 +102,10 @@ public class MusicManager : MonoBehaviour
 
     private void Update()
     {
-        UpdateVolume();
+        if (volumeSlider != null)
+        {
+            UpdateVolume();
+        }
 
         if (lastMarkerString != timelineInfo.lastMarker)
         {
