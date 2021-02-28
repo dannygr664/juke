@@ -199,9 +199,8 @@ public class Player : MonoBehaviour
     {
         float volume = MusicManager.instance.Volume;
         animator.SetFloat("Volume", volume);
-        animator.Play("Player_Pulse");
+        animator.Play("Player_Red_Pulse");
         heartbeatAnimator.Play("Heartbeat");
-        
     }
 
     private void UpdateHeartbeat()
