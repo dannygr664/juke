@@ -607,7 +607,7 @@ MonoBehaviour:
   Banks:
   - Level 1
   - Level2
-  - Level3
+  - World1
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
