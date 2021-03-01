@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Player : MonoBehaviour
 {
@@ -57,7 +58,8 @@ public class Player : MonoBehaviour
     private GameObject heart;
 
     private Animator heartbeatAnimator;
-    private ParticleSystem heartbeat;
+
+    private CinemachineImpulseSource impulseGenerator;
 
     private void Awake()
     {
@@ -66,7 +68,7 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         heartbeatAnimator = heart.GetComponent<Animator>();
-        heartbeat = heart.GetComponentInChildren<ParticleSystem>();
+        impulseGenerator = GetComponent<CinemachineImpulseSource>();
         MusicManager.BeatUpdated += Pulse;
     }
 
@@ -201,6 +203,16 @@ public class Player : MonoBehaviour
         animator.SetFloat("Volume", volume);
         animator.Play("Player_Red_Pulse");
         heartbeatAnimator.Play("Heartbeat");
+
+        if (volume >= 0.8f)
+        {
+            impulseGenerator.GenerateImpulse();
+            //CinemachineShake.Instance.ShakeCamera(Mathf.Lerp(0.1f, 0.5f, Mathf.InverseLerp(0.8f, 1.0f, volume)), 0.1f);
+        }
+        else
+        {
+            //CinemachineShake.Instance.ShakeCamera(0.0f, 0.1f);
+        }
     }
 
     private void UpdateHeartbeat()
