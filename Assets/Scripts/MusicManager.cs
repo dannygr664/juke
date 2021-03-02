@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using FMODUnity;
 using System;
 using System.Runtime.InteropServices;
@@ -18,6 +19,13 @@ public class MusicManager : MonoBehaviour
 
     private FMOD.Studio.EventInstance musicInstance;
 
+    [SerializeField]
+    private Slider volumeSlider;
+
+    [SerializeField] [Range(0.0f, 1.0f)]
+    private float initialVolume = 0.0f;
+    public float Volume { get; private set; }
+
     private FMOD.Studio.EVENT_CALLBACK beatCallback;
 
     [StructLayout(LayoutKind.Sequential)]
@@ -30,13 +38,13 @@ public class MusicManager : MonoBehaviour
     }
 
     public delegate void BeatEventDelegate();
-    public static event BeatEventDelegate beatUpdated;
+    public static event BeatEventDelegate BeatUpdated;
 
     public delegate void TimeSignatureListenerDelegate();
-    public static event TimeSignatureListenerDelegate timeSignatureUpdated;
+    public static event TimeSignatureListenerDelegate TimeSignatureUpdated;
 
     public delegate void MarkerListenerDelegate();
-    public static event MarkerListenerDelegate markerUpdated;
+    public static event MarkerListenerDelegate MarkerUpdated;
 
     public static int lastBeat = 0;
 
@@ -44,6 +52,14 @@ public class MusicManager : MonoBehaviour
     //public static int lastTimeSignatureLower; 
 
     public static string lastMarkerString = null;
+
+    public void UpdateComplexity(int complexity)
+    {
+        if (music != null)
+        {
+            musicInstance.setParameterByName("Complexity", complexity);
+        }
+    }
 
     public void UpdateTimeSignature(int timeSignature)
     {
@@ -61,6 +77,14 @@ public class MusicManager : MonoBehaviour
         {
             musicInstance = RuntimeManager.CreateInstance(music);
             musicInstance.start();
+            musicInstance.setVolume(initialVolume);
+
+            if (volumeSlider != null)
+            {
+                volumeSlider.value = initialVolume;
+            }
+
+            Volume = initialVolume;
         }
     }
 
@@ -78,24 +102,23 @@ public class MusicManager : MonoBehaviour
 
     private void Update()
     {
+        if (volumeSlider != null)
+        {
+            UpdateVolume();
+        }
+
         if (lastMarkerString != timelineInfo.lastMarker)
         {
             lastMarkerString = timelineInfo.lastMarker;
 
-            if (markerUpdated != null)
-            {
-                markerUpdated();
-            }
+            MarkerUpdated?.Invoke();
         }
 
         if (lastBeat != timelineInfo.currentBeat)
         {
             lastBeat = timelineInfo.currentBeat;
 
-            if (beatUpdated != null)
-            {
-                beatUpdated();
-            }
+            BeatUpdated?.Invoke();
         }
 
         if (lastTimeSignatureUpper != timelineInfo.timeSignatureUpper) //|| lastTimeSignatureLower != timelineInfo.timeSignatureLower)
@@ -103,9 +126,37 @@ public class MusicManager : MonoBehaviour
             lastTimeSignatureUpper = timelineInfo.timeSignatureUpper;
             //lastTimeSignatureLower = timelineInfo.timeSignatureLower;
 
-            if (timeSignatureUpdated != null)
+            TimeSignatureUpdated?.Invoke();
+        }
+    }
+
+    private void UpdateVolume()
+    {
+        if (Input.GetKey(KeyCode.Q))
+        {
+            Volume = Mathf.Clamp(Volume + 0.0005f, 0.0f, 1.0f);
+            FMOD.RESULT result = musicInstance.setVolume(Volume);
+            if (result != FMOD.RESULT.OK)
             {
-                timeSignatureUpdated();
+                print(result);
+            }
+            else
+            {
+                volumeSlider.value = Volume;
+            }
+        }
+
+        if (Input.GetKey(KeyCode.Z))
+        {
+            Volume = Mathf.Clamp(Volume - 0.0005f, 0.0f, 1.0f);
+            FMOD.RESULT result = musicInstance.setVolume(Volume);
+            if (result != FMOD.RESULT.OK)
+            {
+                print(result);
+            }
+            else
+            {
+                volumeSlider.value = Volume;
             }
         }
     }

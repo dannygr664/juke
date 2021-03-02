@@ -1,16 +1,19 @@
 fileFormatVersion: 2
-guid: c83c17bab03cd40d6a052ad2036f32e9
+guid: 2f6ceb42e652f4b1e8fc4e877bb819b5
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2120806665001370746
-    second: Quarter_Rest_Genre1_0
+      213: -5575133490681111271
+    second: Quarter_Note_Genre1_0
   - first:
-      213: -9110255041174410071
-    second: Quarter_Rest_Genre1_1
+      213: 6593267859391062561
+    second: Quarter_Note_Genre1_1
   - first:
-      213: 998081729019575421
-    second: Quarter_Rest_Genre1_2
+      213: -7027204315927444874
+    second: Quarter_Note_Genre1_2
+  - first:
+      213: 4390757762507313054
+    second: Quarter_Note_Genre1_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -108,7 +111,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Quarter_Rest_Genre1_0
+      name: Quarter_Note_Genre1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -122,14 +125,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 68bff4f13916192e0800000000000000
-      internalID: -2120806665001370746
+      spriteID: 91d9198e0a521a2b0800000000000000
+      internalID: -5575133490681111271
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Quarter_Rest_Genre1_1
+      name: Quarter_Note_Genre1_1
       rect:
         serializedVersion: 2
         x: 2048
@@ -143,14 +146,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9ac6699ee4fd19180800000000000000
-      internalID: -9110255041174410071
+      spriteID: 122210c7f2eff7b50800000000000000
+      internalID: 6593267859391062561
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Quarter_Rest_Genre1_2
+      name: Quarter_Note_Genre1_2
       rect:
         serializedVersion: 2
         x: 4096
@@ -164,8 +167,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d7cf4036b06e9dd00800000000000000
-      internalID: 998081729019575421
+      spriteID: 6728d0908ea5a7e90800000000000000
+      internalID: -7027204315927444874
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Quarter_Note_Genre1_3
+      rect:
+        serializedVersion: 2
+        x: 6144
+        y: 0
+        width: 2048
+        height: 2048
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9f8909fbea1fec30800000000000000
+      internalID: 4390757762507313054
       vertices: []
       indices: 
       edges: []
