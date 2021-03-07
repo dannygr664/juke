@@ -80,3 +80,6 @@ fmod_editor.log
 # FMOD 1.10.x (Legacy)
 /Unity/Juke/Assets/FMODAssets/*
 /Unity/Juke/Assets/FMODStudioCache.meta
+
+# Mac-specific
+.DS_Store
