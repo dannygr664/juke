@@ -1495,6 +1495,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   music: event:/Jazz
+  volumeSlider: {fileID: 0}
+  initialVolume: 1
 --- !u!1001 &497885322
 PrefabInstance:
   m_ObjectHideFlags: 0
