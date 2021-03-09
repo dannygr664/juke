@@ -1,20 +1,59 @@
 /// <reference path="TSDef/p5.global-mode.d.ts" />
 
+/**
+ * CONTROLS:
+ * - Left/Right arrow key to move
+ * - Space to jump
+ * - 1-5 to change volume animations
+ * - Shift to switch between volume and frequency animations
+ * - Q/Z to increase/decrease volume
+ * - W/X to increase/decrease song speed
+ */
+
 let song;
 let amplitudeAnalyzer, fft;
 let filter, filterFreq, filterRes;
 let player;
 let platforms;
+let fluid;
 let drawMode;
 
-// Volume animations
+// Noise animation
 var agents = [];
 var agentCount = 100;
-var noiseScale = 300;
-var noiseStrength = 10;
+var noiseScale = 0.1;
+var noiseStrength = 0.1;
 var overlayAlpha = 50;
 var agentAlpha = 10;
 var strokeWidth = 0.3;
+
+// Lines animation
+var NORTH = 0;
+var NORTHEAST = 1;
+var EAST = 2;
+var SOUTHEAST = 3;
+var SOUTH = 4;
+var SOUTHWEST = 5;
+var WEST = 6;
+var NORTHWEST = 7;
+var direction;
+var stepSize = 1;
+var diameter = 1;
+var posX;
+var posY;
+
+// Boxes animation
+let maxDistance;
+
+// Origami animation
+var tileCount = 10;
+var actRandomSeed = 0;
+var rectSize = 30;
+var ORIGAMI_SCALE_FACTOR = 200;
+var origamiColor;
+
+var volumeDrawMode = 0;
+var counter = 0;
 
 function preload() {
   soundFormats('wav');
@@ -25,7 +64,7 @@ function preload() {
 function setup() {
   initializeAudio();
 
-  colorMode(HSB);
+  colorMode(HSB, 360, 100, 100, 100);
 
   initializeVariables();
 
@@ -40,12 +79,23 @@ function setup() {
     agents[i] = new Agent();
   }
 
-  textAlign('LEFT', 'TOP')
+  // Lines animation
+  posX = width / 2;
+  posY = height / 2;
+
+  // Boxes animation
+  maxDistance = windowWidth * 2;
+
+  // Origami animation
+  origamiColor = color(200, 50, 50, 20);
+
+  textAlign(LEFT, TOP)
   textFont('Helvetica Neue');
   textSize(20);
 
   createPlayer();
   createPlatforms();
+  // createFluid();
 }
 
 
@@ -161,12 +211,23 @@ function createPlatforms() {
       windowWidth/2 + i * PLATFORM_SPACING,
       random(PLATFORM_Y_MIN, PLATFORM_Y_MAX),
       (i === 0) ? STARTING_PLATFORM_WIDTH : PLATFORM_WIDTH,
-      PLATFORM_HEIGHT);
+      PLATFORM_HEIGHT
+    );
     platform.shapeColor = platformColor;
     platform.setSpeed(platformSpeed, 180);
     platforms.add(platform);
   }
 }
+
+// function createFluid() {
+//   fluid = createSprite(
+//     windowWidth * 2,
+//     random(PLATFORM_Y_MIN, PLATFORM_Y_MAX),
+//     random(FLUID_WIDTH_MIN, FLUID_WIDTH_MAX),
+//     random(FLUID_HEIGHT_MIN, FLUID_HEIGHT_MAX)
+//   );
+//   fluid.shapeColor = random(FLUID_COLORS);
+// }
 
 
 function updateVolume() {
@@ -199,38 +260,34 @@ function drawUI() {
 
 function drawVolumeMeter() {
   fill(0);
-  text('Volume', 10, 20);
+  text('Volume', 0, 5);
   fill(0, 100, 50);
-  rect(80, 5, map(volume, 0, 1, 0, 200), 20);
+  rect(70, 5, map(volume, 0, 1, 0, 200), 20);
   fill(0);
 }
 
 
 function drawSongSpeedMeter() {
   fill(0);
-  text('Speed', 10, 50);
+  text('Speed', 0, 35);
   fill(95, 100, 50);
-  rect(80, 35, map(songSpeed, 0.01, 4, 0, 200), 20);
+  rect(70, 35, map(songSpeed, 0.01, 4, 0, 200), 20);
   fill(0);
 }
 
 
 function drawVolumeAnimations() {
-  let rms = amplitudeAnalyzer.getLevel();
+  rms = amplitudeAnalyzer.getLevel();
 
-  fill(255, overlayAlpha);
-  rect(0, 0, windowWidth, windowHeight);
-
-  noiseStrength = map(rms, 0, 0.1, 0, 20);
-  strokeWidth = map(rms, 0, 0.1, 0.1, map(volume, 0, 1, 1, 4));
-
-  // Draw agents
-  stroke(isReviving ? platformColorInactive : platformColor, agentAlpha);
-  for (var i = 0; i < agentCount; i++) {
-    agents[i].update1(noiseScale, noiseStrength, strokeWidth);
+  if (volumeDrawMode === 3) {
+    drawNoise();
+  } else if (volumeDrawMode === 4) {
+    drawBoxes();
+  } else if (volumeDrawMode === 5) {
+    drawOrigami();
+  } else {
+    drawLines();
   }
-
-  noStroke();
 }
 
 
@@ -253,12 +310,6 @@ function handleControls() {
     player.setSpeed(currentPlayerSpeed, 180);
   } else {
     player.setSpeed(0, 0);
-  }
-}
-
-function keyPressed() {
-  if (keyCode === SHIFT) {
-    (drawMode === 0) ? (drawMode = 1) : (drawMode = 0);
   }
 }
 
@@ -326,6 +377,24 @@ function revivingLoop() {
   }
 }
 
+
+// Noise animation
+function drawNoise() {
+  fill(255, overlayAlpha);
+  rect(0, 0, windowWidth, windowHeight);
+
+  noiseStrength = map(rms, 0, 0.1, 0, 20);
+  strokeWidth = map(rms, 0, 0.1, 0.1, map(volume, 0, 1, 1, 4));
+
+  // Draw agents
+  stroke(isReviving ? platformColorInactive : platformColor, agentAlpha);
+  for (var i = 0; i < agentCount; i++) {
+    agents[i].update1(noiseScale, noiseStrength, strokeWidth);
+  }
+
+  noStroke();
+}
+
 var Agent = function() {
   this.vector = createVector(random(windowWidth), random(windowHeight));
   this.vectorOld = this.vector.copy();
@@ -352,3 +421,139 @@ Agent.prototype.update1 = function(noiseScale, noiseStrength, strokeWidth) {
   this.angle = noise(this.vector.x / noiseScale, this.vector.y / noiseScale) * noiseStrength;
   this.update(strokeWidth);
 };
+
+
+// Lines animation
+function drawLines() {
+  noStroke();
+
+  for (var i = 0; i <= map(rms, 0, 0.05, 0, window.width); i++) {
+    counter++;
+
+    // random number for the direction of the next step
+    if (volumeDrawMode == 2) {
+      direction = int(random(3));
+    } else {
+      direction = int(random(7));
+    }
+
+    if (direction == NORTH) {
+      posY -= stepSize;
+    } else if (direction == NORTHEAST) {
+      posX += stepSize;
+      posY -= stepSize;
+    } else if (direction == EAST) {
+      posX += stepSize;
+    } else if (direction == SOUTHEAST) {
+      posX += stepSize;
+      posY += stepSize;
+    } else if (direction == SOUTH) {
+      posY += stepSize;
+    } else if (direction == SOUTHWEST) {
+      posX -= stepSize;
+      posY += stepSize;
+    } else if (direction == WEST) {
+      posX -= stepSize;
+    } else if (direction == NORTHWEST) {
+      posX -= stepSize;
+      posY -= stepSize;
+    }
+
+    if (posX > width) posX = 0;
+    if (posX < 0) posX = width;
+    if (posY < 0) posY = height;
+    if (posY > height) posY = 0;
+
+    fill(0, 40);
+    ellipse(posX + stepSize / 2, posY + stepSize / 2, diameter, diameter);
+  }
+}
+
+
+// Boxes animation
+function drawBoxes() {
+  fill(isReviving ? platformColorInactive : platformColor, agentAlpha);
+
+  for (var gridY = 0; gridY < windowHeight; gridY += 25) {
+    for (var gridX = 0; gridX < windowWidth; gridX += 25) {
+      var diameter = dist(
+        map(rms, 0, 0.1, 0, windowWidth),
+        map(rms, 0, 0.1, 0, windowHeight),
+        gridX,
+        gridY
+      );
+      diameter = diameter / maxDistance * 5;
+      push();
+      translate(gridX, gridY, diameter);
+      rect(0, 0, diameter, diameter); // also nice: ellipse(...)
+      pop();
+    }
+  }
+
+  fill(0);
+}
+
+
+// Origami animation
+function drawOrigami() {
+  fill(origamiColor);
+  randomSeed(actRandomSeed);
+
+  for (var gridY = 0; gridY < tileCount; gridY++) {
+    for (var gridX = 0; gridX < tileCount; gridX++) {
+
+      var posX = width / tileCount * gridX;
+      var posY = height / tileCount * gridY;
+
+      var shiftX1 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+      var shiftY1 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+      var shiftX2 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+      var shiftY2 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+      var shiftX3 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+      var shiftY3 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+      var shiftX4 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+      var shiftY4 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+
+      push();
+      translate(posX, posY);
+      beginShape();
+      vertex(shiftX1, shiftY1);
+      vertex(rectSize + shiftX2, shiftY2);
+      vertex(rectSize + shiftX3, rectSize + shiftY3);
+      vertex(shiftX4, rectSize + shiftY4);
+      endShape();
+      pop();
+    }
+  }
+
+  fill(0);
+}
+
+
+function keyReleased() {
+  if (keyCode == DELETE || keyCode == BACKSPACE) clear();
+
+  if (keyCode === SHIFT) {
+    (drawMode === 0) ? (drawMode = 1) : (drawMode = 0);
+  }
+
+  if (key == '1') {
+    volumeDrawMode = 1;
+    stepSize = 1;
+    diameter = 1;
+  }
+  if (key == '2') {
+    volumeDrawMode = 2;
+    stepSize = 1;
+    diameter = 1;
+  }
+  if (key == '3') {
+    volumeDrawMode = 3;
+  }
+  if (key == '4') {
+    volumeDrawMode = 4;
+  }
+  if (key == '5') {
+    volumeDrawMode = 5;
+  }
+}
