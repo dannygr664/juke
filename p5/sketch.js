@@ -48,7 +48,7 @@ let maxDistance;
 // Origami animation
 var tileCount = 10;
 var actRandomSeed = 0;
-var rectSize = 30;
+var rectSize;
 var ORIGAMI_SCALE_FACTOR = 200;
 var origamiColor;
 
@@ -84,9 +84,10 @@ function setup() {
   posY = height / 2;
 
   // Boxes animation
-  maxDistance = windowWidth * 2;
+  maxDistance = windowWidth;
 
   // Origami animation
+  rectSize = windowWidth / tileCount;
   origamiColor = color(200, 50, 50, 20);
 
   textAlign(LEFT, TOP)
