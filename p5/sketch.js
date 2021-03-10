@@ -53,7 +53,7 @@ function setup() {
   textFont('Helvetica Neue');
   textSize(20);
 
-  createPlayer();
+  player = new Player();
   createPlatforms();
   createFluid();
 }
@@ -73,25 +73,25 @@ function draw() {
 
   drawUI();
 
-  currentPlayerSpeed = playerSpeed * songSpeed;
+  player.speed = player.baseSpeed * songSpeed;
 
-  if (isReviving) {
+  if (player.isReviving) {
     revivingLoop();
   } else {
     handleControls();
 
-    if (player.collide(platforms)) {
-      gravitySpeed = 0;
+    if (player.sprite.collide(platforms)) {
+      player.gravitySpeed = 0;
       if (keyDown(' ')) {
-        jump();
+        player.jump();
       }
     }
 
-    if (jumpSpeed > 0) {
-      jumpSpeed -= gravityForce;
-      player.addSpeed(jumpSpeed, 270);
+    if (player.jumpSpeed > 0) {
+      player.jumpSpeed -= player.gravityForce;
+      player.sprite.addSpeed(player.jumpSpeed, 270);
     } else {
-      handleGravity();
+      player.handleGravity();
     }
     managePlatforms();
     manageFluid();
@@ -104,7 +104,7 @@ function draw() {
     drawSprite(platforms[i]);
   }
 
-  drawSprite(player);
+  drawSprite(player.sprite);
 }
 
 
@@ -137,17 +137,6 @@ function initializeAudio() {
 function initializeVariables() {
   backgroundColor = color(255);
 
-  playerColor = color(0);
-  playerSpeed = 4;
-  currentPlayerSpeed = playerSpeed;
-  jumpForce = 10;
-  jumpSpeed = 0;
-  isReviving = false;
-  PLAYER_X_INITIAL = windowWidth / 2;
-  PLAYER_Y_INITIAL = windowHeight / 2 - windowHeight / 8;
-  PLAYER_WIDTH = 40;
-  PLAYER_HEIGHT = 40;
-
   platformColor = color(0);
   platformColorInactive = color(255, 0, 70);
   platformSpeed = 0.5;
@@ -164,19 +153,9 @@ function initializeVariables() {
   FLUID_Y_MAX = PLATFORM_Y_MAX;
   FLUID_WIDTH_MIN = PLATFORM_WIDTH / 5;
   FLUID_WIDTH_MAX = PLATFORM_WIDTH * 3;
-  FLUID_HEIGHT_MIN = PLAYER_HEIGHT;
-  FLUID_HEIGHT_MAX = PLAYER_HEIGHT * 6;
+  FLUID_HEIGHT_MIN = 40;
+  FLUID_HEIGHT_MAX = 40 * 6;
   FLUID_COLORS = [color(0, 100, 100), color(100, 100, 100), color(200, 100, 100), color(255, 100, 100)];
-
-  gravityForce = 0.35;
-  gravitySpeed = 0;
-}
-
-
-function createPlayer() {
-  player = createSprite(
-    PLAYER_X_INITIAL, PLAYER_Y_INITIAL, PLAYER_WIDTH, PLAYER_HEIGHT);
-  player.shapeColor = playerColor;
 }
 
 
@@ -258,9 +237,9 @@ function drawVolumeAnimations() {
   rms = amplitudeAnalyzer.getLevel();
 
   if (volumeDrawMode === 3) {
-    noiseAnim.drawNoise();
+    noiseAnim.drawNoise(player.isReviving);
   } else if (volumeDrawMode === 4) {
-    boxesAnim.drawBoxes(isReviving);
+    boxesAnim.drawBoxes(player.isReviving);
   } else if (volumeDrawMode === 5) {
     blindsAnim.drawBlinds();
   } else {
@@ -283,24 +262,12 @@ function drawFrequencyAnimations() {
 
 function handleControls() {
   if (keyIsDown(RIGHT_ARROW)) {
-    player.setSpeed(currentPlayerSpeed, 0);
+    player.sprite.setSpeed(player.speed, 0);
   } else if (keyIsDown(LEFT_ARROW)) {
-    player.setSpeed(currentPlayerSpeed, 180);
+    player.sprite.setSpeed(player.speed, 180);
   } else {
-    player.setSpeed(0, 0);
+    player.sprite.setSpeed(0, 0);
   }
-}
-
-
-function jump() {
-  jumpSpeed = jumpForce;
-  player.setSpeed(jumpSpeed, 270);
-}
-
-
-function handleGravity() {
-  gravitySpeed += gravityForce;
-  player.addSpeed(gravitySpeed, 90);
 }
 
 
@@ -339,25 +306,25 @@ function spawnFluid() {
 
 
 function handleFalling() {
-  if (player.position.y > windowHeight) {
-    isReviving = true;
-    gravitySpeed = 0;
+  if (player.sprite.position.y > windowHeight) {
+    player.isReviving = true;
+    player.gravitySpeed = 0;
     filter.set(200, 1);
     for (let i = 0; i < platforms.length; i++) {
       platforms[i].shapeColor = platformColorInactive;
       platforms[i].setSpeed(0, 180);
     }
     fluid.setSpeed(0, 180);
-    player.setSpeed(50, 270);
+    player.sprite.setSpeed(50, 270);
   }
 }
 
 
 function revivingLoop() {
-  if (player.position.y < windowHeight / 6) {
-    player.setSpeed(0, 270);
+  if (player.sprite.position.y < windowHeight / 6) {
+    player.sprite.setSpeed(0, 270);
     if (keyDown(' ')) {
-      isReviving = false;
+      player.isReviving = false;
       filter.set(22050, 0);
       for (let i = 0; i < platforms.length; i++) {
         platforms[i].shapeColor = platformColor;
@@ -365,11 +332,11 @@ function revivingLoop() {
       }
       fluid.setSpeed(platformSpeed, 180);
     } else if (keyIsDown(RIGHT_ARROW)) {
-      player.setSpeed(1.5, 0);
+      player.sprite.setSpeed(1.5, 0);
     } else if (keyIsDown(LEFT_ARROW)) {
-      player.setSpeed(1.5, 180);
+      player.sprite.setSpeed(1.5, 180);
     } else {
-      player.setSpeed(0, 0);
+      player.sprite.setSpeed(0, 0);
     }
   }
 }

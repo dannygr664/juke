@@ -14,7 +14,7 @@ class Noise {
     }
   }
 
-  drawNoise() {
+  drawNoise(isReviving) {
     fill(255, overlayAlpha);
     rect(0, 0, windowWidth, windowHeight);
 
