@@ -95,7 +95,7 @@ function setup() {
 
   createPlayer();
   createPlatforms();
-  // createFluid();
+  createFluid();
 }
 
 
@@ -134,8 +134,11 @@ function draw() {
       handleGravity();
     }
     managePlatforms();
+    manageFluid();
     handleFalling();
   }
+
+  drawSprite(fluid);
 
   for (var i = 0; i < platforms.length; i++) {
     drawSprite(platforms[i]);
@@ -179,6 +182,10 @@ function initializeVariables() {
   jumpForce = 10;
   jumpSpeed = 0;
   isReviving = false;
+  PLAYER_X_INITIAL = windowWidth/2;
+  PLAYER_Y_INITIAL = windowHeight/2 - windowHeight/8;
+  PLAYER_WIDTH = 40;
+  PLAYER_HEIGHT = 40;
 
   platformColor = color(0);
   platformColorInactive = color(255, 0, 70);
@@ -192,6 +199,14 @@ function initializeVariables() {
   NUMBER_OF_PLATFORMS = 8;
   PLATFORM_SPACING = 200;
 
+  FLUID_Y_MIN = PLATFORM_Y_MIN;
+  FLUID_Y_MAX = PLATFORM_Y_MAX;
+  FLUID_WIDTH_MIN = PLATFORM_WIDTH / 5;
+  FLUID_WIDTH_MAX = PLATFORM_WIDTH * 3;
+  FLUID_HEIGHT_MIN = PLAYER_HEIGHT;
+  FLUID_HEIGHT_MAX = PLAYER_HEIGHT * 6;
+  FLUID_COLORS = [color(0, 100, 100), color(100, 100, 100), color(200, 100, 100), color(255, 100, 100)];
+
   gravityForce = 0.35;
   gravitySpeed = 0;
 }
@@ -199,7 +214,7 @@ function initializeVariables() {
 
 function createPlayer() {
   player = createSprite(
-    windowWidth/2, windowHeight/2 - windowHeight/8, 40, 40);
+    PLAYER_X_INITIAL, PLAYER_Y_INITIAL, PLAYER_WIDTH, PLAYER_HEIGHT);
   player.shapeColor = playerColor;
 }
 
@@ -219,15 +234,17 @@ function createPlatforms() {
   }
 }
 
-// function createFluid() {
-//   fluid = createSprite(
-//     windowWidth * 2,
-//     random(PLATFORM_Y_MIN, PLATFORM_Y_MAX),
-//     random(FLUID_WIDTH_MIN, FLUID_WIDTH_MAX),
-//     random(FLUID_HEIGHT_MIN, FLUID_HEIGHT_MAX)
-//   );
-//   fluid.shapeColor = random(FLUID_COLORS);
-// }
+
+function createFluid() {
+  fluid = createSprite(
+    windowWidth * 2,
+    random(PLATFORM_Y_MIN, PLATFORM_Y_MAX),
+    random(FLUID_WIDTH_MIN, FLUID_WIDTH_MAX),
+    random(FLUID_HEIGHT_MIN, FLUID_HEIGHT_MAX)
+  );
+  fluid.shapeColor = random(FLUID_COLORS);
+  fluid.setSpeed(platformSpeed, 180);
+}
 
 
 function updateVolume() {
@@ -343,6 +360,23 @@ function spawnPlatform(platform) {
 }
 
 
+function manageFluid() {
+  if (fluid.position.x < -fluid.width/2) {
+    spawnFluid();
+  }
+  fluid.setSpeed(platformSpeed * songSpeed, 180);
+}
+
+
+function spawnFluid() {
+  fluid.shapeColor = random(FLUID_COLORS);
+  fluid.width = random(FLUID_WIDTH_MIN, FLUID_WIDTH_MAX);
+  fluid.height = random(FLUID_HEIGHT_MIN, FLUID_HEIGHT_MAX);
+  fluid.position.x = windowWidth + fluid.width/2;
+  fluid.position.y = random(FLUID_Y_MIN, FLUID_Y_MAX);
+}
+
+
 function handleFalling() {
   if (player.position.y > windowHeight) {
     isReviving = true;
@@ -352,6 +386,7 @@ function handleFalling() {
       platforms[i].shapeColor = platformColorInactive;
       platforms[i].setSpeed(0, 180);
     }
+    fluid.setSpeed(0, 180);
     player.setSpeed(50, 270);
   }
 }
@@ -367,6 +402,7 @@ function revivingLoop() {
         platforms[i].shapeColor = platformColor;
         platforms[i].setSpeed(platformSpeed, 180);
       }
+      fluid.setSpeed(platformSpeed, 180);
     } else if (keyIsDown(RIGHT_ARROW)) {
       player.setSpeed(1.5, 0);
     } else if (keyIsDown(LEFT_ARROW)) {
@@ -502,8 +538,8 @@ function drawOrigami() {
   for (var gridY = 0; gridY < tileCount; gridY++) {
     for (var gridX = 0; gridX < tileCount; gridX++) {
 
-      var posX = width / tileCount * gridX;
-      var posY = height / tileCount * gridY;
+      var posX = windowWidth / tileCount * gridX;
+      var posY = windowHeight / tileCount * gridY;
 
       var shiftX1 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
       var shiftY1 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
