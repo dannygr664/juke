@@ -65,19 +65,8 @@ function draw() {
   } else {
     handleControls();
 
-    if (player.sprite.collide(platformManager.platforms)) {
-      player.gravitySpeed = 0;
-      if (keyDown(' ')) {
-        player.jump();
-      }
-    }
+    handleCollisionsAndJumping();
 
-    if (player.jumpSpeed > 0) {
-      player.jumpSpeed -= player.gravityForce;
-      player.sprite.addSpeed(player.jumpSpeed, 270);
-    } else {
-      player.handleGravity();
-    }
     platformManager.managePlatforms();
     fluidManager.manageFluids();
     handleFalling();
@@ -120,6 +109,23 @@ function handleControls() {
     player.sprite.setSpeed(player.speed, 180);
   } else {
     player.sprite.setSpeed(0, 0);
+  }
+}
+
+
+function handleCollisionsAndJumping() {
+  if (player.sprite.collide(platformManager.platforms)) {
+    player.gravitySpeed = 0;
+    if (keyDown(' ')) {
+      player.jump();
+    }
+  }
+
+  if (player.jumpSpeed > 0) {
+    player.jumpSpeed -= player.gravityForce;
+    player.sprite.addSpeed(player.jumpSpeed, 270);
+  } else {
+    player.handleGravity();
   }
 }
 
