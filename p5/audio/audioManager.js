@@ -1,4 +1,5 @@
-const INITIAL_VOLUME = 0;
+const INITIAL_VOLUME = 0.5;
+const INITIAL_VOLUME_RAMP_TIME = 0.05;
 const VOLUME_MIN = 0;
 const VOLUME_MAX = 1;
 const VOLUME_STEP = 0.01;
@@ -24,8 +25,11 @@ class AudioManager {
     this.song.connect(this.filter);
 
     this.volume = INITIAL_VOLUME;
+    this.volumeRampTime = INITIAL_VOLUME_RAMP_TIME;
 
     this.songSpeed = 1;
+
+    masterVolume(this.volume, this.volumeRampTime);
 
     this.song.loop();
 
@@ -50,7 +54,7 @@ class AudioManager {
       this.volume -= VOLUME_STEP;
     }
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-    this.song.amp(this.volume);
+    masterVolume(this.volume, this.volumeRampTime);
   }
 
 
