@@ -10,10 +10,10 @@ class FluidManager {
     this.baseSpeed = DEFAULT_BASE_FLUID_SPEED;
     this.speed = 0;
     this.fluidColors = [
-      color(0, 100, 100),
-      color(100, 100, 100),
-      color(200, 100, 100),
-      color(255, 100, 100)
+      ColorScheme.RED,
+      ColorScheme.BLUE,
+      ColorScheme.GREEN,
+      ColorScheme.YELLOW,
     ];
     this.fluids = new Group();
 

@@ -8,7 +8,7 @@ let origamiColor;
 class Blinds {
   constructor() {
     rectSize = windowWidth / tileCount;
-    origamiColor = color(200, 50, 50, 20);
+    origamiColor = ColorScheme.BLACK_INACTIVE;
   }
 
   drawBlinds(rms) {

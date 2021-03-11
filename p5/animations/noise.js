@@ -22,7 +22,7 @@ class Noise {
     strokeWidth = map(rms, 0, 0.1, 0.1, map(audioManager.volume, 0, 1, 1, 4));
 
     // Draw agents
-    stroke(player.isReviving ? platformManager.platformColorInactive : platformManager.platformColorActive, agentAlpha);
+    stroke(player.isReviving ? ColorScheme.BLACK_INACTIVE : ColorScheme.BLACK, agentAlpha);
     for (let i = 0; i < agentCount; i++) {
       agents[i].update1(noiseScale, noiseStrength, strokeWidth);
     }

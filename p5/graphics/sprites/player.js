@@ -20,7 +20,7 @@ class Player {
 
     this.sprite = createSprite(
       PLAYER_X_INITIAL, PLAYER_Y_INITIAL, PLAYER_WIDTH, PLAYER_HEIGHT);
-    this.sprite.shapeColor = color(0);
+    this.sprite.shapeColor = ColorScheme.BLACK;
   }
 
   jump() {

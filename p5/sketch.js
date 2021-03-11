@@ -54,9 +54,11 @@ function setup() {
 
   colorMode(HSB, 360, 100, 100, 100);
 
+  ColorScheme.initializeColorScheme();
+
   createCanvas(windowWidth, windowHeight);
 
-  backgroundColor = color(255);
+  backgroundColor = ColorScheme.WHITE;
   fill(0);
   noStroke();
   drawMode = 0;

@@ -14,8 +14,6 @@ class PlatformManager {
     this.platformWidth = windowWidth / 4;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
     this.platformSpacing = DEFAULT_PLATFORM_SPACING;
-    this.platformColorActive = color(0);
-    this.platformColorInactive = color(255, 0, 70);
 
     startingPlatformWidth = windowWidth / 1.5;
 
@@ -26,7 +24,7 @@ class PlatformManager {
         (i === 0) ? startingPlatformWidth : this.platformWidth,
         this.platformHeight
       );
-      platform.shapeColor = this.platformColorActive;
+      platform.shapeColor = ColorScheme.BLACK;
       platform.setSpeed(this.baseSpeed, 180);
       this.platforms.add(platform);
     }
@@ -55,14 +53,14 @@ class PlatformManager {
 
   handleFalling() {
     for (let i = 0; i < this.platforms.length; i++) {
-      this.platforms[i].shapeColor = this.platformColorInactive;
+      this.platforms[i].shapeColor = ColorScheme.BLACK_INACTIVE;
       this.platforms[i].setSpeed(0, 180);
     }
   }
 
   handleRevived() {
     for (let i = 0; i < this.platforms.length; i++) {
-      this.platforms[i].shapeColor = this.platformColorActive;
+      this.platforms[i].shapeColor = ColorScheme.BLACK;
       this.platforms[i].setSpeed(this.baseSpeed, 180);
     }
   }
