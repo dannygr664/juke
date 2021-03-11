@@ -35,10 +35,9 @@ function setup() {
 
   colorMode(HSB, 360, 100, 100, 100);
 
-  initializeVariables();
-
   createCanvas(windowWidth, windowHeight);
 
+  backgroundColor = color(255);
   fill(0);
   noStroke();
   drawMode = 0;
@@ -99,11 +98,6 @@ function draw() {
   fluidManager.drawFluids();
   platformManager.drawPlatforms();
   drawSprite(player.sprite);
-}
-
-
-function initializeVariables() {
-  backgroundColor = color(255);
 }
 
 
