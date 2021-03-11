@@ -121,11 +121,33 @@ function handleCollisionsAndJumping() {
     }
   }
 
+  if (!player.sprite.overlap(fluidManager.fluids, handleFluidEnter)) {
+    player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED;
+  }
+
   if (player.jumpSpeed > 0) {
     player.jumpSpeed -= player.gravityForce;
     player.sprite.addSpeed(player.jumpSpeed, 270);
   } else {
     player.handleGravity();
+  }
+}
+
+
+function handleFluidEnter(_, fluid) {
+  switch (fluid.shapeColor) {
+    case ColorScheme.RED:
+      player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED * 0.5;
+      break;
+    case ColorScheme.BLUE:
+      player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED * 1.5;
+      break;
+    case ColorScheme.GREEN:
+      player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED * 4;
+      break;
+    case ColorScheme.YELLOW:
+      player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED * 2;
+      break;
   }
 }
 

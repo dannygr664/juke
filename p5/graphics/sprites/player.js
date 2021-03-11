@@ -1,11 +1,11 @@
-const BASE_SPEED = 4;
+const DEFAULT_BASE_PLAYER_SPEED = 4;
 const DEFAULT_JUMP_FORCE = 10;
 const DEFAULT_GRAVITY_FORCE = 0.35;
 const REVIVING_SPEED = 50;
 
 class Player {
   constructor() {
-    this.baseSpeed = BASE_SPEED;
+    this.baseSpeed = DEFAULT_BASE_PLAYER_SPEED;
     this.speed = 0;
     this.jumpForce = DEFAULT_JUMP_FORCE;
     this.jumpSpeed = 0;
