@@ -122,7 +122,7 @@ function handleCollisionsAndJumping() {
   }
 
   if (!player.sprite.overlap(fluidManager.fluids, handleFluidEnter)) {
-    player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED;
+    audioManager.updateSoundSpeed(INITIAL_SOUND_SPEED);
   }
 
   if (player.jumpSpeed > 0) {
@@ -137,16 +137,16 @@ function handleCollisionsAndJumping() {
 function handleFluidEnter(_, fluid) {
   switch (fluid.shapeColor) {
     case ColorScheme.RED:
-      player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED * 0.5;
+      audioManager.updateSoundSpeed(0.5);
       break;
     case ColorScheme.BLUE:
-      player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED * 1.5;
+      audioManager.updateSoundSpeed(1.5);
       break;
     case ColorScheme.GREEN:
-      player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED * 4;
+      audioManager.updateSoundSpeed(4);
       break;
     case ColorScheme.YELLOW:
-      player.baseSpeed = DEFAULT_BASE_PLAYER_SPEED * 2;
+      audioManager.updateSoundSpeed(2);
       break;
   }
 }

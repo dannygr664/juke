@@ -4,6 +4,7 @@ const VOLUME_MIN = 0;
 const VOLUME_MAX = 1;
 const VOLUME_STEP = 0.01;
 
+const INITIAL_SOUND_SPEED = 1;
 const SOUND_SPEED_MIN = 0.01;
 const SOUND_SPEED_MAX = 4;
 const SOUND_SPEED_STEP = 0.01;
@@ -27,7 +28,7 @@ class AudioManager {
     this.volume = INITIAL_VOLUME;
     this.volumeRampTime = INITIAL_VOLUME_RAMP_TIME;
 
-    this.soundSpeed = 1;
+    this.soundSpeed = INITIAL_SOUND_SPEED;
 
     masterVolume(this.volume, this.volumeRampTime);
 
@@ -45,7 +46,7 @@ class AudioManager {
 
   update() {
     this.updateVolume();
-    this.updateSoundSpeed();
+    //this.updateSoundSpeed();
   }
 
   updateVolume() {
@@ -59,14 +60,21 @@ class AudioManager {
   }
 
 
-  updateSoundSpeed() {
-    if (keyDown('w' || 'W')) {
-      this.soundSpeed += SOUND_SPEED_STEP;
-    } else if (keyDown('x' || 'X')) {
-      this.soundSpeed -= SOUND_SPEED_STEP;
-    }
+  // updateSoundSpeed() {
+  //   if (keyDown('w' || 'W')) {
+  //     this.soundSpeed += SOUND_SPEED_STEP;
+  //   } else if (keyDown('x' || 'X')) {
+  //     this.soundSpeed -= SOUND_SPEED_STEP;
+  //   }
+  //   this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
+  //   this.sound.rate(this.soundSpeed);
+  // }
+
+
+  updateSoundSpeed(newSpeed) {
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
-    this.sound.rate(this.soundSpeed);
+    this.soundSpeed = newSpeed;
+    this.sound.rate(newSpeed);
   }
 
   handleFalling() {
