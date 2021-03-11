@@ -72,4 +72,10 @@ class FluidManager {
       drawSprite(this.fluids[i]);
     }
   }
+
+  handleFalling() {
+    for (let i = 0; i < this.fluids.length; i++) {
+      this.fluids[i].setSpeed(0, 180);
+    }
+  }
 }

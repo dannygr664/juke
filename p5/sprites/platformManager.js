@@ -52,4 +52,11 @@ class PlatformManager {
       drawSprite(this.platforms[i]);
     }
   }
+
+  handleFalling() {
+    for (let i = 0; i < this.platforms.length; i++) {
+      this.platforms[i].shapeColor = this.platformColorInactive;
+      this.platforms[i].setSpeed(0, 180);
+    }
+  }
 }

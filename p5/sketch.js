@@ -171,17 +171,10 @@ function handleControls() {
 
 function handleFalling() {
   if (player.sprite.position.y > windowHeight) {
-    player.isReviving = true;
-    player.gravitySpeed = 0;
-    audioManager.filter.set(200, 1);
-    for (let i = 0; i < platformManager.platforms.length; i++) {
-      platformManager.platforms[i].shapeColor = platformManager.platformColorInactive;
-      platformManager.platforms[i].setSpeed(0, 180);
-    }
-    for (let i = 0; i < fluidManager.fluids.length; i++) {
-      fluidManager.fluids[i].setSpeed(0, 180);
-    }
-    player.sprite.setSpeed(50, 270);
+    player.handleFalling();
+    audioManager.handleFalling();
+    platformManager.handleFalling();
+    fluidManager.handleFalling();
   }
 }
 

@@ -1,6 +1,7 @@
 const BASE_SPEED = 4;
 const DEFAULT_JUMP_FORCE = 10;
 const DEFAULT_GRAVITY_FORCE = 0.35;
+const REVIVING_SPEED = 50;
 
 class Player {
   constructor() {
@@ -30,5 +31,11 @@ class Player {
   handleGravity() {
     this.gravitySpeed += this.gravityForce;
     this.sprite.addSpeed(this.gravitySpeed, 90);
+  }
+
+  handleFalling() {
+    this.isReviving = true;
+    this.gravitySpeed = 0;
+    this.sprite.setSpeed(REVIVING_SPEED, 270);
   }
 }

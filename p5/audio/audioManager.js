@@ -7,6 +7,9 @@ const SONG_SPEED_MIN = 0.01;
 const SONG_SPEED_MAX = 4;
 const SONG_SPEED_STEP = 0.01;
 
+const REVIVING_LPF_CUTOFF = 200;
+const REVIVING_LPF_PEAK_VOLUME = 0;
+
 class AudioManager {
   constructor(song) {
     this.song = song;
@@ -56,5 +59,9 @@ class AudioManager {
     }
     this.songSpeed = constrain(this.songSpeed, SONG_SPEED_MIN, SONG_SPEED_MAX);
     this.song.rate(this.songSpeed);
+  }
+
+  handleFalling() {
+    this.filter.set(REVIVING_LPF_CUTOFF, REVIVING_LPF_PEAK_VOLUME);
   }
 }
