@@ -7,7 +7,7 @@ class UIManager {
 
   drawUI() {
     this.drawVolumeMeter();
-    this.drawSongSpeedMeter();
+    this.drawSoundSpeedMeter();
   }
 
   drawVolumeMeter() {
@@ -18,11 +18,11 @@ class UIManager {
     fill(0);
   }
 
-  drawSongSpeedMeter() {
+  drawSoundSpeedMeter() {
     fill(0);
     text('Speed', 0, 35);
     fill(95, 100, 50);
-    rect(70, 35, map(audioManager.songSpeed, 0.01, 4, 0, 200), 20);
+    rect(70, 35, map(audioManager.soundSpeed, 0.01, 4, 0, 200), 20);
     fill(0);
   }
 }

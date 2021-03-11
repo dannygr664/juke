@@ -4,9 +4,9 @@ const VOLUME_MIN = 0;
 const VOLUME_MAX = 1;
 const VOLUME_STEP = 0.01;
 
-const SONG_SPEED_MIN = 0.01;
-const SONG_SPEED_MAX = 4;
-const SONG_SPEED_STEP = 0.01;
+const SOUND_SPEED_MIN = 0.01;
+const SOUND_SPEED_MAX = 4;
+const SOUND_SPEED_STEP = 0.01;
 
 const ALIVE_LPF_CUTOFF = 22050;
 const ALIVE_LPF_PEAK_VOLUME = 0;
@@ -15,36 +15,37 @@ const REVIVING_LPF_CUTOFF = 200;
 const REVIVING_LPF_PEAK_VOLUME = 0;
 
 class AudioManager {
-  constructor(song) {
-    this.song = song;
-
+  constructor(sounds) {
     this.filter = new p5.LowPass();
     this.filter.set(22050, 0);
 
-    this.song.disconnect();
-    this.song.connect(this.filter);
+    sounds.forEach(sound => {
+      sound.disconnect();
+      sound.connect(this.filter);
+    });
 
     this.volume = INITIAL_VOLUME;
     this.volumeRampTime = INITIAL_VOLUME_RAMP_TIME;
 
-    this.songSpeed = 1;
+    this.soundSpeed = 1;
 
     masterVolume(this.volume, this.volumeRampTime);
 
-    this.song.loop();
+    this.sound = sounds[0];
+    this.sound.loop();
 
     // Volume analysis
     this.amplitudeAnalyzer = new p5.Amplitude();
-    this.amplitudeAnalyzer.setInput(this.song);
+    this.amplitudeAnalyzer.setInput(this.sound);
 
     // Pitch analysis
     this.fft = new p5.FFT;
-    this.fft.setInput(this.song);
+    this.fft.setInput(this.sound);
   }
 
   update() {
     this.updateVolume();
-    this.updateSongSpeed();
+    this.updateSoundSpeed();
   }
 
   updateVolume() {
@@ -58,14 +59,14 @@ class AudioManager {
   }
 
 
-  updateSongSpeed() {
+  updateSoundSpeed() {
     if (keyDown('w' || 'W')) {
-      this.songSpeed += SONG_SPEED_STEP;
+      this.soundSpeed += SOUND_SPEED_STEP;
     } else if (keyDown('x' || 'X')) {
-      this.songSpeed -= SONG_SPEED_STEP;
+      this.soundSpeed -= SOUND_SPEED_STEP;
     }
-    this.songSpeed = constrain(this.songSpeed, SONG_SPEED_MIN, SONG_SPEED_MAX);
-    this.song.rate(this.songSpeed);
+    this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
+    this.sound.rate(this.soundSpeed);
   }
 
   handleFalling() {

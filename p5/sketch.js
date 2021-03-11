@@ -10,7 +10,8 @@
  * - W/X to increase/decrease song speed
  */
 
-let song;
+let audioFilePaths = [];
+let sounds = [];
 let audioManager;
 
 let animationController;
@@ -22,12 +23,34 @@ let fluidManager;
 
 function preload() {
   soundFormats('wav', 'mp3');
-  song = loadSound('audio/Jesus.wav');
+  getAudioFilePaths();
+  loadSounds();
+}
+
+
+function getAudioFilePaths() {
+  let etherealAudioFileNames = [
+    'Angel1_88bpm4-4_L8M',
+    'Angel2_88bpm4-4_L17M',
+    'Angel3_88bpm4-4_L4M'
+  ];
+
+  etherealAudioFileNames.forEach(etherealAudioFileName => {
+    audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}`);
+  });
+}
+
+
+function loadSounds() {
+  audioFilePaths.forEach(audioFilePath => {
+    let sound = loadSound(audioFilePath);
+    sounds.push(sound);
+  });
 }
 
 
 function setup() {
-  audioManager = new AudioManager(song);
+  audioManager = new AudioManager(sounds);
 
   colorMode(HSB, 360, 100, 100, 100);
 
@@ -57,7 +80,7 @@ function draw() {
 
   uiManager.drawUI();
 
-  player.speed = player.baseSpeed * audioManager.songSpeed;
+  player.speed = player.baseSpeed * audioManager.soundSpeed;
 
   if (player.isReviving) {
     revivingLoop();
