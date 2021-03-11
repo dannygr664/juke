@@ -195,8 +195,6 @@ function revivingLoop() {
 
 
 function keyReleased() {
-  if (keyCode == DELETE || keyCode == BACKSPACE) clear();
-
   if (keyCode === SHIFT) {
     (drawMode === 0) ? (drawMode = 1) : (drawMode = 0);
   }
