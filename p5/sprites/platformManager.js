@@ -1,13 +1,9 @@
 const DEFAULT_BASE_PLATFORM_SPEED = 0.5;
 const NUMBER_OF_PLATFORMS = 8;
-const STARTING_PLATFORM_WIDTH = 800;
-const PLATFORM_WIDTH = 250;
-const PLATFORM_HEIGHT = 5;
-const PLATFORM_SPACING = 200;
-let platformYMin;
-let platformYMax;
-let platformColorActive;
-let platformColorInactive;
+const DEFAULT_PLATFORM_HEIGHT = 5;
+const DEFAULT_PLATFORM_SPACING = 200;
+
+let startingPlatformWidth;
 
 class PlatformManager {
   constructor() {
@@ -15,15 +11,20 @@ class PlatformManager {
     this.platforms = new Group();
     this.platformYMin = windowHeight / 4;
     this.platformYMax = windowHeight;
+    this.platformWidth = windowWidth / 4;
+    this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
+    this.platformSpacing = DEFAULT_PLATFORM_SPACING;
     this.platformColorActive = color(0);
     this.platformColorInactive = color(255, 0, 70);
 
+    startingPlatformWidth = windowWidth / 1.5;
+
     for (let i = 0; i < NUMBER_OF_PLATFORMS; i++) {
       let platform = createSprite(
-        windowWidth / 2 + i * PLATFORM_SPACING,
+        windowWidth / 2 + i * this.platformSpacing,
         random(this.platformYMin, this.platformYMax),
-        (i === 0) ? STARTING_PLATFORM_WIDTH : PLATFORM_WIDTH,
-        PLATFORM_HEIGHT
+        (i === 0) ? startingPlatformWidth : this.platformWidth,
+        this.platformHeight
       );
       platform.shapeColor = this.platformColorActive;
       platform.setSpeed(this.baseSpeed, 180);
@@ -41,8 +42,8 @@ class PlatformManager {
   }
 
   spawnPlatform(platform) {
-    platform.width = PLATFORM_WIDTH; // to reset initial platform
-    platform.position.x = windowWidth + PLATFORM_WIDTH / 2;
+    platform.width = this.platformWidth; // to reset initial platform
+    platform.position.x = windowWidth + this.platformWidth / 2;
     platform.position.y = random(this.platformYMin, this.platformYMax);
   }
 
