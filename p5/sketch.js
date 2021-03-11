@@ -15,6 +15,7 @@ let amplitudeAnalyzer, fft;
 let filter, filterFreq, filterRes;
 
 let player;
+let platformManager;
 let platforms;
 let fluid;
 
@@ -54,7 +55,7 @@ function setup() {
   textSize(20);
 
   player = new Player();
-  createPlatforms();
+  platformManager = new PlatformManager();
   createFluid();
 }
 
@@ -80,7 +81,7 @@ function draw() {
   } else {
     handleControls();
 
-    if (player.sprite.collide(platforms)) {
+    if (player.sprite.collide(platformManager.platforms)) {
       player.gravitySpeed = 0;
       if (keyDown(' ')) {
         player.jump();
@@ -93,17 +94,13 @@ function draw() {
     } else {
       player.handleGravity();
     }
-    managePlatforms();
+    platformManager.managePlatforms();
     manageFluid();
     handleFalling();
   }
 
   drawSprite(fluid);
-
-  for (let i = 0; i < platforms.length; i++) {
-    drawSprite(platforms[i]);
-  }
-
+  platformManager.drawPlatforms();
   drawSprite(player.sprite);
 }
 
@@ -156,22 +153,6 @@ function initializeVariables() {
   FLUID_HEIGHT_MIN = 40;
   FLUID_HEIGHT_MAX = 40 * 6;
   FLUID_COLORS = [color(0, 100, 100), color(100, 100, 100), color(200, 100, 100), color(255, 100, 100)];
-}
-
-
-function createPlatforms() {
-  platforms = new Group();
-  for (let i = 0; i < NUMBER_OF_PLATFORMS; i++) {
-    let platform = createSprite(
-      windowWidth / 2 + i * PLATFORM_SPACING,
-      random(PLATFORM_Y_MIN, PLATFORM_Y_MAX),
-      (i === 0) ? STARTING_PLATFORM_WIDTH : PLATFORM_WIDTH,
-      PLATFORM_HEIGHT
-    );
-    platform.shapeColor = platformColor;
-    platform.setSpeed(platformSpeed, 180);
-    platforms.add(platform);
-  }
 }
 
 
@@ -271,23 +252,6 @@ function handleControls() {
 }
 
 
-function managePlatforms() {
-  for (let i = 0; i < platforms.length; i++) {
-    if (platforms[i].position.x < -platforms[i].width / 2) {
-      spawnPlatform(platforms[i]);
-    }
-    platforms[i].setSpeed(platformSpeed * songSpeed, 180);
-  }
-}
-
-
-function spawnPlatform(platform) {
-  platform.width = PLATFORM_WIDTH; // to reset initial platform
-  platform.position.x = windowWidth + PLATFORM_WIDTH / 2;
-  platform.position.y = random(PLATFORM_Y_MIN, PLATFORM_Y_MAX);
-}
-
-
 function manageFluid() {
   if (fluid.position.x < -fluid.width / 2) {
     spawnFluid();
@@ -310,9 +274,9 @@ function handleFalling() {
     player.isReviving = true;
     player.gravitySpeed = 0;
     filter.set(200, 1);
-    for (let i = 0; i < platforms.length; i++) {
-      platforms[i].shapeColor = platformColorInactive;
-      platforms[i].setSpeed(0, 180);
+    for (let i = 0; i < platformManager.platforms.length; i++) {
+      platformManager.platforms[i].shapeColor = platformColorInactive;
+      platformManager.platforms[i].setSpeed(0, 180);
     }
     fluid.setSpeed(0, 180);
     player.sprite.setSpeed(50, 270);
@@ -326,9 +290,9 @@ function revivingLoop() {
     if (keyDown(' ')) {
       player.isReviving = false;
       filter.set(22050, 0);
-      for (let i = 0; i < platforms.length; i++) {
-        platforms[i].shapeColor = platformColor;
-        platforms[i].setSpeed(platformSpeed, 180);
+      for (let i = 0; i < platformManager.platforms.length; i++) {
+        platformManager.platforms[i].shapeColor = platformColor;
+        platformManager.platforms[i].setSpeed(platformSpeed, 180);
       }
       fluid.setSpeed(platformSpeed, 180);
     } else if (keyIsDown(RIGHT_ARROW)) {
