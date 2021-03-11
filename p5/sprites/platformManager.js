@@ -17,7 +17,7 @@ class PlatformManager {
   managePlatforms() {
     for (let i = 0; i < this.platforms.length; i++) {
       if (this.platforms[i].position.x < -this.platforms[i].width / 2) {
-        spawnPlatform(platforms[i]);
+        this.spawnPlatform(this.platforms[i]);
       }
       this.platforms[i].setSpeed(platformSpeed * songSpeed, 180);
     }
