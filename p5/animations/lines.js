@@ -20,7 +20,7 @@ class Lines {
     posY = windowHeight / 2;
   }
 
-  drawLines() {
+  drawLines(volumeDrawMode, rms) {
     noStroke();
 
     for (let i = 0; i <= map(rms, 0, 0.05, 0, windowWidth); i++) {

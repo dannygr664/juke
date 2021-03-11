@@ -13,16 +13,11 @@
 let song;
 let audioManager;
 
+let animationController;
+
 let player;
 let platformManager;
 let fluidManager;
-
-let drawMode;
-
-let volumeDrawMode = 0;
-let noiseAnim;
-let boxesAnim;
-let linesAnim;
 
 function preload() {
   soundFormats('wav', 'mp3');
@@ -42,10 +37,7 @@ function setup() {
   noStroke();
   drawMode = 0;
 
-  noiseAnim = new Noise();
-  boxesAnim = new Boxes();
-  linesAnim = new Lines();
-  blindsAnim = new Blinds();
+  animationController = new AnimationController();
 
   textAlign(LEFT, TOP)
   textFont('Helvetica Neue');
@@ -62,11 +54,7 @@ function draw() {
 
   audioManager.update();
 
-  if (drawMode == 0) {
-    drawVolumeAnimations();
-  } else {
-    drawFrequencyAnimations();
-  }
+  animationController.draw();
 
   drawUI();
 
@@ -125,33 +113,6 @@ function drawSongSpeedMeter() {
 }
 
 
-function drawVolumeAnimations() {
-  rms = audioManager.amplitudeAnalyzer.getLevel();
-
-  if (volumeDrawMode === 3) {
-    noiseAnim.drawNoise(player.isReviving);
-  } else if (volumeDrawMode === 4) {
-    boxesAnim.drawBoxes(player.isReviving);
-  } else if (volumeDrawMode === 5) {
-    blindsAnim.drawBlinds();
-  } else {
-    linesAnim.drawLines();
-  }
-}
-
-
-function drawFrequencyAnimations() {
-  fill(255, 0, 90, 80);
-
-  let spectrum = audioManager.fft.analyze();
-
-  spectrumStep = 10;
-  for (i = 0; i < spectrum.length; i += spectrumStep) {
-    rect(map(i, 0, spectrum.length - 1, 0, windowWidth), 0, windowWidth / (255 / spectrumStep), map(spectrum[i], 0, 255, height, 0));
-  }
-}
-
-
 function handleControls() {
   if (keyIsDown(RIGHT_ARROW)) {
     player.sprite.setSpeed(player.speed, 0);
@@ -187,29 +148,28 @@ function revivingLoop() {
   }
 }
 
-
 function keyReleased() {
   if (keyCode === SHIFT) {
-    (drawMode === 0) ? (drawMode = 1) : (drawMode = 0);
+    (animationController.drawMode === 0) ? (animationController.drawMode = 1) : (animationController.drawMode = 0);
   }
 
   if (key == '1') {
-    volumeDrawMode = 1;
+    animationController.volumeDrawMode = 1;
     stepSize = 1;
     diameter = 1;
   }
   if (key == '2') {
-    volumeDrawMode = 2;
+    animationController.volumeDrawMode = 2;
     stepSize = 1;
     diameter = 1;
   }
   if (key == '3') {
-    volumeDrawMode = 3;
+    animationController.volumeDrawMode = 3;
   }
   if (key == '4') {
-    volumeDrawMode = 4;
+    animationController.volumeDrawMode = 4;
   }
   if (key == '5') {
-    volumeDrawMode = 5;
+    animationController.volumeDrawMode = 5;
   }
 }

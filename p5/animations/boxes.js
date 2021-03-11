@@ -6,8 +6,8 @@ class Boxes {
     maxDistance = windowWidth;
   }
 
-  drawBoxes(isReviving) {
-    fill(isReviving ? platformColorInactive : platformColor, agentAlpha);
+  drawBoxes(rms) {
+    fill(player.isReviving ? platformManager.platformColorInactive : platformManager.platformColorActive, agentAlpha);
 
     for (let gridY = 0; gridY < windowHeight; gridY += 25) {
       for (let gridX = 0; gridX < windowWidth; gridX += 25) {

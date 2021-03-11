@@ -11,7 +11,7 @@ class Blinds {
     origamiColor = color(200, 50, 50, 20);
   }
 
-  drawBlinds() {
+  drawBlinds(rms) {
     fill(origamiColor);
     randomSeed(actRandomSeed);
 
