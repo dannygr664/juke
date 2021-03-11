@@ -11,8 +11,7 @@
  */
 
 let song;
-let amplitudeAnalyzer, fft;
-let filter, filterFreq, filterRes;
+let audioManager;
 
 let player;
 let platformManager;
@@ -32,7 +31,7 @@ function preload() {
 
 
 function setup() {
-  initializeAudio();
+  audioManager = new AudioManager(song);
 
   colorMode(HSB, 360, 100, 100, 100);
 
@@ -62,8 +61,7 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  updateVolume();
-  updateSongSpeed();
+  audioManager.update();
 
   if (drawMode == 0) {
     drawVolumeAnimations();
@@ -73,7 +71,7 @@ function draw() {
 
   drawUI();
 
-  player.speed = player.baseSpeed * songSpeed;
+  player.speed = player.baseSpeed * audioManager.songSpeed;
 
   if (player.isReviving) {
     revivingLoop();
@@ -104,56 +102,8 @@ function draw() {
 }
 
 
-function initializeAudio() {
-  filter = new p5.LowPass();
-  filter.set(22050, 0);
-
-  song.disconnect();
-  song.connect(filter);
-
-  song.loop();
-
-  INITIAL_VOLUME = 0;
-  volume = INITIAL_VOLUME;
-  VOLUME_STEP = 0.01;
-
-  songSpeed = 1;
-  SONG_SPEED_STEP = 0.01;
-
-  // Volume analysis
-  amplitudeAnalyzer = new p5.Amplitude();
-  amplitudeAnalyzer.setInput(song);
-
-  // Pitch analysis
-  fft = new p5.FFT;
-  fft.setInput(song);
-}
-
-
 function initializeVariables() {
   backgroundColor = color(255);
-}
-
-
-function updateVolume() {
-  if (keyDown('q' || 'Q')) {
-    volume += VOLUME_STEP;
-  } else if (keyDown('z' || 'Z')) {
-    volume -= VOLUME_STEP;
-  }
-  volume = constrain(volume, 0, 1);
-  song.amp(volume);
-}
-
-
-function updateSongSpeed() {
-  if (keyDown('w' || 'W')) {
-    songSpeed += SONG_SPEED_STEP;
-  } else if (keyDown('x' || 'X')) {
-    songSpeed -= SONG_SPEED_STEP;
-  }
-  songSpeed = constrain(songSpeed, 0.01, 4);
-  song.rate(songSpeed);
 }
 
 
@@ -167,7 +117,7 @@ function drawVolumeMeter() {
   fill(0);
   text('Volume', 0, 5);
   fill(0, 100, 50);
-  rect(70, 5, map(volume, 0, 1, 0, 200), 20);
+  rect(70, 5, map(audioManager.volume, 0, 1, 0, 200), 20);
   fill(0);
 }
 
@@ -176,13 +126,13 @@ function drawSongSpeedMeter() {
   fill(0);
   text('Speed', 0, 35);
   fill(95, 100, 50);
-  rect(70, 35, map(songSpeed, 0.01, 4, 0, 200), 20);
+  rect(70, 35, map(audioManager.songSpeed, 0.01, 4, 0, 200), 20);
   fill(0);
 }
 
 
 function drawVolumeAnimations() {
-  rms = amplitudeAnalyzer.getLevel();
+  rms = audioManager.amplitudeAnalyzer.getLevel();
 
   if (volumeDrawMode === 3) {
     noiseAnim.drawNoise(player.isReviving);
@@ -199,7 +149,7 @@ function drawVolumeAnimations() {
 function drawFrequencyAnimations() {
   fill(255, 0, 90, 80);
 
-  let spectrum = fft.analyze();
+  let spectrum = audioManager.fft.analyze();
 
   spectrumStep = 10;
   for (i = 0; i < spectrum.length; i += spectrumStep) {
@@ -223,7 +173,7 @@ function handleFalling() {
   if (player.sprite.position.y > windowHeight) {
     player.isReviving = true;
     player.gravitySpeed = 0;
-    filter.set(200, 1);
+    audioManager.filter.set(200, 1);
     for (let i = 0; i < platformManager.platforms.length; i++) {
       platformManager.platforms[i].shapeColor = platformManager.platformColorInactive;
       platformManager.platforms[i].setSpeed(0, 180);
@@ -241,7 +191,7 @@ function revivingLoop() {
     player.sprite.setSpeed(0, 270);
     if (keyDown(' ')) {
       player.isReviving = false;
-      filter.set(22050, 0);
+      audioManager.filter.set(22050, 0);
       for (let i = 0; i < platformManager.platforms.length; i++) {
         platformManager.platforms[i].shapeColor = platformManager.platformColorActive;
         platformManager.platforms[i].setSpeed(platformManager.baseSpeed, 180);

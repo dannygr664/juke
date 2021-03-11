@@ -52,7 +52,7 @@ class FluidManager {
       if (fluid.position.x < -fluid.width / 2) {
         this.spawnFluid(fluid);
       }
-      fluid.setSpeed(this.baseSpeed * songSpeed, 180);
+      fluid.setSpeed(this.baseSpeed * audioManager.songSpeed, 180);
     }
   }
 
