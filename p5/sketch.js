@@ -17,7 +17,6 @@ let filter, filterFreq, filterRes;
 let player;
 let platformManager;
 let fluidManager;
-let fluid;
 
 let drawMode;
 
@@ -133,18 +132,6 @@ function initializeAudio() {
 
 function initializeVariables() {
   backgroundColor = color(255);
-
-  platformColor = color(0);
-  platformColorInactive = color(255, 0, 70);
-  platformSpeed = 0.5;
-  STARTING_PLATFORM_WIDTH = 800;
-  PLATFORM_WIDTH = 250;
-  PLATFORM_HEIGHT = 5;
-  PLATFORM_Y_MIN = windowHeight / 4;
-  PLATFORM_Y_MAX = windowHeight;
-  PLATFORM_SPAWN_PROBABILITY = 0.006;
-  NUMBER_OF_PLATFORMS = 8;
-  PLATFORM_SPACING = 200;
 }
 
 
@@ -238,7 +225,7 @@ function handleFalling() {
     player.gravitySpeed = 0;
     filter.set(200, 1);
     for (let i = 0; i < platformManager.platforms.length; i++) {
-      platformManager.platforms[i].shapeColor = platformColorInactive;
+      platformManager.platforms[i].shapeColor = platformManager.platformColorInactive;
       platformManager.platforms[i].setSpeed(0, 180);
     }
     for (let i = 0; i < fluidManager.fluids.length; i++) {
@@ -256,11 +243,11 @@ function revivingLoop() {
       player.isReviving = false;
       filter.set(22050, 0);
       for (let i = 0; i < platformManager.platforms.length; i++) {
-        platformManager.platforms[i].shapeColor = platformColor;
-        platformManager.platforms[i].setSpeed(platformSpeed, 180);
+        platformManager.platforms[i].shapeColor = platformManager.platformColorActive;
+        platformManager.platforms[i].setSpeed(platformManager.baseSpeed, 180);
       }
       for (let i = 0; i < fluidManager.fluids.length; i++) {
-        fluidManager.fluids[i].setSpeed(platformSpeed, 180);
+        fluidManager.fluids[i].setSpeed(platformManager.baseSpeed, 180);
       }
     } else if (keyIsDown(RIGHT_ARROW)) {
       player.sprite.setSpeed(1.5, 0);

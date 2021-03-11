@@ -1,4 +1,4 @@
-const DEFAULT_BASE_SPEED = 0.5;
+const DEFAULT_BASE_FLUID_SPEED = 0.5;
 const NUMBER_OF_FLUIDS = 1;
 const FLUID_WIDTH_MIN = 50;
 const FLUID_WIDTH_MAX = 750;
@@ -15,7 +15,7 @@ let fluidSpacingMax;
 
 class FluidManager {
   constructor() {
-    this.baseSpeed = DEFAULT_BASE_SPEED;
+    this.baseSpeed = DEFAULT_BASE_FLUID_SPEED;
     this.speed = 0;
     this.fluidColors = [
       color(0, 100, 100),
