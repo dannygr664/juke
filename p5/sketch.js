@@ -14,6 +14,7 @@ let song;
 let audioManager;
 
 let animationController;
+let uiManager;
 
 let player;
 let platformManager;
@@ -39,9 +40,7 @@ function setup() {
 
   animationController = new AnimationController();
 
-  textAlign(LEFT, TOP)
-  textFont('Helvetica Neue');
-  textSize(20);
+  uiManager = new UIManager();
 
   player = new Player();
   platformManager = new PlatformManager();
@@ -56,7 +55,7 @@ function draw() {
 
   animationController.draw();
 
-  drawUI();
+  uiManager.drawUI();
 
   player.speed = player.baseSpeed * audioManager.songSpeed;
 
@@ -75,30 +74,6 @@ function draw() {
   fluidManager.drawFluids();
   platformManager.drawPlatforms();
   drawSprite(player.sprite);
-}
-
-
-function drawUI() {
-  drawVolumeMeter();
-  drawSongSpeedMeter();
-}
-
-
-function drawVolumeMeter() {
-  fill(0);
-  text('Volume', 0, 5);
-  fill(0, 100, 50);
-  rect(70, 5, map(audioManager.volume, 0, 1, 0, 200), 20);
-  fill(0);
-}
-
-
-function drawSongSpeedMeter() {
-  fill(0);
-  text('Speed', 0, 35);
-  fill(95, 100, 50);
-  rect(70, 35, map(audioManager.songSpeed, 0.01, 4, 0, 200), 20);
-  fill(0);
 }
 
 
