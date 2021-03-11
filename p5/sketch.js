@@ -26,7 +26,7 @@ let boxesAnim;
 let linesAnim;
 
 function preload() {
-  soundFormats('wav');
+  soundFormats('wav', 'mp3');
   song = loadSound('audio/Calvin.wav');
 }
 
