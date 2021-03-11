@@ -18,12 +18,12 @@ class FluidManager {
     this.fluids = new Group();
 
     fluidXInitial = windowWidth * 2;
-    this.fluidWidthMin = windowWidth / 5;
+    this.fluidWidthMin = windowWidth / 1.5;
     this.fluidWidthMax = windowWidth;
-    this.fluidHeightMin = windowHeight / 5;
+    this.fluidHeightMin = windowHeight / 1.5;
     this.fluidHeightMax = windowHeight;
     this.fluidYMin = windowHeight / 2 - windowHeight / 8;
-    this.fluidYMax = windowHeight;
+    this.fluidYMax = windowHeight / 2;
     this.fluidSpacingMin = windowWidth / 8;
     this.fluidSpacingMax = windowWidth;
 
