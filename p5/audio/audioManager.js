@@ -7,6 +7,9 @@ const SONG_SPEED_MIN = 0.01;
 const SONG_SPEED_MAX = 4;
 const SONG_SPEED_STEP = 0.01;
 
+const ALIVE_LPF_CUTOFF = 22050;
+const ALIVE_LPF_PEAK_VOLUME = 0;
+
 const REVIVING_LPF_CUTOFF = 200;
 const REVIVING_LPF_PEAK_VOLUME = 0;
 
@@ -63,5 +66,9 @@ class AudioManager {
 
   handleFalling() {
     this.filter.set(REVIVING_LPF_CUTOFF, REVIVING_LPF_PEAK_VOLUME);
+  }
+
+  handleRevived() {
+    this.filter.set(ALIVE_LPF_CUTOFF, ALIVE_LPF_PEAK_VOLUME);
   }
 }

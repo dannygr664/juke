@@ -59,4 +59,11 @@ class PlatformManager {
       this.platforms[i].setSpeed(0, 180);
     }
   }
+
+  handleRevived() {
+    for (let i = 0; i < this.platforms.length; i++) {
+      this.platforms[i].shapeColor = this.platformColorActive;
+      this.platforms[i].setSpeed(this.baseSpeed, 180);
+    }
+  }
 }

@@ -78,4 +78,10 @@ class FluidManager {
       this.fluids[i].setSpeed(0, 180);
     }
   }
+
+  handleRevived() {
+    for (let i = 0; i < this.fluids.length; i++) {
+      this.fluids[i].setSpeed(this.baseSpeed, 180);
+    }
+  }
 }

@@ -184,20 +184,11 @@ function revivingLoop() {
     player.sprite.setSpeed(0, 270);
     if (keyDown(' ')) {
       player.isReviving = false;
-      audioManager.filter.set(22050, 0);
-      for (let i = 0; i < platformManager.platforms.length; i++) {
-        platformManager.platforms[i].shapeColor = platformManager.platformColorActive;
-        platformManager.platforms[i].setSpeed(platformManager.baseSpeed, 180);
-      }
-      for (let i = 0; i < fluidManager.fluids.length; i++) {
-        fluidManager.fluids[i].setSpeed(platformManager.baseSpeed, 180);
-      }
-    } else if (keyIsDown(RIGHT_ARROW)) {
-      player.sprite.setSpeed(1.5, 0);
-    } else if (keyIsDown(LEFT_ARROW)) {
-      player.sprite.setSpeed(1.5, 180);
+      audioManager.handleRevived();
+      platformManager.handleRevived();
+      fluidManager.handleRevived();
     } else {
-      player.sprite.setSpeed(0, 0);
+      handleControls();
     }
   }
 }
