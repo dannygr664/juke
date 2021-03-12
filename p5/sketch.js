@@ -199,4 +199,13 @@ function keyReleased() {
   if (key == '5') {
     animationController.volumeDrawMode = 5;
   }
+  if (key == '6') {
+    audioManager.toggleSound(0);
+  }
+  if (key == '7') {
+    audioManager.toggleSound(1);
+  }
+  if (key == '8') {
+    audioManager.toggleSound(2);
+  }
 }

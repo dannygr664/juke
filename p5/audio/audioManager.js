@@ -32,16 +32,19 @@ class AudioManager {
 
     masterVolume(this.volume, this.volumeRampTime);
 
-    this.sound = sounds[0];
-    this.sound.loop();
+    this.loopSoundWithAnalysis(sounds[0]);
+  }
+
+  loopSoundWithAnalysis(sound) {
+    sound.loop();
 
     // Volume analysis
     this.amplitudeAnalyzer = new p5.Amplitude();
-    this.amplitudeAnalyzer.setInput(this.sound);
+    this.amplitudeAnalyzer.setInput(sound);
 
     // Pitch analysis
     this.fft = new p5.FFT;
-    this.fft.setInput(this.sound);
+    this.fft.setInput(sound);
   }
 
   update() {
@@ -59,7 +62,6 @@ class AudioManager {
     masterVolume(this.volume, this.volumeRampTime);
   }
 
-
   // updateSoundSpeed() {
   //   if (keyDown('w' || 'W')) {
   //     this.soundSpeed += SOUND_SPEED_STEP;
@@ -70,11 +72,12 @@ class AudioManager {
   //   this.sound.rate(this.soundSpeed);
   // }
 
-
   updateSoundSpeed(newSpeed) {
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
     this.soundSpeed = newSpeed;
-    this.sound.rate(newSpeed);
+    sounds.filter(sound => sound.isPlaying()).forEach(sound => {
+      sound.rate(newSpeed);
+    });
   }
 
   handleFalling() {
@@ -83,5 +86,13 @@ class AudioManager {
 
   handleRevived() {
     this.filter.set(ALIVE_LPF_CUTOFF, ALIVE_LPF_PEAK_VOLUME);
+  }
+
+  toggleSound(soundIndex) {
+    if (sounds[soundIndex].isPlaying()) {
+      sounds[soundIndex].stop();
+    } else {
+      this.loopSoundWithAnalysis(sounds[soundIndex]);
+    }
   }
 }
