@@ -80,8 +80,6 @@ function draw() {
 
   animationController.draw();
 
-  uiManager.drawUI();
-
   player.speed = player.baseSpeed * audioManager.soundSpeed;
 
   if (player.isReviving) {
@@ -99,6 +97,7 @@ function draw() {
   fluidManager.drawFluids();
   platformManager.drawPlatforms();
   drawSprite(player.sprite);
+  uiManager.drawUI();
 }
 
 
