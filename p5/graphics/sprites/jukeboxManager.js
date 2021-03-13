@@ -1,18 +1,19 @@
-const DEFAULT_BASE_JUKEBOX_SPEED = 0.5;
+const DEFAULT_BASE_JUKEBOX_SPEED = 0;
 const NUMBER_OF_JUKEBOXES = 1;
-
-let jukeboxColors;
 
 class JukeboxManager {
   constructor() {
     this.baseSpeed = DEFAULT_BASE_JUKEBOX_SPEED;
     this.speed = 0;
-    this.jukeboxColors = [
+    this.jukeboxAnimationColors = [
+      ColorScheme.BLACK,
       ColorScheme.RED,
       ColorScheme.BLUE,
       ColorScheme.GREEN,
       ColorScheme.YELLOW,
     ];
+    this.currentAnimationColor = ColorScheme.BLACK;
+
     this.jukeboxes = new Group();
 
     const JUKEBOX_WIDTH = 40;
@@ -49,6 +50,8 @@ class JukeboxManager {
   }
 
   spawnJukebox(jukebox) {
+    this.currentAnimationColor = random(this.jukeboxAnimationColors);
+    animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     jukebox.position.x = windowWidth + jukebox.width / 2;
   }
 
@@ -69,7 +72,7 @@ class JukeboxManager {
   }
 
   handleRevived() {
-    animationController.setJukeboxAnimationColor(ColorScheme.BLACK);
+    animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       this.jukeboxes[i].setSpeed(this.baseSpeed, 180);
     }

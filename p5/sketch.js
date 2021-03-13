@@ -123,6 +123,7 @@ function draw() {
 
     platformManager.managePlatforms();
     fluidManager.manageFluids();
+    jukeboxManager.manageJukeboxes();
     handleFalling();
   }
 
