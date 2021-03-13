@@ -1,3 +1,5 @@
+const FOREGROUND_ANIMATIONS = [0, 3, 4];
+
 let noiseAnim;
 let boxesAnim;
 let linesAnim;
@@ -53,10 +55,18 @@ class AnimationController {
     }
   }
 
-  drawSoundAnimations() {
-    audioManager.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
-      this.drawSoundAnimation(sound);
-    });
+  drawBackgroundSoundAnimations() {
+    audioManager.sounds
+      .filter(sound => sound.isPlaying())
+      .filter(sound => FOREGROUND_ANIMATIONS.indexOf(sound.animation) === -1)
+      .forEach(sound => { this.drawSoundAnimation(sound); });
+  }
+
+  drawForegroundSoundAnimations() {
+    audioManager.sounds
+      .filter(sound => sound.isPlaying())
+      .filter(sound => FOREGROUND_ANIMATIONS.indexOf(sound.animation) !== -1)
+      .forEach(sound => { this.drawSoundAnimation(sound); });
   }
 
   drawSoundAnimation(sound) {

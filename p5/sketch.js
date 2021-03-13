@@ -110,7 +110,7 @@ function draw() {
 
   // audioManager.update();
 
-  animationController.drawSoundAnimations();
+  animationController.drawBackgroundSoundAnimations();
 
   player.speed = player.baseSpeed * audioManager.soundSpeed;
 
@@ -127,6 +127,7 @@ function draw() {
   }
 
   fluidManager.drawFluids();
+  animationController.drawForegroundSoundAnimations();
   jukebox.drawJukebox();
   platformManager.drawPlatforms();
   drawSprite(player.sprite);
