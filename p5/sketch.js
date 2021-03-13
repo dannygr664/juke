@@ -54,6 +54,7 @@ function getAudioFilePaths() {
 function loadSounds() {
   for (let i = 0; i < audioFilePaths.length; i++) {
     let sound = loadSound(audioFilePaths[i]);
+    sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePaths[i]);
     let animation = i % NUMBER_OF_ANIMATIONS;
     if (animation === 5) {
       sound.animationType = 1;
