@@ -25,6 +25,7 @@ let jukebox;
 function preload() {
   soundFormats('wav', 'mp3');
   getAudioFilePaths();
+  animationController = new AnimationController();
   loadSounds();
 }
 
@@ -55,13 +56,12 @@ function loadSounds() {
   for (let i = 0; i < audioFilePaths.length; i++) {
     let sound = loadSound(audioFilePaths[i]);
     sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePaths[i]);
-    let animation = i % NUMBER_OF_ANIMATIONS;
-    if (animation === 5) {
-      sound.animationType = 1;
-    } else {
-      sound.animationType = 0;
-    }
-    sound.animation = animation;
+
+    sound.animation = animationController.getSoundAnimationForSound(sound);
+    sound.animationType = animationController.getSoundAnimationTypeForSoundAnimation(
+      sound.animation
+    );
+
     sounds.push(sound);
   }
 }
@@ -80,8 +80,6 @@ function setup() {
   fill(0);
   noStroke();
   drawMode = 0;
-
-  animationController = new AnimationController();
 
   uiManager = new UIManager();
 
