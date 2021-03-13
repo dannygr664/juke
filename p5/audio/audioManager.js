@@ -24,14 +24,13 @@ class AudioManager {
     this.sounds.forEach(sound => {
       sound.disconnect();
       sound.connect(this.filter);
+      sound.amp(INITIAL_VOLUME);
     });
 
     this.volume = INITIAL_VOLUME;
     this.volumeRampTime = INITIAL_VOLUME_RAMP_TIME;
 
     this.soundSpeed = INITIAL_SOUND_SPEED;
-
-    masterVolume(this.volume, this.volumeRampTime);
 
     this.loopSoundWithAnalysisAndAnimation(
       this.sounds[0],
@@ -69,7 +68,7 @@ class AudioManager {
   //     this.volume -= VOLUME_STEP;
   //   }
   //   this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-  //   masterVolume(this.volume, this.volumeRampTime);
+  //   updateVolume(this.volume);
   // }
 
   // updateSoundSpeed() {
@@ -79,17 +78,15 @@ class AudioManager {
   //     this.soundSpeed -= SOUND_SPEED_STEP;
   //   }
   //   this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
-  //   this.sound.rate(this.soundSpeed);
+  //   updateSoundSpeed(this.soundSpeed);
   // }
-
-  getMasterVolume() {
-    getMasterVolume();
-  }
 
   updateVolume(newVolume) {
     this.volume = newVolume;
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-    masterVolume(this.volume, this.volumeRampTime);
+    this.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
+      sound.amp(this.volume, this.volumeRampTime);
+    });
   }
 
   updateSoundSpeed(newSpeed) {
