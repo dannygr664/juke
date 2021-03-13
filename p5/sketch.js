@@ -12,7 +12,6 @@
 
 let audioFilePaths = [];
 let sounds = [];
-let nextSound = 0;
 let audioManager;
 
 let animationController;
@@ -200,8 +199,6 @@ function keyReleased() {
     audioManager.toggleSound(11);
   }
   if (key == '3') {
-    audioManager.toggleSound(nextSound);
-    nextSound = (nextSound + 1) % (sounds.length - 2);
-    audioManager.toggleSound(nextSound);
+    audioManager.playNextSound();
   }
 }

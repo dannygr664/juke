@@ -15,6 +15,8 @@ const ALIVE_LPF_PEAK_VOLUME = 0;
 const REVIVING_LPF_CUTOFF = 200;
 const REVIVING_LPF_PEAK_VOLUME = 0;
 
+const NUMBER_OF_INSTRUMENTS = 2;
+
 class AudioManager {
   constructor(sounds) {
     this.filter = new p5.LowPass();
@@ -38,6 +40,8 @@ class AudioManager {
       this.sounds[0].animationType ?? DEFAULT_ANIMATION_TYPE,
       this.sounds[0].animation ?? DEFAULT_ANIMATION
     );
+
+    this.nextSound = 0;
   }
 
   loopSoundWithAnalysisAndAnimation(sound, animationType, animation) {
@@ -106,5 +110,11 @@ class AudioManager {
         this.sounds[soundIndex].animation ?? DEFAULT_ANIMATION
       );
     }
+  }
+
+  playNextSound() {
+    audioManager.toggleSound(this.nextSound);
+    this.nextSound = (this.nextSound + 1) % (this.sounds.length - NUMBER_OF_INSTRUMENTS);
+    audioManager.toggleSound(this.nextSound);
   }
 }
