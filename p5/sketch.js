@@ -193,7 +193,7 @@ function handleFluidEnter(_, fluid) {
 }
 
 function handleJukeboxEnter(_, _) {
-  colorFilter = ColorScheme.getFilterColor(jukeboxManager.currentAnimationColor);
+  // colorFilterter = ColorScheme.getFilterColor(jukeboxManager.currentAnimationColor);
   // switch (fluid.shapeColor) {
   //   case ColorScheme.RED:
   //     audioManager.updateVolume(1);
