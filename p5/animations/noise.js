@@ -3,7 +3,7 @@ let agents = [];
 let agentCount = 100;
 let noiseScale = 0.1;
 let noiseStrength = 0.1;
-let overlayAlpha = 50;
+let overlayAlpha = 0;
 let agentAlpha = 10;
 let strokeWidth = 0.3;
 
@@ -15,6 +15,7 @@ class Noise {
   }
 
   drawNoise(rms) {
+    push();
     fill(255, overlayAlpha);
     rect(0, 0, windowWidth, windowHeight);
 
@@ -27,7 +28,7 @@ class Noise {
       agents[i].update1(noiseScale, noiseStrength, strokeWidth);
     }
 
-    noStroke();
+    pop();
   }
 }
 
