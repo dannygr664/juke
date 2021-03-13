@@ -1,5 +1,5 @@
 const INITIAL_VOLUME = 0.5;
-const INITIAL_VOLUME_RAMP_TIME = 0.05;
+const INITIAL_VOLUME_RAMP_TIME = 0.2;
 const VOLUME_MIN = 0;
 const VOLUME_MAX = 1;
 const VOLUME_STEP = 0.01;
@@ -83,6 +83,10 @@ class AudioManager {
   //   this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
   //   this.sound.rate(this.soundSpeed);
   // }
+
+  getMasterVolume() {
+    getMasterVolume();
+  }
 
   updateVolume(newVolume) {
     this.volume = newVolume;
