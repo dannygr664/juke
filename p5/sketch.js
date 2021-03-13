@@ -92,7 +92,7 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  audioManager.update();
+  // audioManager.update();
 
   animationController.draw();
 
@@ -137,7 +137,7 @@ function handleCollisionsAndJumping() {
   }
 
   if (!player.sprite.overlap(fluidManager.fluids, handleFluidEnter)) {
-    audioManager.updateSoundSpeed(INITIAL_SOUND_SPEED);
+    audioManager.updateVolume(INITIAL_VOLUME);
   }
 
   if (player.jumpSpeed > 0) {
@@ -152,16 +152,16 @@ function handleCollisionsAndJumping() {
 function handleFluidEnter(_, fluid) {
   switch (fluid.shapeColor) {
     case ColorScheme.RED:
-      audioManager.updateSoundSpeed(0.5);
+      audioManager.updateVolume(1);
       break;
     case ColorScheme.BLUE:
-      audioManager.updateSoundSpeed(1.5);
+      audioManager.updateVolume(0.25);
       break;
     case ColorScheme.GREEN:
-      audioManager.updateSoundSpeed(4);
+      audioManager.updateVolume(0);
       break;
     case ColorScheme.YELLOW:
-      audioManager.updateSoundSpeed(2);
+      audioManager.updateVolume(0.75);
       break;
   }
 }

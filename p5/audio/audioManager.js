@@ -59,20 +59,20 @@ class AudioManager {
     sound.animation = animation;
   }
 
-  update() {
-    this.updateVolume();
-    //this.updateSoundSpeed();
-  }
+  // update() {
+  //   this.updateVolume();
+  //   this.updateSoundSpeed();
+  // }
 
-  updateVolume() {
-    if (keyDown('q' || 'Q')) {
-      this.volume += VOLUME_STEP;
-    } else if (keyDown('z' || 'Z')) {
-      this.volume -= VOLUME_STEP;
-    }
-    this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-    masterVolume(this.volume, this.volumeRampTime);
-  }
+  // updateVolume() {
+  //   if (keyDown('q' || 'Q')) {
+  //     this.volume += VOLUME_STEP;
+  //   } else if (keyDown('z' || 'Z')) {
+  //     this.volume -= VOLUME_STEP;
+  //   }
+  //   this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
+  //   masterVolume(this.volume, this.volumeRampTime);
+  // }
 
   // updateSoundSpeed() {
   //   if (keyDown('w' || 'W')) {
@@ -84,9 +84,15 @@ class AudioManager {
   //   this.sound.rate(this.soundSpeed);
   // }
 
+  updateVolume(newVolume) {
+    this.volume = newVolume;
+    this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
+    masterVolume(this.volume, this.volumeRampTime);
+  }
+
   updateSoundSpeed(newSpeed) {
-    this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
     this.soundSpeed = newSpeed;
+    this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
     this.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.rate(newSpeed);
     });
