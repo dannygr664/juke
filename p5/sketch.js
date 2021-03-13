@@ -48,6 +48,24 @@ function getAudioFilePaths() {
   etherealAudioFileNames.forEach(etherealAudioFileName => {
     audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.mp3`);
   });
+
+  let lofiAudioFileNames = [
+    'Break_87bpm4-4_L4M',
+    'Build_87bpm4-4_L1M',
+    'Cymbal_87bpm4-4_L2.5B',
+    'Ending_87bpm4-4_L4.5B',
+    'Intro_87bpm4-4_L4M',
+    'Section1_87bpm4-4_L4M',
+    'Section2_87bpm4-4_L9M',
+    'Section3_87bpm4-4_L14M',
+    'Section4_87bpm4-4_L4M',
+    'Section5_87bpm4-4_L4M',
+    'Section6_87bpm4-4_L14M',
+  ];
+
+  lofiAudioFileNames.forEach(lofiAudioFileName => {
+    audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.mp3`);
+  });
 }
 
 
