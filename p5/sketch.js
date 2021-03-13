@@ -4,9 +4,7 @@
  * CONTROLS:
  * - Left/Right arrow key to move
  * - Space to jump
- * - 1 to bring in/out synth
- * - 2 to bring in/out bass
- * - 3 to cycle through vocal parts
+ * - 1 to cycle through parts
  */
 
 let audioFilePaths = [];
@@ -214,12 +212,6 @@ function revivingLoop() {
 
 function keyReleased() {
   if (key == '1') {
-    audioManager.toggleSound(10);
-  }
-  if (key == '2') {
-    audioManager.toggleSound(11);
-  }
-  if (key == '3') {
     audioManager.playNextSound();
   }
 }

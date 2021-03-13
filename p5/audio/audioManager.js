@@ -15,8 +15,6 @@ const ALIVE_LPF_PEAK_VOLUME = 0;
 const REVIVING_LPF_CUTOFF = 200;
 const REVIVING_LPF_PEAK_VOLUME = 0;
 
-const NUMBER_OF_INSTRUMENTS = 2;
-
 class AudioManager {
   constructor(sounds) {
     this.filter = new p5.LowPass();
@@ -126,7 +124,7 @@ class AudioManager {
 
   playNextSound() {
     audioManager.toggleSound(this.currentSound);
-    this.currentSound = (this.currentSound + 1) % (this.sounds.length - NUMBER_OF_INSTRUMENTS);
+    this.currentSound = (this.currentSound + 1) % (this.sounds.length);
     audioManager.toggleSound(this.currentSound);
   }
 }
