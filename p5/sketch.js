@@ -7,7 +7,6 @@
  * - 1 to bring in/out synth
  * - 2 to bring in/out bass
  * - 3 to cycle through vocal parts
- * - Q/Z to increase/decrease volume
  */
 
 let audioFilePaths = [];
