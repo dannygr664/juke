@@ -1,4 +1,4 @@
-const DEFAULT_BASE_JUKEBOX_SPEED = 0;
+const DEFAULT_BASE_JUKEBOX_SPEED = 2;
 const NUMBER_OF_JUKEBOXES = 1;
 
 class JukeboxManager {

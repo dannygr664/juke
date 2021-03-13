@@ -13,8 +13,8 @@ class Moire {
     let lineHeight = dist(this.x1, this.y1, this.x2, this.y2);
     //let lineAngle = atan2(this.y2 - this.y1, this.x2 - this.x1);
     push();
-    fill(360, 50);
-    //rect(this.x1, 0, this.width * 0.8, window.height);
+    fill(ColorScheme.getFilterColor(this.color));
+    rect(this.x1, 0, this.width * 0.8, window.height);
     stroke(this.color);
     strokeWeight(5);
 
