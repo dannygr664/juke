@@ -1,9 +1,5 @@
 // Moire animation
-let shapes = [];
 let density = 8;
-let shapeHeight = 64;
-
-let newShape;
 
 class Moire {
   constructor(x1, y1, x2, y2, width, color) {
