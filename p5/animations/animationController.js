@@ -1,7 +1,3 @@
-const DEFAULT_ANIMATION_TYPE = 0;
-const DEFAULT_ANIMATION = 0;
-const NUMBER_OF_ANIMATIONS = 6;
-
 let noiseAnim;
 let boxesAnim;
 let linesAnim;

@@ -37,8 +37,8 @@ class AudioManager {
 
     this.loopSoundWithAnalysisAndAnimation(
       this.sounds[0],
-      this.sounds[0].animationType ?? DEFAULT_ANIMATION_TYPE,
-      this.sounds[0].animation ?? DEFAULT_ANIMATION
+      this.sounds[0].animationType,
+      this.sounds[0].animation
     );
 
     this.currentSound = 0;
@@ -117,8 +117,8 @@ class AudioManager {
     } else {
       this.loopSoundWithAnalysisAndAnimation(
         this.sounds[soundIndex],
-        this.sounds[soundIndex].animationType ?? DEFAULT_ANIMATION_TYPE,
-        this.sounds[soundIndex].animation ?? DEFAULT_ANIMATION
+        this.sounds[soundIndex].animationType,
+        this.sounds[soundIndex].animation
       );
       this.sounds[soundIndex].amp(this.volume, this.volumeRampTime);
     }
