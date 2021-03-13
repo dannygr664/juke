@@ -9,10 +9,9 @@ let WEST = 6;
 let NORTHWEST = 7;
 let direction;
 let stepSize = 1;
-let diameter = 1;
+let diameter = 5;
 let posX;
 let posY;
-let counter = 0;
 
 class Lines {
   constructor() {
@@ -32,13 +31,11 @@ class Lines {
     noStroke();
 
     for (let i = 0; i <= map(rms, 0, 0.05, 0, windowWidth); i++) {
-      counter++;
-
       // random number for the direction of the next step
       if (drawMode == 0) {
         direction = int(random(3));
       } else if (drawMode === 1) {
-        direction = int(random(7));
+        direction = int(random(map(rms, 0, 0.05, 3, 10)));
       }
 
       if (direction == NORTH) {
