@@ -16,7 +16,7 @@ class UIManager {
     fill(ColorScheme.BLACK);
     text('Volume', 0, 5);
     fill(0, 100, 50);
-    rect(70, 5, map(audioManager.getMasterVolume(), 0, 1, 0, 200), 20);
+    rect(70, 5, map(audioManager.volume, 0, 1, 0, 200), 20);
     pop();
   }
 
