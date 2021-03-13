@@ -164,6 +164,8 @@ function handleCollisionsAndJumping() {
     audioManager.updateVolume(INITIAL_VOLUME);
   }
 
+  player.sprite.overlap(jukeboxManager.jukeboxes, handleJukeboxEnter);
+
   if (player.jumpSpeed > 0) {
     player.jumpSpeed -= player.gravityForce;
     player.sprite.addSpeed(player.jumpSpeed, 270);
@@ -188,6 +190,24 @@ function handleFluidEnter(_, fluid) {
       audioManager.updateVolume(0.75);
       break;
   }
+}
+
+function handleJukeboxEnter(_, _) {
+  colorFilter = ColorScheme.getFilterColor(jukeboxManager.currentAnimationColor);
+  // switch (fluid.shapeColor) {
+  //   case ColorScheme.RED:
+  //     audioManager.updateVolume(1);
+  //     break;
+  //   case ColorScheme.BLUE:
+  //     audioManager.updateVolume(0.25);
+  //     break;
+  //   case ColorScheme.GREEN:
+  //     audioManager.updateVolume(0);
+  //     break;
+  //   case ColorScheme.YELLOW:
+  //     audioManager.updateVolume(0.75);
+  //     break;
+  // }
 }
 
 
