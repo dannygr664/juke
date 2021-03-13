@@ -41,7 +41,7 @@ class AudioManager {
       this.sounds[0].animation ?? DEFAULT_ANIMATION
     );
 
-    this.nextSound = 0;
+    this.currentSound = 0;
   }
 
   loopSoundWithAnalysisAndAnimation(sound, animationType, animation) {
@@ -123,8 +123,8 @@ class AudioManager {
   }
 
   playNextSound() {
-    audioManager.toggleSound(this.nextSound);
-    this.nextSound = (this.nextSound + 1) % (this.sounds.length - NUMBER_OF_INSTRUMENTS);
-    audioManager.toggleSound(this.nextSound);
+    audioManager.toggleSound(this.currentSound);
+    this.currentSound = (this.currentSound + 1) % (this.sounds.length - NUMBER_OF_INSTRUMENTS);
+    audioManager.toggleSound(this.currentSound);
   }
 }
