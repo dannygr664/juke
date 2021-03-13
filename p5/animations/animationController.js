@@ -38,6 +38,8 @@ class AnimationController {
     switch (sound.soundInfo.genre) {
       case 'Ethereal':
         return 0;
+      case 'LoFi':
+        return 1;
       default:
         return 0;
     }
