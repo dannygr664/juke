@@ -11,18 +11,22 @@ class UIManager {
   }
 
   drawVolumeMeter() {
-    fill(0);
+    push();
+    noStroke();
+    fill(ColorScheme.BLACK);
     text('Volume', 0, 5);
     fill(0, 100, 50);
     rect(70, 5, map(audioManager.getMasterVolume(), 0, 1, 0, 200), 20);
-    fill(0);
+    pop();
   }
 
   drawSoundSpeedMeter() {
-    fill(0);
+    push();
+    noStroke();
+    fill(ColorScheme.BLACK);
     text('Speed', 0, 35);
     fill(95, 100, 50);
     rect(70, 35, map(audioManager.soundSpeed, 0.01, 4, 0, 200), 20);
-    fill(0);
+    pop();
   }
 }
