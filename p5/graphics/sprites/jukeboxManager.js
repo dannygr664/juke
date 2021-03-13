@@ -7,16 +7,16 @@ class JukeboxManager {
     this.speed = 0;
     this.jukeboxAnimationColors = [
       ColorScheme.BLACK,
-      ColorScheme.RED,
-      ColorScheme.BLUE,
-      ColorScheme.GREEN,
-      ColorScheme.YELLOW,
+      ColorScheme.RED_SAT,
+      ColorScheme.BLUE_SAT,
+      ColorScheme.GREEN_SAT,
+      ColorScheme.YELLOW_SAT,
     ];
     this.currentAnimationColor = ColorScheme.BLACK;
 
     this.jukeboxes = new Group();
 
-    const JUKEBOX_WIDTH = 40;
+    const JUKEBOX_WIDTH = 60;
     const JUKEBOX_HEIGHT = windowHeight;
     const JUKEBOX_X_INITIAL = windowWidth + JUKEBOX_WIDTH / 2
     const JUKEBOX_Y_INITIAL = windowHeight / 2;

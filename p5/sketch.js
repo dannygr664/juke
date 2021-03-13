@@ -92,6 +92,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   backgroundColor = ColorScheme.WHITE;
+  colorFilter = ColorScheme.CLEAR;
   fill(0);
   noStroke();
   drawMode = 0;
@@ -133,6 +134,10 @@ function draw() {
   platformManager.drawPlatforms();
   drawSprite(player.sprite);
   uiManager.drawUI();
+  push();
+  fill(colorFilter);
+  rect(0, 0, window.width, window.height);
+  pop();
 }
 
 
