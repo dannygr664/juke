@@ -19,7 +19,7 @@ class Noise {
     rect(0, 0, windowWidth, windowHeight);
 
     noiseStrength = map(rms, 0, 0.1, 0, 20);
-    strokeWidth = map(rms, 0, 0.1, 0.1, map(audioManager.getMasterVolume(), 0, 1, 1, 4));
+    strokeWidth = map(rms, 0, 0.1, 0.1, map(audioManager.volume, 0, 1, 1, 4));
 
     // Draw agents
     stroke(player.isReviving ? ColorScheme.BLACK_INACTIVE : ColorScheme.BLACK, agentAlpha);
