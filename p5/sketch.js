@@ -4,10 +4,10 @@
  * CONTROLS:
  * - Left/Right arrow key to move
  * - Space to jump
- * - 1-5 to change volume animations
- * - Shift to switch between volume and frequency animations
+ * - 1 to bring in/out synth
+ * - 2 to bring in/out bass
+ * - 3 to cycle through vocal parts
  * - Q/Z to increase/decrease volume
- * - W/X to increase/decrease song speed
  */
 
 let audioFilePaths = [];
