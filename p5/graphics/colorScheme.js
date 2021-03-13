@@ -7,5 +7,6 @@ class ColorScheme {
     this.BLACK = color(0);
     this.BLACK_INACTIVE = color(0, 0, 70);
     this.WHITE = color(360);
+    this.CLEAR = color(360, 0);
   }
 }

@@ -7,6 +7,8 @@ let boxesAnim;
 let linesAnim;
 let blindsAnim;
 
+let moireAnim;
+
 class AnimationController {
   constructor() {
     noiseAnim = new Noise();
@@ -15,13 +17,34 @@ class AnimationController {
     blindsAnim = new Blinds();
   }
 
-  draw() {
+  createJukeboxAnimation(xPosition, width) {
+    moireAnim = new Moire(
+      xPosition,
+      0,
+      xPosition,
+      windowHeight,
+      width,
+      ColorScheme.BLACK
+    )
+  }
+
+  drawJukeboxAnimation(xPosition) {
+    moireAnim.x1 = xPosition;
+    moireAnim.x2 = xPosition;
+    moireAnim.drawMoire();
+  }
+
+  setJukeboxAnimationColor(color) {
+    moireAnim.color = color;
+  }
+
+  drawSoundAnimations() {
     audioManager.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
-      this.drawAnimation(sound);
+      this.drawSoundAnimation(sound);
     });
   }
 
-  drawAnimation(sound) {
+  drawSoundAnimation(sound) {
     if (sound.animationType === 0) {
       this.drawVolumeAnimations(sound);
     } else {

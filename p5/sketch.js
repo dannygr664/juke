@@ -20,6 +20,7 @@ let uiManager;
 let player;
 let platformManager;
 let fluidManager;
+let jukebox;
 
 function preload() {
   soundFormats('wav', 'mp3');
@@ -86,6 +87,7 @@ function setup() {
   player = new Player();
   platformManager = new PlatformManager();
   fluidManager = new FluidManager();
+  jukebox = new Jukebox();
 }
 
 
@@ -94,7 +96,7 @@ function draw() {
 
   // audioManager.update();
 
-  animationController.draw();
+  animationController.drawSoundAnimations();
 
   player.speed = player.baseSpeed * audioManager.soundSpeed;
 
@@ -111,6 +113,7 @@ function draw() {
   }
 
   fluidManager.drawFluids();
+  jukebox.drawJukebox();
   platformManager.drawPlatforms();
   drawSprite(player.sprite);
   uiManager.drawUI();
@@ -173,6 +176,7 @@ function handleFalling() {
     audioManager.handleFalling();
     platformManager.handleFalling();
     fluidManager.handleFalling();
+    jukebox.handleFalling();
   }
 }
 
@@ -185,6 +189,7 @@ function revivingLoop() {
       audioManager.handleRevived();
       platformManager.handleRevived();
       fluidManager.handleRevived();
+      jukebox.handleRevived();
     } else {
       handleControls();
     }
