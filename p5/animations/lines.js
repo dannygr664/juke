@@ -20,16 +20,24 @@ class Lines {
     posY = windowHeight / 2;
   }
 
-  drawLines(volumeDrawMode, rms) {
+  drawLines1(rms) {
+    this.drawLines(0, rms);
+  }
+
+  drawLines2(rms) {
+    this.drawLines(1, rms);
+  }
+
+  drawLines(drawMode, rms) {
     noStroke();
 
     for (let i = 0; i <= map(rms, 0, 0.05, 0, windowWidth); i++) {
       counter++;
 
       // random number for the direction of the next step
-      if (volumeDrawMode == 2) {
+      if (drawMode == 0) {
         direction = int(random(3));
-      } else {
+      } else if (drawMode === 1) {
         direction = int(random(7));
       }
 

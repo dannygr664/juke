@@ -20,7 +20,8 @@ class AudioManager {
     this.filter = new p5.LowPass();
     this.filter.set(22050, 0);
 
-    sounds.forEach(sound => {
+    this.sounds = sounds;
+    this.sounds.forEach(sound => {
       sound.disconnect();
       sound.connect(this.filter);
     });
@@ -32,19 +33,26 @@ class AudioManager {
 
     masterVolume(this.volume, this.volumeRampTime);
 
-    this.loopSoundWithAnalysis(sounds[0]);
+    this.loopSoundWithAnalysisAndAnimation(
+      this.sounds[0],
+      this.sounds[0].animationType ?? DEFAULT_ANIMATION_TYPE,
+      this.sounds[0].animation ?? DEFAULT_ANIMATION
+    );
   }
 
-  loopSoundWithAnalysis(sound) {
+  loopSoundWithAnalysisAndAnimation(sound, animationType, animation) {
     sound.loop();
 
     // Volume analysis
-    this.amplitudeAnalyzer = new p5.Amplitude();
-    this.amplitudeAnalyzer.setInput(sound);
+    sound.amplitudeAnalyzer = new p5.Amplitude();
+    sound.amplitudeAnalyzer.setInput(sound);
 
     // Pitch analysis
-    this.fft = new p5.FFT;
-    this.fft.setInput(sound);
+    sound.fft = new p5.FFT;
+    sound.fft.setInput(sound);
+
+    sound.animationType = animationType;
+    sound.animation = animation;
   }
 
   update() {
@@ -75,7 +83,7 @@ class AudioManager {
   updateSoundSpeed(newSpeed) {
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
     this.soundSpeed = newSpeed;
-    sounds.filter(sound => sound.isPlaying()).forEach(sound => {
+    this.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.rate(newSpeed);
     });
   }
@@ -89,10 +97,14 @@ class AudioManager {
   }
 
   toggleSound(soundIndex) {
-    if (sounds[soundIndex].isPlaying()) {
-      sounds[soundIndex].stop();
+    if (this.sounds[soundIndex].isPlaying()) {
+      this.sounds[soundIndex].stop();
     } else {
-      this.loopSoundWithAnalysis(sounds[soundIndex]);
+      this.loopSoundWithAnalysisAndAnimation(
+        this.sounds[soundIndex],
+        this.sounds[soundIndex].animationType ?? DEFAULT_ANIMATION_TYPE,
+        this.sounds[soundIndex].animation ?? DEFAULT_ANIMATION
+      );
     }
   }
 }

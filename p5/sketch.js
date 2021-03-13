@@ -12,6 +12,7 @@
 
 let audioFilePaths = [];
 let sounds = [];
+let nextSound = 0;
 let audioManager;
 
 let animationController;
@@ -32,20 +33,36 @@ function getAudioFilePaths() {
   let etherealAudioFileNames = [
     'Angel1_88bpm4-4_L8M',
     'Angel2_88bpm4-4_L17M',
-    'Angel3_88bpm4-4_L4M'
+    'Angel3_88bpm4-4_L4M',
+    'Angel4_88bpm4-4_L8M',
+    'Angel5_88bpm4-4_L8M',
+    'Angel6_88bpm4-4_L12M',
+    'Angel7_88bpm4-4_L12M',
+    'Mateo1_88bpm4-4_L17M',
+    'Mateo2_88bpm4-4_L17M',
+    'Mateo3_88bpm4-4_L17M',
+    'LostShipSynth_88bpm4-4_L4M',
+    'NeomazeBass_88bpm4-4_L4M'
   ];
 
   etherealAudioFileNames.forEach(etherealAudioFileName => {
-    audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}`);
+    audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.mp3`);
   });
 }
 
 
 function loadSounds() {
-  audioFilePaths.forEach(audioFilePath => {
-    let sound = loadSound(audioFilePath);
+  for (let i = 0; i < audioFilePaths.length; i++) {
+    let sound = loadSound(audioFilePaths[i]);
+    let animation = i % NUMBER_OF_ANIMATIONS;
+    if (animation === 5) {
+      sound.animationType = 1;
+    } else {
+      sound.animationType = 0;
+    }
+    sound.animation = animation;
     sounds.push(sound);
-  });
+  }
 }
 
 
@@ -176,36 +193,15 @@ function revivingLoop() {
 }
 
 function keyReleased() {
-  if (keyCode === SHIFT) {
-    (animationController.drawMode === 0) ? (animationController.drawMode = 1) : (animationController.drawMode = 0);
-  }
-
   if (key == '1') {
-    animationController.volumeDrawMode = 1;
-    stepSize = 1;
-    diameter = 1;
+    audioManager.toggleSound(10);
   }
   if (key == '2') {
-    animationController.volumeDrawMode = 2;
-    stepSize = 1;
-    diameter = 1;
+    audioManager.toggleSound(11);
   }
   if (key == '3') {
-    animationController.volumeDrawMode = 3;
-  }
-  if (key == '4') {
-    animationController.volumeDrawMode = 4;
-  }
-  if (key == '5') {
-    animationController.volumeDrawMode = 5;
-  }
-  if (key == '6') {
-    audioManager.toggleSound(0);
-  }
-  if (key == '7') {
-    audioManager.toggleSound(1);
-  }
-  if (key == '8') {
-    audioManager.toggleSound(2);
+    audioManager.toggleSound(nextSound);
+    nextSound = (nextSound + 1) % (sounds.length - 2);
+    audioManager.toggleSound(nextSound);
   }
 }
