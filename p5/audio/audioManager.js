@@ -112,13 +112,15 @@ class AudioManager {
 
   toggleSound(soundIndex) {
     if (this.sounds[soundIndex].isPlaying()) {
-      this.sounds[soundIndex].stop();
+      this.sounds[soundIndex].amp(0, this.volumeRampTime);
+      this.sounds[soundIndex].pause();
     } else {
       this.loopSoundWithAnalysisAndAnimation(
         this.sounds[soundIndex],
         this.sounds[soundIndex].animationType ?? DEFAULT_ANIMATION_TYPE,
         this.sounds[soundIndex].animation ?? DEFAULT_ANIMATION
       );
+      this.sounds[soundIndex].amp(this.volume, this.volumeRampTime);
     }
   }
 
