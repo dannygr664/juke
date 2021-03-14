@@ -97,6 +97,11 @@ function loadSounds() {
 
 
 function setup() {
+  // Disable scroll bar from appearing when pressing space
+  window.onkeydown = function (e) {
+    return !(e.keyCode == 32);
+  };
+
   audioManager = new AudioManager(sounds);
 
   colorMode(HSB, 360, 100, 100, 100);
