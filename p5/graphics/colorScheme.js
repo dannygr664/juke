@@ -15,7 +15,6 @@ class ColorScheme {
     this.GREEN_FILTER = color(142, 100, 40, FILTER_ALPHA);
     this.YELLOW_FILTER = color(40, 100, 95, FILTER_ALPHA);
     this.BLACK = color(0);
-    this.BLACK_FILTER = color(0, FILTER_ALPHA);
     this.BLACK_INACTIVE = color(0, 0, 70);
     this.BLACK_INACTIVE_FILTER = color(0, 0, 70, FILTER_ALPHA);
     this.WHITE = color(360);
@@ -38,7 +37,7 @@ class ColorScheme {
       case this.YELLOW_SAT:
         return this.YELLOW_FILTER;
       case this.BLACK:
-        return this.BLACK_FILTER;
+        return this.CLEAR;
       case this.BLACK_INACTIVE:
         return this.BLACK_INACTIVE_FILTER;
       case this.WHITE:
