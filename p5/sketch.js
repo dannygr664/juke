@@ -28,19 +28,33 @@ function preload() {
 
 
 function getAudioFilePaths() {
+  // let etherealAudioFileNames = [
+  //   'Angel1_88bpm4-4_L8M',
+  //   'Angel2_88bpm4-4_L17M',
+  //   'Angel3_88bpm4-4_L4M',
+  //   'Angel4_88bpm4-4_L8M',
+  //   'Angel5_88bpm4-4_L8M',
+  //   'Angel6_88bpm4-4_L12M',
+  //   'Angel7_88bpm4-4_L12M',
+  //   'Mateo1_88bpm4-4_L17M',
+  //   'Mateo2_88bpm4-4_L17M',
+  //   'Mateo3_88bpm4-4_L17M',
+  //   'LostShipSynth_88bpm4-4_L4M',
+  //   'NeomazeBass_88bpm4-4_L4M'
+  // ];
+
   let etherealAudioFileNames = [
     'Angel1_88bpm4-4_L8M',
-    'Angel2_88bpm4-4_L17M',
-    'Angel3_88bpm4-4_L4M',
-    'Angel4_88bpm4-4_L8M',
-    'Angel5_88bpm4-4_L8M',
-    'Angel6_88bpm4-4_L12M',
-    'Angel7_88bpm4-4_L12M',
-    'Mateo1_88bpm4-4_L17M',
-    'Mateo2_88bpm4-4_L17M',
-    'Mateo3_88bpm4-4_L17M',
-    'LostShipSynth_88bpm4-4_L4M',
-    'NeomazeBass_88bpm4-4_L4M'
+    '2Parts_88bpm4-4_L17M',
+    '3Parts_88bpm4-4_L17M',
+    '4Parts_88bpm4-4_L17M',
+    '5Parts_88bpm4-4_L17M',
+    '6Parts_88bpm4-4_L17M',
+    '7Parts_88bpm4-4_L17M',
+    '8Parts_88bpm4-4_L17M',
+    '9Parts_88bpm4-4_L17M',
+    '10Parts_88bpm4-4_L17M',
+    '11Parts_88bpm4-4_L21M',
   ];
 
   etherealAudioFileNames.forEach(etherealAudioFileName => {
