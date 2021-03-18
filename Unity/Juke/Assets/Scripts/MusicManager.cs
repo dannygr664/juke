@@ -134,7 +134,7 @@ public class MusicManager : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Q))
         {
-            Volume = Mathf.Clamp(Volume + 0.0005f, 0.0f, 1.0f);
+            Volume = Mathf.Clamp(Volume + 0.005f, 0.0f, 1.0f);
             FMOD.RESULT result = musicInstance.setVolume(Volume);
             if (result != FMOD.RESULT.OK)
             {
@@ -148,7 +148,7 @@ public class MusicManager : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Z))
         {
-            Volume = Mathf.Clamp(Volume - 0.0005f, 0.0f, 1.0f);
+            Volume = Mathf.Clamp(Volume - 0.005f, 0.0f, 1.0f);
             FMOD.RESULT result = musicInstance.setVolume(Volume);
             if (result != FMOD.RESULT.OK)
             {
