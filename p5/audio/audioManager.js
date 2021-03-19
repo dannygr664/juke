@@ -18,13 +18,13 @@ const REVIVING_LPF_PEAK_VOLUME = 0;
 class AudioManager {
   constructor() {
     soundFormats('wav', 'mp3');
-    this.audioFilePaths = this.getAudioFilePaths();
+    this.getAudioFilePaths();
     this.sounds = [];
     this.levelSounds = [];
   }
 
   getAudioFilePaths() {
-    let audioFilePaths = [];
+    this.audioFilePaths = [];
 
     let etherealAudioFileNames = [
       'Angel1_88bpm4-4_L8M',
@@ -41,7 +41,7 @@ class AudioManager {
     ];
 
     etherealAudioFileNames.forEach(etherealAudioFileName => {
-      audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.mp3`);
+      this.audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.mp3`);
     });
 
     let lofiAudioFileNames = [
@@ -59,10 +59,8 @@ class AudioManager {
     ];
 
     lofiAudioFileNames.forEach(lofiAudioFileName => {
-      audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.mp3`);
+      this.audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.mp3`);
     });
-
-    return audioFilePaths;
   }
 
 
