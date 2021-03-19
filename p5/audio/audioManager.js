@@ -25,21 +25,6 @@ class AudioManager {
   getAudioFilePaths() {
     let audioFilePaths = [];
 
-    // let etherealAudioFileNames = [
-    //   'Angel1_88bpm4-4_L8M',
-    //   'Angel2_88bpm4-4_L17M',
-    //   'Angel3_88bpm4-4_L4M',
-    //   'Angel4_88bpm4-4_L8M',
-    //   'Angel5_88bpm4-4_L8M',
-    //   'Angel6_88bpm4-4_L12M',
-    //   'Angel7_88bpm4-4_L12M',
-    //   'Mateo1_88bpm4-4_L17M',
-    //   'Mateo2_88bpm4-4_L17M',
-    //   'Mateo3_88bpm4-4_L17M',
-    //   'LostShipSynth_88bpm4-4_L4M',
-    //   'NeomazeBass_88bpm4-4_L4M'
-    // ];
-
     let etherealAudioFileNames = [
       'Angel1_88bpm4-4_L8M',
       '2Parts_88bpm4-4_L17M',
