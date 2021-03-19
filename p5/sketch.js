@@ -48,10 +48,7 @@ function setup() {
 
   audioManager.startSounds(currentLevel.genre);
 
-
   uiManager = new UIManager();
-
-
 
   player = new Player();
   platformManager = new PlatformManager();
