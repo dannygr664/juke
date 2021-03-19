@@ -20,6 +20,7 @@ class AudioManager {
     soundFormats('wav', 'mp3');
     this.audioFilePaths = this.getAudioFilePaths();
     this.sounds = [];
+    this.levelSounds = [];
   }
 
   getAudioFilePaths() {
@@ -80,11 +81,13 @@ class AudioManager {
     }
   }
 
-  startSounds() {
+  startSounds(genre) {
     this.filter = new p5.LowPass();
     this.filter.set(22050, 0);
 
-    this.sounds.forEach(sound => {
+    this.levelSounds = this.sounds.filter(sound => sound.soundInfo.genre === genre);
+
+    this.levelSounds.forEach(sound => {
       sound.disconnect();
       sound.connect(this.filter);
       sound.amp(INITIAL_VOLUME);
@@ -96,9 +99,9 @@ class AudioManager {
     this.soundSpeed = INITIAL_SOUND_SPEED;
 
     this.loopSoundWithAnalysisAndAnimation(
-      this.sounds[0],
-      this.sounds[0].animationType,
-      this.sounds[0].animation
+      this.levelSounds[0],
+      this.levelSounds.animationType,
+      this.levelSounds.animation
     );
 
     this.currentSound = 0;
@@ -147,7 +150,7 @@ class AudioManager {
   updateVolume(newVolume) {
     this.volume = newVolume;
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-    this.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
+    this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.amp(this.volume, this.volumeRampTime);
     });
   }
@@ -155,7 +158,7 @@ class AudioManager {
   updateSoundSpeed(newSpeed) {
     this.soundSpeed = newSpeed;
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
-    this.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
+    this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.rate(newSpeed);
     });
   }
@@ -169,22 +172,23 @@ class AudioManager {
   }
 
   toggleSound(soundIndex) {
-    if (this.sounds[soundIndex].isPlaying()) {
-      this.sounds[soundIndex].amp(0, this.volumeRampTime);
-      this.sounds[soundIndex].pause();
+    let sound = this.levelSounds[soundIndex];
+    if (sound.isPlaying()) {
+      sound.amp(0, this.volumeRampTime);
+      sound.pause();
     } else {
       this.loopSoundWithAnalysisAndAnimation(
-        this.sounds[soundIndex],
-        this.sounds[soundIndex].animationType,
-        this.sounds[soundIndex].animation
+        sound,
+        sound.animationType,
+        sound.animation
       );
-      this.sounds[soundIndex].amp(this.volume, this.volumeRampTime);
+      sound.amp(this.volume, this.volumeRampTime);
     }
   }
 
   playNextSound() {
     audioManager.toggleSound(this.currentSound);
-    this.currentSound = (this.currentSound + 1) % (this.sounds.length);
+    this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
     audioManager.toggleSound(this.currentSound);
   }
 }

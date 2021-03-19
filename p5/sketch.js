@@ -46,7 +46,7 @@ function setup() {
   colorFilter = currentLevel.initialColorFilter;
   drawMode = currentLevel.initialDrawMode;
 
-  audioManager.startSounds();
+  audioManager.startSounds(currentLevel.genre);
 
 
   uiManager = new UIManager();

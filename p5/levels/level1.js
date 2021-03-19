@@ -11,6 +11,7 @@ class Level1 {
       ColorScheme.GREEN,
       ColorScheme.YELLOW,
     ];
+    this.genre = 'LoFi';
   }
 
   handleFluidEnter(_, fluid) {
