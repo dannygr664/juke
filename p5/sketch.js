@@ -33,23 +33,25 @@ function setup() {
     return !(e.keyCode == 32);
   };
 
-  audioManager.startSounds();
-
   colorMode(HSB, 360, 100, 100, 100);
 
   ColorScheme.initializeColorScheme();
 
   createCanvas(windowWidth, windowHeight);
 
-  uiManager = new UIManager();
-
   levelManager = new LevelManager();
 
   currentLevel = levelManager.getCurrentLevel();
-
   backgroundColor = currentLevel.initialBackgroundColor;
   colorFilter = currentLevel.initialColorFilter;
   drawMode = currentLevel.initialDrawMode;
+
+  audioManager.startSounds();
+
+
+  uiManager = new UIManager();
+
+
 
   player = new Player();
   platformManager = new PlatformManager();
