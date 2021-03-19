@@ -5,6 +5,12 @@ class Level1 {
     fill(0);
     noStroke();
     this.initialDrawMode = 0;
+    this.fluidColors = [
+      ColorScheme.RED,
+      ColorScheme.BLUE,
+      ColorScheme.GREEN,
+      ColorScheme.YELLOW,
+    ];
   }
 
   handleFluidEnter(_, fluid) {

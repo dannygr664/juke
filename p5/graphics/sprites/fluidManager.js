@@ -9,12 +9,7 @@ class FluidManager {
   constructor() {
     this.baseSpeed = DEFAULT_BASE_FLUID_SPEED;
     this.speed = 0;
-    this.fluidColors = [
-      ColorScheme.RED,
-      ColorScheme.BLUE,
-      ColorScheme.GREEN,
-      ColorScheme.YELLOW,
-    ];
+    this.fluidColors = levelManager.getCurrentLevel().fluidColors;
     this.fluids = new Group();
 
     fluidXInitial = windowWidth;
