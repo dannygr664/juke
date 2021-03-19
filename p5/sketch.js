@@ -14,6 +14,11 @@ let audioManager;
 let animationController;
 let uiManager;
 
+const NUMBER_OF_LEVELS = 1;
+
+let levels = [];
+let currentLevel;
+
 let player;
 let platformManager;
 let fluidManager;
@@ -110,18 +115,25 @@ function setup() {
 
   createCanvas(windowWidth, windowHeight);
 
-  backgroundColor = ColorScheme.WHITE;
-  colorFilter = ColorScheme.CLEAR;
-  fill(0);
-  noStroke();
-  drawMode = 0;
-
   uiManager = new UIManager();
+
+  initializeLevels();
+
+  backgroundColor = levels[currentLevel].initialBackgroundColor;
+  colorFilter = levels[currentLevel].initialColorFilter;
+  drawMode = levels[currentLevel].initialDrawMode;
 
   player = new Player();
   platformManager = new PlatformManager();
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
+}
+
+
+function initializeLevels() {
+  let level1 = new Level1();
+  levels.push(level1);
+  currentLevel = 0;
 }
 
 
@@ -179,11 +191,11 @@ function handleCollisionsAndJumping() {
     }
   }
 
-  if (!player.sprite.overlap(fluidManager.fluids, handleFluidEnter)) {
-    audioManager.updateVolume(INITIAL_VOLUME);
+  if (!player.sprite.overlap(fluidManager.fluids, levels[currentLevel].handleFluidEnter)) {
+    levels[currentLevel].handleFluidExit();
   }
 
-  player.sprite.overlap(jukeboxManager.jukeboxes, handleJukeboxEnter);
+  player.sprite.overlap(jukeboxManager.jukeboxes, levels[currentLevel].handleJukeboxEnter);
 
   if (player.jumpSpeed > 0) {
     player.jumpSpeed -= player.gravityForce;
@@ -191,42 +203,6 @@ function handleCollisionsAndJumping() {
   } else {
     player.handleGravity();
   }
-}
-
-
-function handleFluidEnter(_, fluid) {
-  switch (fluid.shapeColor) {
-    case ColorScheme.RED:
-      audioManager.updateVolume(1);
-      break;
-    case ColorScheme.BLUE:
-      audioManager.updateVolume(0.25);
-      break;
-    case ColorScheme.GREEN:
-      audioManager.updateVolume(0);
-      break;
-    case ColorScheme.YELLOW:
-      audioManager.updateVolume(0.75);
-      break;
-  }
-}
-
-function handleJukeboxEnter(_, _) {
-  // colorFilterter = ColorScheme.getFilterColor(jukeboxManager.currentAnimationColor);
-  // switch (fluid.shapeColor) {
-  //   case ColorScheme.RED:
-  //     audioManager.updateVolume(1);
-  //     break;
-  //   case ColorScheme.BLUE:
-  //     audioManager.updateVolume(0.25);
-  //     break;
-  //   case ColorScheme.GREEN:
-  //     audioManager.updateVolume(0);
-  //     break;
-  //   case ColorScheme.YELLOW:
-  //     audioManager.updateVolume(0.75);
-  //     break;
-  // }
 }
 
 
