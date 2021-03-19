@@ -13,11 +13,7 @@ let audioManager;
 
 let animationController;
 let uiManager;
-
-const NUMBER_OF_LEVELS = 1;
-
-let levels = [];
-let currentLevel;
+let levelManager;
 
 let player;
 let platformManager;
@@ -117,23 +113,18 @@ function setup() {
 
   uiManager = new UIManager();
 
-  initializeLevels();
+  levelManager = new LevelManager();
 
-  backgroundColor = levels[currentLevel].initialBackgroundColor;
-  colorFilter = levels[currentLevel].initialColorFilter;
-  drawMode = levels[currentLevel].initialDrawMode;
+  currentLevel = levelManager.getCurrentLevel();
+
+  backgroundColor = currentLevel.initialBackgroundColor;
+  colorFilter = currentLevel.initialColorFilter;
+  drawMode = currentLevel.initialDrawMode;
 
   player = new Player();
   platformManager = new PlatformManager();
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
-}
-
-
-function initializeLevels() {
-  let level1 = new Level1();
-  levels.push(level1);
-  currentLevel = 0;
 }
 
 
@@ -191,11 +182,13 @@ function handleCollisionsAndJumping() {
     }
   }
 
-  if (!player.sprite.overlap(fluidManager.fluids, levels[currentLevel].handleFluidEnter)) {
-    levels[currentLevel].handleFluidExit();
+  let currentLevel = levelManager.getCurrentLevel();
+
+  if (!player.sprite.overlap(fluidManager.fluids, currentLevel.handleFluidEnter)) {
+    currentLevel.handleFluidExit();
   }
 
-  player.sprite.overlap(jukeboxManager.jukeboxes, levels[currentLevel].handleJukeboxEnter);
+  player.sprite.overlap(jukeboxManager.jukeboxes, currentLevel.handleJukeboxEnter);
 
   if (player.jumpSpeed > 0) {
     player.jumpSpeed -= player.gravityForce;
