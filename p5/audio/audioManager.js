@@ -16,11 +16,89 @@ const REVIVING_LPF_CUTOFF = 200;
 const REVIVING_LPF_PEAK_VOLUME = 0;
 
 class AudioManager {
-  constructor(sounds) {
+  constructor() {
+    soundFormats('wav', 'mp3');
+    this.audioFilePaths = this.getAudioFilePaths();
+    this.sounds = [];
+  }
+
+  getAudioFilePaths() {
+    let audioFilePaths = [];
+
+    // let etherealAudioFileNames = [
+    //   'Angel1_88bpm4-4_L8M',
+    //   'Angel2_88bpm4-4_L17M',
+    //   'Angel3_88bpm4-4_L4M',
+    //   'Angel4_88bpm4-4_L8M',
+    //   'Angel5_88bpm4-4_L8M',
+    //   'Angel6_88bpm4-4_L12M',
+    //   'Angel7_88bpm4-4_L12M',
+    //   'Mateo1_88bpm4-4_L17M',
+    //   'Mateo2_88bpm4-4_L17M',
+    //   'Mateo3_88bpm4-4_L17M',
+    //   'LostShipSynth_88bpm4-4_L4M',
+    //   'NeomazeBass_88bpm4-4_L4M'
+    // ];
+
+    let etherealAudioFileNames = [
+      'Angel1_88bpm4-4_L8M',
+      '2Parts_88bpm4-4_L17M',
+      '3Parts_88bpm4-4_L17M',
+      '4Parts_88bpm4-4_L17M',
+      '5Parts_88bpm4-4_L17M',
+      '6Parts_88bpm4-4_L17M',
+      '7Parts_88bpm4-4_L17M',
+      '8Parts_88bpm4-4_L17M',
+      '9Parts_88bpm4-4_L17M',
+      '10Parts_88bpm4-4_L17M',
+      '11Parts_88bpm4-4_L21M',
+    ];
+
+    etherealAudioFileNames.forEach(etherealAudioFileName => {
+      audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.mp3`);
+    });
+
+    let lofiAudioFileNames = [
+      'Break_87bpm4-4_L4M',
+      'Build_87bpm4-4_L1M',
+      'Cymbal_87bpm4-4_L2.5B',
+      'Ending_87bpm4-4_L4.5B',
+      'Intro_87bpm4-4_L4M',
+      'Section1_87bpm4-4_L4M',
+      'Section2_87bpm4-4_L9M',
+      'Section3_87bpm4-4_L14M',
+      'Section4_87bpm4-4_L4M',
+      'Section5_87bpm4-4_L4M',
+      'Section6_87bpm4-4_L14M',
+    ];
+
+    lofiAudioFileNames.forEach(lofiAudioFileName => {
+      audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.mp3`);
+    });
+
+    return audioFilePaths;
+  }
+
+
+  loadSounds() {
+    let audioFilePaths = this.audioFilePaths;
+    for (let i = 0; i < audioFilePaths.length; i++) {
+      let sound = loadSound(audioFilePaths[i]);
+      sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePaths[i]);
+
+      sound.animation = animationController.getSoundAnimationForSound(sound);
+      sound.animationType = animationController.getSoundAnimationTypeForSoundAnimation(
+        sound.animation
+      );
+
+      this.sounds.push(sound);
+    }
+  }
+
+  startSounds() {
     this.filter = new p5.LowPass();
     this.filter.set(22050, 0);
 
-    this.sounds = sounds;
     this.sounds.forEach(sound => {
       sound.disconnect();
       sound.connect(this.filter);
