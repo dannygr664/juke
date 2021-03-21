@@ -9,6 +9,7 @@ class AudioFilePathParser {
     const timeSignature = nameParts[3].split('bpm')[1];
     const timeSignatureUpper = timeSignature.split('-')[0];
     const timeSignatureLower = timeSignature.split('-')[1];
+
     const length = (nameParts[4].slice(-1) === 'B')
       ? nameParts[4].slice(1, -1)
       : nameParts[4].slice(1, -1) * timeSignatureLower;

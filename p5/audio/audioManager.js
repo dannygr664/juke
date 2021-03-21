@@ -46,7 +46,7 @@ class AudioManager {
     });
 
     let lofiAudioFileNames = [
-      'Cymbal_87bpm4-4_L2.5B',
+      'Cymbal_87bpm4-4_L4B',
       'Intro_87bpm4-4_L4M',
       'Section1_87bpm4-4_L4M',
       'Section2_87bpm4-4_L9M',
@@ -188,6 +188,22 @@ class AudioManager {
       );
       sound.amp(this.volume, this.volumeRampTime);
     }
+  }
+
+  isSoundAlmostOver() {
+    let sound = this.levelSounds[this.currentSound];
+    const numberOfBeats = sound.soundInfo.length;
+    const songDuration = sound.duration();
+    const lengthOfBeat = songDuration / numberOfBeats;
+    return (sound.currentTime() > songDuration - (lengthOfBeat * 4));
+  }
+
+  getDurationOfFourBeats() {
+    let sound = this.levelSounds[this.currentSound];
+    const numberOfBeats = sound.soundInfo.length;
+    const songDuration = sound.duration();
+    const lengthOfBeat = songDuration / numberOfBeats;
+    return lengthOfBeat * 4;
   }
 
   unloopCurrentSound() {

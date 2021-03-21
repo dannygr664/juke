@@ -1,4 +1,3 @@
-const JUKEBOX_MOVING_SPEED = 2;
 const NUMBER_OF_JUKEBOXES = 1;
 
 class JukeboxManager {
@@ -34,7 +33,7 @@ class JukeboxManager {
         JUKEBOX_HEIGHT
       );
       jukebox.shapeColor = ColorScheme.CLEAR;
-      jukebox.setSpeed(this.baseSpeed, 180);
+      jukebox.setSpeed(0, 180);
       this.jukeboxes.add(jukebox);
     }
   }
@@ -45,14 +44,24 @@ class JukeboxManager {
       if (jukebox.position.x < -jukebox.width / 2) {
         this.spawnJukebox(jukebox);
       }
-      jukebox.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
+      if (audioManager.isSoundAlmostOver() && this.baseSpeed === 0) {
+        this.baseSpeed = this.calculateJukeboxSweepSpeed();
+        jukebox.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
+      }
     }
+  }
+
+  calculateJukeboxSweepSpeed() {
+    let durationOfFourBeats = audioManager.getDurationOfFourBeats();
+    return durationOfFourBeats * 1.9;
   }
 
   spawnJukebox(jukebox) {
     this.currentAnimationColor = random(this.jukeboxAnimationColors);
     animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     jukebox.position.x = windowWidth + jukebox.width / 2;
+    this.baseSpeed = 0;
+    jukebox.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
   }
 
   drawJukeboxes() {
