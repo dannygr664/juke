@@ -11,4 +11,8 @@ class LevelManager {
   getCurrentLevel() {
     return this.levels[this.currentLevel];
   }
+
+  changeLevel(level) {
+    this.currentLevel = level;
+  }
 }
