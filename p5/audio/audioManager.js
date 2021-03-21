@@ -45,10 +45,7 @@ class AudioManager {
     });
 
     let lofiAudioFileNames = [
-      'Break_87bpm4-4_L4M',
-      'Build_87bpm4-4_L1M',
       'Cymbal_87bpm4-4_L2.5B',
-      'Ending_87bpm4-4_L4.5B',
       'Intro_87bpm4-4_L4M',
       'Section1_87bpm4-4_L4M',
       'Section2_87bpm4-4_L9M',
@@ -56,6 +53,9 @@ class AudioManager {
       'Section4_87bpm4-4_L4M',
       'Section5_87bpm4-4_L4M',
       'Section6_87bpm4-4_L14M',
+      'Break_87bpm4-4_L4M',
+      'Build_87bpm4-4_L1M',
+      'Ending_87bpm4-4_L4.5B'
     ];
 
     lofiAudioFileNames.forEach(lofiAudioFileName => {
