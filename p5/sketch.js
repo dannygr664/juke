@@ -168,9 +168,6 @@ function changeLevel() {
 
 
 function keyReleased() {
-  if (key === '1') {
-    audioManager.unloopCurrentSound();
-  }
   if (key === '2') {
     changeLevel();
   }

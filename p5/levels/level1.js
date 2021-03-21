@@ -36,7 +36,8 @@ class Level1 {
   }
 
   handleJukeboxEnter(_, jukebox) {
-    // colorFilterter = ColorScheme.getFilterColor(jukeboxManager.currentAnimationColor);
+    audioManager.unloopCurrentSound();
+    // colorFilter = ColorScheme.getFilterColor(jukeboxManager.currentAnimationColor);
     // switch (fluid.shapeColor) {
     //   case ColorScheme.RED:
     //     audioManager.updateVolume(1);
