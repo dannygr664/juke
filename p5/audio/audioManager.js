@@ -79,10 +79,12 @@ class AudioManager {
     }
   }
 
-  startSounds(genre) {
+  loadFilter() {
     this.filter = new p5.LowPass();
     this.filter.set(22050, 0);
+  }
 
+  startSounds(genre) {
     this.levelSounds = this.sounds.filter(sound => sound.soundInfo.genre === genre);
 
     this.levelSounds.forEach(sound => {
@@ -187,6 +189,10 @@ class AudioManager {
   playNextSound() {
     audioManager.toggleSound(this.currentSound);
     this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
+    audioManager.toggleSound(this.currentSound);
+  }
+
+  stopSounds() {
     audioManager.toggleSound(this.currentSound);
   }
 }

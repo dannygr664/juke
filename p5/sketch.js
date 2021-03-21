@@ -46,6 +46,7 @@ function setup() {
   colorFilter = currentLevel.initialColorFilter;
   drawMode = currentLevel.initialDrawMode;
 
+  audioManager.loadFilter();
   audioManager.startSounds(currentLevel.genre);
 
   uiManager = new UIManager();
@@ -154,8 +155,23 @@ function revivingLoop() {
   }
 }
 
+
+function changeLevel() {
+  levelManager.changeLevel();
+  currentLevel = levelManager.getCurrentLevel();
+  backgroundColor = currentLevel.initialBackgroundColor;
+  colorFilter = currentLevel.initialColorFilter;
+  drawMode = currentLevel.initialDrawMode;
+
+  audioManager.startSounds(currentLevel.genre);
+}
+
+
 function keyReleased() {
-  if (key == '1') {
+  if (key === '1') {
     audioManager.playNextSound();
+  }
+  if (key === '2') {
+    changeLevel();
   }
 }
