@@ -61,7 +61,7 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  // audioManager.update();
+  audioManager.update();
 
   animationController.drawBackgroundSoundAnimations();
 
@@ -169,7 +169,7 @@ function changeLevel() {
 
 function keyReleased() {
   if (key === '1') {
-    audioManager.playNextSound();
+    audioManager.unloopCurrentSound();
   }
   if (key === '2') {
     changeLevel();

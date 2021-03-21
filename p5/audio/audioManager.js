@@ -21,6 +21,7 @@ class AudioManager {
     this.getAudioFilePaths();
     this.sounds = [];
     this.levelSounds = [];
+    this.waitingToChange = false;
   }
 
   getAudioFilePaths() {
@@ -122,10 +123,13 @@ class AudioManager {
     sound.animation = animation;
   }
 
-  // update() {
-  //   this.updateVolume();
-  //   this.updateSoundSpeed();
-  // }
+  update() {
+    if (this.waitingToChange) {
+      this.tryToPlayNextSound();
+    }
+    // this.updateVolume();
+    // this.updateSoundSpeed();
+  }
 
   // updateVolume() {
   //   if (keyDown('q' || 'Q')) {
@@ -186,13 +190,24 @@ class AudioManager {
     }
   }
 
-  playNextSound() {
-    audioManager.toggleSound(this.currentSound);
-    this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
-    audioManager.toggleSound(this.currentSound);
+  unloopCurrentSound() {
+    // Turn looping off
+    let sound = this.levelSounds[this.currentSound];
+    if (sound.isLooping()) {
+      sound.setLoop(false);
+      this.waitingToChange = true;
+    }
+  }
+
+  tryToPlayNextSound() {
+    if (!this.levelSounds[this.currentSound].isPlaying()) {
+      this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
+      this.toggleSound(this.currentSound);
+      this.waitingToChange = false;
+    }
   }
 
   stopSounds() {
-    audioManager.toggleSound(this.currentSound);
+    this.toggleSound(this.currentSound);
   }
 }
