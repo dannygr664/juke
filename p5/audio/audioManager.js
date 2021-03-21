@@ -41,7 +41,7 @@ class AudioManager {
     ];
 
     etherealAudioFileNames.forEach(etherealAudioFileName => {
-      this.audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.mp3`);
+      this.audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.wav`);
     });
 
     let lofiAudioFileNames = [
@@ -59,7 +59,7 @@ class AudioManager {
     ];
 
     lofiAudioFileNames.forEach(lofiAudioFileName => {
-      this.audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.mp3`);
+      this.audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.wav`);
     });
   }
 
