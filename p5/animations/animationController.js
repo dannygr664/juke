@@ -70,11 +70,12 @@ class AnimationController {
   }
 
   drawSoundAnimation(sound) {
-    if (sound.animationType === 0) {
-      this.drawVolumeAnimations(sound);
-    } else {
-      this.drawFrequencyAnimations(sound);
-    }
+    // if (sound.animationType === 0) {
+    //   this.drawVolumeAnimations(sound);
+    // } else {
+    //   this.drawFrequencyAnimations(sound);
+    // }
+    this.drawVolumeAnimations(sound);
   }
 
   drawVolumeAnimations(sound) {
