@@ -1,9 +1,9 @@
-const DEFAULT_BASE_JUKEBOX_SPEED = 2;
+const JUKEBOX_MOVING_SPEED = 2;
 const NUMBER_OF_JUKEBOXES = 1;
 
 class JukeboxManager {
   constructor() {
-    this.baseSpeed = DEFAULT_BASE_JUKEBOX_SPEED;
+    this.baseSpeed = 0;
     this.speed = 0;
     this.jukeboxAnimationColors = [
       ColorScheme.BLACK,
