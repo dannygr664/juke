@@ -55,7 +55,7 @@ class JukeboxManager {
 
   calculateJukeboxSweepSpeed() {
     let durationOfFourBeats = audioManager.getDurationOfFourBeats();
-    return durationOfFourBeats * 1.9;
+    return durationOfFourBeats * 1.5;
   }
 
   spawnJukebox(jukebox) {
