@@ -27,6 +27,18 @@ class AudioManager {
   getAudioFilePaths() {
     this.audioFilePaths = [];
 
+    let spaceshipAudioFileNames = [
+      'Intro_76,88bpm4-4_L4M',
+      'Section1_76,88bpm4-4_L4M',
+      'Section2_76,88bpm4-4_L8M',
+      'Section3_76,88bpm4-4_L8M',
+      'Ending_76,88bpm4-4_L2M'
+    ];
+
+    spaceshipAudioFileNames.forEach(spaceshipAudioFileName => {
+      this.audioFilePaths.push(`audio/Spaceship/Juke_Spaceship_${spaceshipAudioFileName}.wav`);
+    });
+
     let etherealAudioFileNames = [
       'Angel1_88bpm4-4_L8M',
       '2Parts_88bpm4-4_L17M',
