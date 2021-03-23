@@ -59,9 +59,9 @@ class JukeboxManager {
   }
 
   spawnJukebox(jukebox) {
+    jukebox.position.x = windowWidth + jukebox.width / 2;
     this.currentAnimationColor = random(this.jukeboxAnimationColors);
     animationController.setJukeboxAnimationColor(this.currentAnimationColor);
-    jukebox.position.x = windowWidth + jukebox.width / 2;
     this.baseSpeed = 0;
     jukebox.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
   }
@@ -79,6 +79,7 @@ class JukeboxManager {
     animationController.setJukeboxAnimationColor(ColorScheme.BLACK_INACTIVE);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       this.jukeboxes[i].setSpeed(0, 180);
+      this.spawnJukebox(this.jukeboxes[i]);
     }
     this.didPlayerFall = true;
   }
