@@ -36,6 +36,8 @@ class JukeboxManager {
       jukebox.setSpeed(0, 180);
       this.jukeboxes.add(jukebox);
     }
+
+    this.didPlayerFall = false;
   }
 
   manageJukeboxes() {
@@ -44,7 +46,7 @@ class JukeboxManager {
       if (jukebox.position.x < -jukebox.width / 2) {
         this.spawnJukebox(jukebox);
       }
-      if (audioManager.isSoundAlmostOver() && this.baseSpeed === 0) {
+      if (audioManager.isSoundAlmostOver() && !this.didPlayerFall && this.baseSpeed === 0) {
         this.baseSpeed = this.calculateJukeboxSweepSpeed();
         jukebox.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
       }
@@ -78,6 +80,7 @@ class JukeboxManager {
     for (let i = 0; i < this.jukeboxes.length; i++) {
       this.jukeboxes[i].setSpeed(0, 180);
     }
+    this.didPlayerFall = true;
   }
 
   handleRevived() {

@@ -76,8 +76,14 @@ class AudioManager {
         sound.animation
       );
 
+      sound.addCue(0, this.resetDidPlayerFallFlag);
+
       this.sounds.push(sound);
     }
+  }
+
+  resetDidPlayerFallFlag() {
+    jukeboxManager.didPlayerFall = false;
   }
 
   loadFilter() {
