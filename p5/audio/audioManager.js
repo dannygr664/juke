@@ -83,14 +83,18 @@ class AudioManager {
       let sound = loadSound(audioFilePaths[i]);
       sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePaths[i]);
 
-      sound.animation = animationController.getSoundAnimationForSound(sound);
-      sound.animationType = animationController.getSoundAnimationTypeForSoundAnimation(
-        sound.animation
-      );
-
       sound.addCue(0, this.resetDidPlayerFallFlag);
 
       this.sounds.push(sound);
+    }
+  }
+
+  assignSoundAnimations() {
+    for (let i = 0; i < this.sounds.length; i++) {
+      this.sounds[i].animation = animationController.getSoundAnimationForSound(this.sounds[i]);
+      this.sounds[i].animationType = animationController.getSoundAnimationTypeForSoundAnimation(
+        this.sounds[i].animation
+      );
     }
   }
 

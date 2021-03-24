@@ -55,6 +55,8 @@ function setup() {
   platformManager = new PlatformManager();
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
+
+  audioManager.assignSoundAnimations();
 }
 
 
