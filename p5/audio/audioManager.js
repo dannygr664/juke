@@ -107,7 +107,9 @@ class AudioManager {
   }
 
   resetDidPlayerFallFlag() {
-    jukeboxManager.didPlayerFall = false;
+    if (!player.isReviving) {
+      jukeboxManager.didPlayerFall = false;
+    }
   }
 
   loadFilter() {
