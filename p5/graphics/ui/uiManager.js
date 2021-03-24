@@ -8,6 +8,7 @@ class UIManager {
   drawUI() {
     this.drawVolumeMeter();
     this.drawSoundSpeedMeter();
+    this.drawReverbMeter();
   }
 
   drawVolumeMeter() {
@@ -15,7 +16,7 @@ class UIManager {
     noStroke();
     fill(ColorScheme.BLACK);
     text('Volume', 0, 5);
-    fill(0, 100, 50);
+    fill(ColorScheme.RED);
     rect(70, 5, map(audioManager.volume, 0, 1, 0, 200), 20);
     pop();
   }
@@ -25,8 +26,18 @@ class UIManager {
     noStroke();
     fill(ColorScheme.BLACK);
     text('Speed', 0, 35);
-    fill(95, 100, 50);
+    fill(ColorScheme.GREEN);
     rect(70, 35, map(audioManager.soundSpeed, 0.01, 4, 0, 200), 20);
+    pop();
+  }
+
+  drawReverbMeter() {
+    push();
+    noStroke();
+    fill(ColorScheme.BLACK);
+    text('Reverb', 0, 65);
+    fill(ColorScheme.BLUE);
+    rect(70, 65, map(audioManager.reverbLevel, 0, 1, 0, 200), 20);
     pop();
   }
 }

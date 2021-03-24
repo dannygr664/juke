@@ -47,6 +47,7 @@ function setup() {
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.loadFilter();
+  audioManager.loadReverb();
   audioManager.startSounds(currentLevel.genre);
 
   uiManager = new UIManager();
@@ -68,6 +69,7 @@ function draw() {
   animationController.drawBackgroundSoundAnimations();
 
   player.speed = player.baseSpeed * audioManager.soundSpeed;
+  player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
 
   if (player.isReviving) {
     revivingLoop();

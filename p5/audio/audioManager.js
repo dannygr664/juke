@@ -9,6 +9,13 @@ const SOUND_SPEED_MIN = 0.01;
 const SOUND_SPEED_MAX = 4;
 const SOUND_SPEED_STEP = 0.01;
 
+const INITIAL_REVERB = 0;
+const INITIAL_REVERB_TIME = 3;
+const INITIAL_REVERB_DECAY_RATE = 100;
+const REVERB_MIN = 0;
+const REVERB_MAX = 1;
+const REVERB_STEP = 0.01;
+
 const ALIVE_LPF_CUTOFF = 22050;
 const ALIVE_LPF_PEAK_VOLUME = 0;
 
@@ -40,6 +47,7 @@ class AudioManager {
     });
 
     let etherealAudioFileNames = [
+      '11Parts_88bpm4-4_L21M',
       'Angel1_88bpm4-4_L8M',
       '2Parts_88bpm4-4_L17M',
       '3Parts_88bpm4-4_L17M',
@@ -107,12 +115,23 @@ class AudioManager {
     this.filter.set(22050, 0);
   }
 
+  loadReverb() {
+    this.reverb = new p5.Reverb();
+    this.reverb.drywet(INITIAL_REVERB);
+  }
+
   startSounds(genre) {
+    this.reverb.connect(this.filter);
+
     this.levelSounds = this.sounds.filter(sound => sound.soundInfo.genre === genre);
 
     this.levelSounds.forEach(sound => {
       sound.disconnect();
-      sound.connect(this.filter);
+      if (genre === 'Ethereal') {
+        sound.connect(this.reverb);
+      } else {
+        sound.connect(this.filter);
+      }
       sound.amp(INITIAL_VOLUME);
     });
 
@@ -120,6 +139,8 @@ class AudioManager {
     this.volumeRampTime = INITIAL_VOLUME_RAMP_TIME;
 
     this.soundSpeed = INITIAL_SOUND_SPEED;
+
+    this.reverbLevel = INITIAL_REVERB;
 
     this.loopSoundWithAnalysisAndAnimation(
       this.levelSounds[0],
@@ -189,6 +210,12 @@ class AudioManager {
     });
   }
 
+  updateReverb(newReverb) {
+    this.reverbLevel = newReverb;
+    this.reverbLevel = constrain(this.reverbLevel, REVERB_MIN, REVERB_MAX);
+    this.reverb.drywet(newReverb);
+  }
+
   handleFalling() {
     this.filter.set(REVIVING_LPF_CUTOFF, REVIVING_LPF_PEAK_VOLUME);
   }
@@ -203,6 +230,9 @@ class AudioManager {
       sound.amp(0, this.volumeRampTime);
       sound.pause();
     } else {
+      if (sound.soundInfo.genre === 'Ethereal') {
+        this.reverb.process(sound, INITIAL_REVERB_TIME, INITIAL_REVERB_DECAY_RATE, false);
+      }
       this.loopSoundWithAnalysisAndAnimation(
         sound,
         sound.animationType,
