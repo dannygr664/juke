@@ -1,4 +1,4 @@
-class Level1 {
+class Spaceship {
   constructor() {
     this.initialBackgroundColor = ColorScheme.WHITE;
     this.initialColorFilter = ColorScheme.CLEAR;

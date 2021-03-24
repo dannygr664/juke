@@ -1,4 +1,4 @@
-class Level2 {
+class LoFi {
   constructor() {
     this.initialBackgroundColor = ColorScheme.WHITE;
     this.initialColorFilter = ColorScheme.CLEAR;
@@ -11,7 +11,7 @@ class Level2 {
       ColorScheme.GREEN,
       ColorScheme.YELLOW,
     ];
-    this.genre = 'Ethereal';
+    this.genre = 'LoFi';
   }
 
   handleFluidEnter(_, fluid) {
