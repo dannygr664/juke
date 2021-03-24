@@ -17,22 +17,22 @@ class LoFi {
   handleFluidEnter(_, fluid) {
     switch (fluid.animation.color) {
       case ColorScheme.RED:
-        audioManager.updateVolume(1);
+        audioManager.updateSoundSpeed(0.4);
         break;
       case ColorScheme.BLUE:
-        audioManager.updateVolume(0.25);
+        audioManager.updateSoundSpeed(2);
         break;
       case ColorScheme.GREEN:
-        audioManager.updateVolume(0);
+        audioManager.updateSoundSpeed(4);
         break;
       case ColorScheme.YELLOW:
-        audioManager.updateVolume(0.75);
+        audioManager.updateSoundSpeed(0.75);
         break;
     }
   }
 
   handleFluidExit() {
-    audioManager.updateVolume(INITIAL_VOLUME);
+    audioManager.updateSoundSpeed(INITIAL_SOUND_SPEED);
   }
 
   handleJukeboxEnter(_, jukebox) {
