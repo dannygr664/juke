@@ -36,6 +36,29 @@ class AnimationController {
     moireAnim.color = color;
   }
 
+  createFluidAnimation(xPosition, yPosition, width, height, color) {
+    let fluidAnim = new Moire(
+      xPosition,
+      yPosition,
+      xPosition,
+      yPosition + height,
+      width,
+      color
+    )
+
+    return fluidAnim;
+  }
+
+  drawFluidAnimation(anim, xPosition) {
+    anim.x1 = xPosition;
+    anim.x2 = xPosition;
+    anim.drawMoire();
+  }
+
+  setFluidAnimationColor(anim, color) {
+    anim.color = color;
+  }
+
   getSoundAnimationForSound(sound) {
     switch (sound.soundInfo.genre) {
       case 'Ethereal':

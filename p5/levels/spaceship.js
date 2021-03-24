@@ -5,7 +5,7 @@ class Spaceship {
     fill(0);
     noStroke();
     this.initialDrawMode = 0;
-    this.fluidColors = [
+    this.fluidAnimationColors = [
       ColorScheme.RED,
       ColorScheme.BLUE,
       ColorScheme.GREEN,
@@ -15,7 +15,7 @@ class Spaceship {
   }
 
   handleFluidEnter(_, fluid) {
-    switch (fluid.shapeColor) {
+    switch (fluid.animation.color) {
       case ColorScheme.RED:
         audioManager.updateVolume(1);
         break;
