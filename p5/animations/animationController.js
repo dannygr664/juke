@@ -42,6 +42,8 @@ class AnimationController {
         return 0;
       case 'LoFi':
         return 1;
+      case 'Spaceship':
+        return 2;
       default:
         return 0;
     }

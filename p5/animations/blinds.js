@@ -3,16 +3,14 @@ let tileCount = 10;
 let actRandomSeed = 0;
 let rectSize;
 let ORIGAMI_SCALE_FACTOR = 200;
-let origamiColor;
 
 class Blinds {
   constructor() {
     rectSize = windowWidth / tileCount;
-    origamiColor = ColorScheme.BLACK_INACTIVE;
   }
 
   drawBlinds(rms) {
-    fill(origamiColor);
+    fill(ColorScheme.BLACK_INACTIVE);
     randomSeed(actRandomSeed);
 
     for (let gridY = 0; gridY < tileCount; gridY++) {
