@@ -18,21 +18,31 @@ class Spaceship {
     switch (fluid.animation.color) {
       case ColorScheme.RED:
         audioManager.updateVolume(1);
+        player.sprite.width = DEFAULT_PLAYER_WIDTH * 2;
+        player.sprite.height = DEFAULT_PLAYER_HEIGHT * 2;
         break;
       case ColorScheme.BLUE:
         audioManager.updateVolume(0.25);
+        player.sprite.width = DEFAULT_PLAYER_WIDTH * 0.5;
+        player.sprite.height = DEFAULT_PLAYER_HEIGHT * 0.5;
         break;
       case ColorScheme.GREEN:
         audioManager.updateVolume(0);
+        player.sprite.width = DEFAULT_PLAYER_WIDTH * 0.25;
+        player.sprite.height = DEFAULT_PLAYER_HEIGHT * 0.25;
         break;
       case ColorScheme.YELLOW:
         audioManager.updateVolume(0.75);
+        player.sprite.width = DEFAULT_PLAYER_WIDTH * 1.5;
+        player.sprite.height = DEFAULT_PLAYER_HEIGHT * 1.5;
         break;
     }
   }
 
   handleFluidExit() {
     audioManager.updateVolume(INITIAL_VOLUME);
+    player.sprite.width = DEFAULT_PLAYER_WIDTH;
+    player.sprite.height = DEFAULT_PLAYER_HEIGHT;
   }
 
   handleJukeboxEnter(_, jukebox) {

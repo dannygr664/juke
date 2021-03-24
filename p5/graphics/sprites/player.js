@@ -1,4 +1,6 @@
 const DEFAULT_BASE_PLAYER_SPEED = 4;
+const DEFAULT_PLAYER_WIDTH = 40;
+const DEFAULT_PLAYER_HEIGHT = 40;
 const DEFAULT_JUMP_FORCE = 10;
 const DEFAULT_GRAVITY_FORCE = 0.35;
 const REVIVING_SPEED = 50;
@@ -15,11 +17,9 @@ class Player {
 
     const PLAYER_X_INITIAL = windowWidth / 2;
     const PLAYER_Y_INITIAL = windowHeight / 2 - windowHeight / 8;
-    const PLAYER_WIDTH = 40;
-    const PLAYER_HEIGHT = 40;
 
     this.sprite = createSprite(
-      PLAYER_X_INITIAL, PLAYER_Y_INITIAL, PLAYER_WIDTH, PLAYER_HEIGHT);
+      PLAYER_X_INITIAL, PLAYER_Y_INITIAL, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
     this.sprite.shapeColor = ColorScheme.BLACK;
   }
 
