@@ -9,6 +9,13 @@ const SOUND_SPEED_MIN = 0.01;
 const SOUND_SPEED_MAX = 4;
 const SOUND_SPEED_STEP = 0.01;
 
+const INITIAL_REVERB = 0;
+const INITIAL_REVERB_TIME = 3;
+const INITIAL_REVERB_DECAY_RATE = 100;
+const REVERB_MIN = 0;
+const REVERB_MAX = 1;
+const REVERB_STEP = 0.01;
+
 const ALIVE_LPF_CUTOFF = 22050;
 const ALIVE_LPF_PEAK_VOLUME = 0;
 
@@ -16,14 +23,117 @@ const REVIVING_LPF_CUTOFF = 200;
 const REVIVING_LPF_PEAK_VOLUME = 0;
 
 class AudioManager {
-  constructor(sounds) {
+  constructor() {
+    soundFormats('wav', 'mp3');
+    this.getAudioFilePaths();
+    this.sounds = [];
+    this.levelSounds = [];
+    this.waitingToChange = false;
+  }
+
+  getAudioFilePaths() {
+    this.audioFilePaths = [];
+
+    let spaceshipAudioFileNames = [
+      'Intro_76,88bpm4-4_L4M',
+      'Section1_76,88bpm4-4_L4M',
+      'Section2_76,88bpm4-4_L8M',
+      'Section3_76,88bpm4-4_L8M',
+      'Ending_76,88bpm4-4_L2M'
+    ];
+
+    spaceshipAudioFileNames.forEach(spaceshipAudioFileName => {
+      this.audioFilePaths.push(`audio/Spaceship/Juke_Spaceship_${spaceshipAudioFileName}.wav`);
+    });
+
+    let etherealAudioFileNames = [
+      '11Parts_88bpm4-4_L21M',
+      'Angel1_88bpm4-4_L8M',
+      '2Parts_88bpm4-4_L17M',
+      '3Parts_88bpm4-4_L17M',
+      '4Parts_88bpm4-4_L17M',
+      '5Parts_88bpm4-4_L17M',
+      '6Parts_88bpm4-4_L17M',
+      '7Parts_88bpm4-4_L17M',
+      '8Parts_88bpm4-4_L17M',
+      '9Parts_88bpm4-4_L17M',
+      '10Parts_88bpm4-4_L17M',
+      '11Parts_88bpm4-4_L21M',
+    ];
+
+    etherealAudioFileNames.forEach(etherealAudioFileName => {
+      this.audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.wav`);
+    });
+
+    let lofiAudioFileNames = [
+      'Cymbal_87bpm4-4_L4B',
+      'Intro_87bpm4-4_L4M',
+      'Section1_87bpm4-4_L4M',
+      'Section2_87bpm4-4_L9M',
+      'Section3_87bpm4-4_L14M',
+      'Section4_87bpm4-4_L4M',
+      'Section5_87bpm4-4_L4M',
+      'Section6_87bpm4-4_L14M',
+      'Break_87bpm4-4_L4M',
+      'Build_87bpm4-4_L1M',
+      'Ending_87bpm4-4_L4.5B'
+    ];
+
+    lofiAudioFileNames.forEach(lofiAudioFileName => {
+      this.audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.wav`);
+    });
+  }
+
+
+  loadSounds() {
+    let audioFilePaths = this.audioFilePaths;
+    for (let i = 0; i < audioFilePaths.length; i++) {
+      let sound = loadSound(audioFilePaths[i]);
+      sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePaths[i]);
+
+      sound.addCue(0, this.resetDidPlayerFallFlag);
+
+      this.sounds.push(sound);
+    }
+  }
+
+  assignSoundAnimations() {
+    for (let i = 0; i < this.sounds.length; i++) {
+      this.sounds[i].animation = animationController.getSoundAnimationForSound(this.sounds[i]);
+      this.sounds[i].animationType = animationController.getSoundAnimationTypeForSoundAnimation(
+        this.sounds[i].animation
+      );
+    }
+  }
+
+  resetDidPlayerFallFlag() {
+    if (!player.isReviving) {
+      jukeboxManager.didPlayerFall = false;
+    }
+  }
+
+  loadFilter() {
     this.filter = new p5.LowPass();
     this.filter.set(22050, 0);
+  }
 
-    this.sounds = sounds;
-    this.sounds.forEach(sound => {
+  loadReverb() {
+    this.reverb = new p5.Reverb();
+    this.reverb.drywet(INITIAL_REVERB);
+  }
+
+  startSounds(genre) {
+    this.reverb.connect(this.filter);
+
+    this.levelSounds = this.sounds.filter(sound => sound.soundInfo.genre === genre);
+
+    this.levelSounds.forEach(sound => {
       sound.disconnect();
-      sound.connect(this.filter);
+      if (genre === 'Ethereal') {
+        sound.connect(this.reverb);
+      } else {
+        sound.connect(this.filter);
+      }
       sound.amp(INITIAL_VOLUME);
     });
 
@@ -32,10 +142,12 @@ class AudioManager {
 
     this.soundSpeed = INITIAL_SOUND_SPEED;
 
+    this.reverbLevel = INITIAL_REVERB;
+
     this.loopSoundWithAnalysisAndAnimation(
-      this.sounds[0],
-      this.sounds[0].animationType,
-      this.sounds[0].animation
+      this.levelSounds[0],
+      this.levelSounds.animationType,
+      this.levelSounds.animation
     );
 
     this.currentSound = 0;
@@ -56,10 +168,13 @@ class AudioManager {
     sound.animation = animation;
   }
 
-  // update() {
-  //   this.updateVolume();
-  //   this.updateSoundSpeed();
-  // }
+  update() {
+    if (this.waitingToChange) {
+      this.tryToPlayNextSound();
+    }
+    // this.updateVolume();
+    // this.updateSoundSpeed();
+  }
 
   // updateVolume() {
   //   if (keyDown('q' || 'Q')) {
@@ -84,7 +199,7 @@ class AudioManager {
   updateVolume(newVolume) {
     this.volume = newVolume;
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-    this.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
+    this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.amp(this.volume, this.volumeRampTime);
     });
   }
@@ -92,9 +207,15 @@ class AudioManager {
   updateSoundSpeed(newSpeed) {
     this.soundSpeed = newSpeed;
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
-    this.sounds.filter(sound => sound.isPlaying()).forEach(sound => {
+    this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.rate(newSpeed);
     });
+  }
+
+  updateReverb(newReverb) {
+    this.reverbLevel = newReverb;
+    this.reverbLevel = constrain(this.reverbLevel, REVERB_MIN, REVERB_MAX);
+    this.reverb.drywet(newReverb);
   }
 
   handleFalling() {
@@ -106,22 +227,57 @@ class AudioManager {
   }
 
   toggleSound(soundIndex) {
-    if (this.sounds[soundIndex].isPlaying()) {
-      this.sounds[soundIndex].amp(0, this.volumeRampTime);
-      this.sounds[soundIndex].pause();
+    let sound = this.levelSounds[soundIndex];
+    if (sound.isPlaying()) {
+      sound.amp(0, this.volumeRampTime);
+      sound.pause();
     } else {
+      if (sound.soundInfo.genre === 'Ethereal') {
+        this.reverb.process(sound, INITIAL_REVERB_TIME, INITIAL_REVERB_DECAY_RATE, false);
+      }
       this.loopSoundWithAnalysisAndAnimation(
-        this.sounds[soundIndex],
-        this.sounds[soundIndex].animationType,
-        this.sounds[soundIndex].animation
+        sound,
+        sound.animationType,
+        sound.animation
       );
-      this.sounds[soundIndex].amp(this.volume, this.volumeRampTime);
+      sound.amp(this.volume, this.volumeRampTime);
     }
   }
 
-  playNextSound() {
-    audioManager.toggleSound(this.currentSound);
-    this.currentSound = (this.currentSound + 1) % (this.sounds.length);
-    audioManager.toggleSound(this.currentSound);
+  isSoundAlmostOver() {
+    let sound = this.levelSounds[this.currentSound];
+    const numberOfBeats = sound.soundInfo.length;
+    const songDuration = sound.duration();
+    const lengthOfBeat = songDuration / numberOfBeats;
+    return (sound.currentTime() > songDuration - (lengthOfBeat * 4));
+  }
+
+  getDurationOfFourBeats() {
+    let sound = this.levelSounds[this.currentSound];
+    const numberOfBeats = sound.soundInfo.length;
+    const songDuration = sound.duration();
+    const lengthOfBeat = songDuration / numberOfBeats;
+    return lengthOfBeat * 4;
+  }
+
+  unloopCurrentSound() {
+    // Turn looping off
+    let sound = this.levelSounds[this.currentSound];
+    if (sound.isLooping()) {
+      sound.setLoop(false);
+      this.waitingToChange = true;
+    }
+  }
+
+  tryToPlayNextSound() {
+    if (!this.levelSounds[this.currentSound].isPlaying()) {
+      this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
+      this.toggleSound(this.currentSound);
+      this.waitingToChange = false;
+    }
+  }
+
+  stopSounds() {
+    this.toggleSound(this.currentSound);
   }
 }

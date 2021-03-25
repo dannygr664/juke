@@ -35,8 +35,14 @@ class PlatformManager {
       if (this.platforms[i].position.x < -this.platforms[i].width / 2) {
         this.spawnPlatform(this.platforms[i]);
       }
+      this.baseSpeed = this.calculatePlatformSpeed();
       this.platforms[i].setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
     }
+  }
+
+  calculatePlatformSpeed() {
+    let durationOfFourBeats = audioManager.getDurationOfFourBeats();
+    return durationOfFourBeats * 1.5;
   }
 
   spawnPlatform(platform) {

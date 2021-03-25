@@ -13,6 +13,7 @@ let audioManager;
 
 let animationController;
 let uiManager;
+let levelManager;
 
 let player;
 let platformManager;
@@ -20,79 +21,9 @@ let fluidManager;
 let jukeboxManager;
 
 function preload() {
-  soundFormats('wav', 'mp3');
-  getAudioFilePaths();
+  audioManager = new AudioManager();
   animationController = new AnimationController();
-  loadSounds();
-}
-
-
-function getAudioFilePaths() {
-  // let etherealAudioFileNames = [
-  //   'Angel1_88bpm4-4_L8M',
-  //   'Angel2_88bpm4-4_L17M',
-  //   'Angel3_88bpm4-4_L4M',
-  //   'Angel4_88bpm4-4_L8M',
-  //   'Angel5_88bpm4-4_L8M',
-  //   'Angel6_88bpm4-4_L12M',
-  //   'Angel7_88bpm4-4_L12M',
-  //   'Mateo1_88bpm4-4_L17M',
-  //   'Mateo2_88bpm4-4_L17M',
-  //   'Mateo3_88bpm4-4_L17M',
-  //   'LostShipSynth_88bpm4-4_L4M',
-  //   'NeomazeBass_88bpm4-4_L4M'
-  // ];
-
-  let etherealAudioFileNames = [
-    'Angel1_88bpm4-4_L8M',
-    '2Parts_88bpm4-4_L17M',
-    '3Parts_88bpm4-4_L17M',
-    '4Parts_88bpm4-4_L17M',
-    '5Parts_88bpm4-4_L17M',
-    '6Parts_88bpm4-4_L17M',
-    '7Parts_88bpm4-4_L17M',
-    '8Parts_88bpm4-4_L17M',
-    '9Parts_88bpm4-4_L17M',
-    '10Parts_88bpm4-4_L17M',
-    '11Parts_88bpm4-4_L21M',
-  ];
-
-  etherealAudioFileNames.forEach(etherealAudioFileName => {
-    audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.mp3`);
-  });
-
-  let lofiAudioFileNames = [
-    'Break_87bpm4-4_L4M',
-    'Build_87bpm4-4_L1M',
-    'Cymbal_87bpm4-4_L2.5B',
-    'Ending_87bpm4-4_L4.5B',
-    'Intro_87bpm4-4_L4M',
-    'Section1_87bpm4-4_L4M',
-    'Section2_87bpm4-4_L9M',
-    'Section3_87bpm4-4_L14M',
-    'Section4_87bpm4-4_L4M',
-    'Section5_87bpm4-4_L4M',
-    'Section6_87bpm4-4_L14M',
-  ];
-
-  lofiAudioFileNames.forEach(lofiAudioFileName => {
-    audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.mp3`);
-  });
-}
-
-
-function loadSounds() {
-  for (let i = 0; i < audioFilePaths.length; i++) {
-    let sound = loadSound(audioFilePaths[i]);
-    sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePaths[i]);
-
-    sound.animation = animationController.getSoundAnimationForSound(sound);
-    sound.animationType = animationController.getSoundAnimationTypeForSoundAnimation(
-      sound.animation
-    );
-
-    sounds.push(sound);
-  }
+  audioManager.loadSounds();
 }
 
 
@@ -102,19 +33,22 @@ function setup() {
     return !(e.keyCode == 32);
   };
 
-  audioManager = new AudioManager(sounds);
-
   colorMode(HSB, 360, 100, 100, 100);
 
   ColorScheme.initializeColorScheme();
 
   createCanvas(windowWidth, windowHeight);
 
-  backgroundColor = ColorScheme.WHITE;
-  colorFilter = ColorScheme.CLEAR;
-  fill(0);
-  noStroke();
-  drawMode = 0;
+  levelManager = new LevelManager();
+
+  currentLevel = levelManager.getCurrentLevel();
+  backgroundColor = currentLevel.initialBackgroundColor;
+  colorFilter = currentLevel.initialColorFilter;
+  drawMode = currentLevel.initialDrawMode;
+
+  audioManager.loadFilter();
+  audioManager.loadReverb();
+  audioManager.startSounds(currentLevel.genre);
 
   uiManager = new UIManager();
 
@@ -122,17 +56,20 @@ function setup() {
   platformManager = new PlatformManager();
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
+
+  audioManager.assignSoundAnimations();
 }
 
 
 function draw() {
   background(backgroundColor);
 
-  // audioManager.update();
+  audioManager.update();
 
   animationController.drawBackgroundSoundAnimations();
 
   player.speed = player.baseSpeed * audioManager.soundSpeed;
+  player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
 
   if (player.isReviving) {
     revivingLoop();
@@ -179,11 +116,13 @@ function handleCollisionsAndJumping() {
     }
   }
 
-  if (!player.sprite.overlap(fluidManager.fluids, handleFluidEnter)) {
-    audioManager.updateVolume(INITIAL_VOLUME);
+  let currentLevel = levelManager.getCurrentLevel();
+
+  if (!player.sprite.overlap(fluidManager.fluids, currentLevel.handleFluidEnter)) {
+    currentLevel.handleFluidExit();
   }
 
-  player.sprite.overlap(jukeboxManager.jukeboxes, handleJukeboxEnter);
+  player.sprite.overlap(jukeboxManager.jukeboxes, currentLevel.handleJukeboxEnter);
 
   if (player.jumpSpeed > 0) {
     player.jumpSpeed -= player.gravityForce;
@@ -191,42 +130,6 @@ function handleCollisionsAndJumping() {
   } else {
     player.handleGravity();
   }
-}
-
-
-function handleFluidEnter(_, fluid) {
-  switch (fluid.shapeColor) {
-    case ColorScheme.RED:
-      audioManager.updateVolume(1);
-      break;
-    case ColorScheme.BLUE:
-      audioManager.updateVolume(0.25);
-      break;
-    case ColorScheme.GREEN:
-      audioManager.updateVolume(0);
-      break;
-    case ColorScheme.YELLOW:
-      audioManager.updateVolume(0.75);
-      break;
-  }
-}
-
-function handleJukeboxEnter(_, _) {
-  // colorFilterter = ColorScheme.getFilterColor(jukeboxManager.currentAnimationColor);
-  // switch (fluid.shapeColor) {
-  //   case ColorScheme.RED:
-  //     audioManager.updateVolume(1);
-  //     break;
-  //   case ColorScheme.BLUE:
-  //     audioManager.updateVolume(0.25);
-  //     break;
-  //   case ColorScheme.GREEN:
-  //     audioManager.updateVolume(0);
-  //     break;
-  //   case ColorScheme.YELLOW:
-  //     audioManager.updateVolume(0.75);
-  //     break;
-  // }
 }
 
 
@@ -256,8 +159,20 @@ function revivingLoop() {
   }
 }
 
+
+function changeLevel() {
+  levelManager.changeLevel();
+  currentLevel = levelManager.getCurrentLevel();
+  backgroundColor = currentLevel.initialBackgroundColor;
+  colorFilter = currentLevel.initialColorFilter;
+  drawMode = currentLevel.initialDrawMode;
+
+  audioManager.startSounds(currentLevel.genre);
+}
+
+
 function keyReleased() {
-  if (key == '1') {
-    audioManager.playNextSound();
+  if (key === '2') {
+    changeLevel();
   }
 }

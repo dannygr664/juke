@@ -1,20 +1,14 @@
 const DEFAULT_BASE_FLUID_SPEED = 0.5;
 const NUMBER_OF_FLUIDS = 1;
 
-let fluidColors;
-
 let fluidXInitial;
 
 class FluidManager {
   constructor() {
     this.baseSpeed = DEFAULT_BASE_FLUID_SPEED;
     this.speed = 0;
-    this.fluidColors = [
-      ColorScheme.RED,
-      ColorScheme.BLUE,
-      ColorScheme.GREEN,
-      ColorScheme.YELLOW,
-    ];
+    this.fluidAnimationColors = levelManager.getCurrentLevel().fluidAnimationColors;
+    this.currentAnimationColor = random(this.fluidAnimationColors);
     this.fluids = new Group();
 
     fluidXInitial = windowWidth;
@@ -40,7 +34,16 @@ class FluidManager {
         random(this.fluidWidthMin, this.fluidWidthMax),
         random(this.fluidHeightMin, this.fluidHeightMax)
       );
-      fluid.shapeColor = random(this.fluidColors);
+
+      fluid.animation = animationController.createFluidAnimation(
+        fluid.position.x - fluid.width / 2,
+        fluid.position.y - fluid.height / 2,
+        fluid.width,
+        fluid.height,
+        this.currentAnimationColor
+      );
+
+      fluid.shapeColor = ColorScheme.CLEAR;
       fluid.setSpeed(this.baseSpeed, 180);
       this.fluids.add(fluid);
     }
@@ -57,7 +60,9 @@ class FluidManager {
   }
 
   spawnFluid(fluid) {
-    fluid.shapeColor = random(this.fluidColors);
+    //fluid.shapeColor = random(this.fluidAnimationColors);
+    this.currentAnimationColor = random(this.fluidAnimationColors);
+    animationController.setFluidAnimationColor(fluid.animation, this.currentAnimationColor);
     fluid.width = random(this.fluidWidthMin, this.fluidWidthMax);
     fluid.height = random(this.fluidHeightMin, this.fluidHeightMax);
     fluid.position.x = windowWidth + fluid.width / 2 + random(
@@ -70,11 +75,16 @@ class FluidManager {
   drawFluids() {
     for (let i = 0; i < this.fluids.length; i++) {
       drawSprite(this.fluids[i]);
+      animationController.drawFluidAnimation(
+        this.fluids[i].animation,
+        this.fluids[i].position.x - this.fluids[i].width / 2
+      );
     }
   }
 
   handleFalling() {
     for (let i = 0; i < this.fluids.length; i++) {
+      animationController.setFluidAnimationColor(this.fluids[i].animation, ColorScheme.BLACK_INACTIVE);
       this.fluids[i].setSpeed(0, 180);
     }
   }
@@ -82,6 +92,7 @@ class FluidManager {
   handleRevived() {
     for (let i = 0; i < this.fluids.length; i++) {
       this.fluids[i].setSpeed(this.baseSpeed, 180);
+      animationController.setFluidAnimationColor(this.fluids[i].animation, this.currentAnimationColor);
     }
   }
 }

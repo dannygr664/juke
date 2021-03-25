@@ -36,12 +36,37 @@ class AnimationController {
     moireAnim.color = color;
   }
 
+  createFluidAnimation(xPosition, yPosition, width, height, color) {
+    let fluidAnim = new Moire(
+      xPosition,
+      yPosition,
+      xPosition,
+      yPosition + height,
+      width,
+      color
+    )
+
+    return fluidAnim;
+  }
+
+  drawFluidAnimation(anim, xPosition) {
+    anim.x1 = xPosition;
+    anim.x2 = xPosition;
+    anim.drawMoire();
+  }
+
+  setFluidAnimationColor(anim, color) {
+    anim.color = color;
+  }
+
   getSoundAnimationForSound(sound) {
     switch (sound.soundInfo.genre) {
       case 'Ethereal':
         return 0;
       case 'LoFi':
         return 1;
+      case 'Spaceship':
+        return 2;
       default:
         return 0;
     }
@@ -70,11 +95,12 @@ class AnimationController {
   }
 
   drawSoundAnimation(sound) {
-    if (sound.animationType === 0) {
-      this.drawVolumeAnimations(sound);
-    } else {
-      this.drawFrequencyAnimations(sound);
-    }
+    // if (sound.animationType === 0) {
+    //   this.drawVolumeAnimations(sound);
+    // } else {
+    //   this.drawFrequencyAnimations(sound);
+    // }
+    this.drawVolumeAnimations(sound);
   }
 
   drawVolumeAnimations(sound) {
