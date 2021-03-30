@@ -6,10 +6,10 @@ class Ethereal {
     noStroke();
     this.initialDrawMode = 0;
     this.fluidAnimationColors = [
-      ColorScheme.RED,
-      ColorScheme.BLUE,
-      ColorScheme.GREEN,
-      ColorScheme.YELLOW,
+      ColorScheme.ETHEREAL_HIGHEST_REVERB,
+      ColorScheme.ETHEREAL_HIGHER_REVERB,
+      ColorScheme.ETHEREAL_LOWER_REVERB,
+      ColorScheme.ETHEREAL_LOWEST_REVERB
     ];
     this.genre = 'Ethereal';
   }

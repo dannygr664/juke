@@ -2,6 +2,7 @@ const FILTER_ALPHA = 30;
 
 class ColorScheme {
   static initializeColorScheme() {
+    // Define colors
     this.RED = color(356, 78, 67);
     this.BLUE = color(213, 77, 49);
     this.GREEN = color(142, 55, 40);
@@ -20,6 +21,22 @@ class ColorScheme {
     this.WHITE = color(360);
     this.WHITE_FILTER = color(360, FILTER_ALPHA);
     this.CLEAR = color(360, 0);
+
+    // Assign color schemes for each level
+    this.SPACESHIP_LOWEST_VOLUME = this.GREEN;
+    this.SPACESHIP_LOWER_VOLUME = this.BLUE;
+    this.SPACESHIP_HIGHER_VOLUME = this.YELLOW;
+    this.SPACESHIP_HIGHEST_VOLUME = this.RED;
+
+    this.LOFI_LOWEST_SPEED = this.RED;
+    this.LOFI_LOWER_SPEED = this.YELLOW;
+    this.LOFI_HIGHER_SPEED = this.BLUE;
+    this.LOFI_HIGHEST_SPEED = this.GREEN;
+
+    this.ETHEREAL_LOWEST_REVERB = this.RED;
+    this.ETHEREAL_LOWER_REVERB = this.YELLOW;
+    this.ETHEREAL_HIGHER_REVERB = this.BLUE;
+    this.ETHEREAL_HIGHEST_REVERB = this.GREEN;
   }
 
   static getFilterColor(color) {

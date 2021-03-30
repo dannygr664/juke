@@ -6,10 +6,10 @@ class Spaceship {
     noStroke();
     this.initialDrawMode = 0;
     this.fluidAnimationColors = [
-      ColorScheme.RED,
-      ColorScheme.BLUE,
-      ColorScheme.GREEN,
-      ColorScheme.YELLOW,
+      ColorScheme.SPACESHIP_HIGHEST_VOLUME,
+      ColorScheme.SPACESHIP_HIGHER_VOLUME,
+      ColorScheme.SPACESHIP_LOWER_VOLUME,
+      ColorScheme.SPACESHIP_LOWEST_VOLUME
     ];
     this.genre = 'Spaceship';
   }
