@@ -16,8 +16,25 @@ class Blinds {
   draw(rms) {
     push();
     fill(this.color);
-    let rectSizeX = (this.x2 - this.x1) / tileCount;
-    let rectSizeY = (this.y2 - this.y1) / tileCount;
+    let colorScaleFactor;
+    switch (this.color) {
+      case ColorScheme.SPACESHIP_HIGHEST_VOLUME:
+        colorScaleFactor = 1;
+        break;
+      case ColorScheme.SPACESHIP_HIGHER_VOLUME:
+        colorScaleFactor = 0.6;
+        break;
+      case ColorScheme.SPACESHIP_LOWER_VOLUME:
+        colorScaleFactor = 0.25;
+        break;
+      case ColorScheme.SPACESHIP_LOWEST_VOLUME:
+        colorScaleFactor = 0.1;
+        break;
+      default:
+        colorScaleFactor = 1;
+    }
+    let rectSizeX = (this.x2 - this.x1) / tileCount * colorScaleFactor;
+    let rectSizeY = (this.y2 - this.y1) / tileCount * colorScaleFactor;
 
     randomSeed(actRandomSeed);
 
@@ -27,14 +44,14 @@ class Blinds {
         let posX = this.x1 + ((this.x2 - this.x1) / tileCount * gridX);
         let posY = (this.y2 - this.y1) / tileCount * gridY;
 
-        let shiftX1 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
-        let shiftY1 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
-        let shiftX2 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
-        let shiftY2 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
-        let shiftX3 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
-        let shiftY3 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
-        let shiftX4 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
-        let shiftY4 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
+        let shiftX1 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
+        let shiftY1 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
+        let shiftX2 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
+        let shiftY2 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
+        let shiftX3 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
+        let shiftY3 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
+        let shiftX4 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
+        let shiftY4 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
 
         push();
         translate(posX, posY);
