@@ -32,12 +32,31 @@ class Noise {
     rect(0, 0, this.x2 - this.x1, this.y2 - this.y1);
 
     noiseStrength = map(rms, 0, 0.1, 0, 20);
-    strokeWidth = map(rms, 0, 0.1, 0.1, map(audioManager.volume, 0, 1, 4, 10));
+    strokeWidth = map(rms, 0, 0.1, 0.5, map(audioManager.volume, 0, 1, 4, 10));
 
     // Draw agents
     stroke(player.isReviving ? ColorScheme.BLACK_INACTIVE : this.color, agentAlpha);
+
+    let colorScaleFactor;
+    switch (this.color) {
+      case ColorScheme.ETHEREAL_HIGHEST_REVERB:
+        colorScaleFactor = 1000;
+        break;
+      case ColorScheme.ETHEREAL_HIGHER_REVERB:
+        colorScaleFactor = 100;
+        break;
+      case ColorScheme.ETHEREAL_LOWER_REVERB:
+        colorScaleFactor = 0.5;
+        break;
+      case ColorScheme.ETHEREAL_LOWEST_REVERB:
+        colorScaleFactor = 0.25;
+        break;
+      default:
+        colorScaleFactor = 1;
+    }
+
     for (let i = 0; i < agentCount; i++) {
-      agents[i].update1(noiseScale, noiseStrength, strokeWidth);
+      agents[i].update1(noiseScale, noiseStrength * colorScaleFactor, strokeWidth);
     }
 
     pop();
