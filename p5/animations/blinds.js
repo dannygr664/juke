@@ -5,19 +5,27 @@ let rectSize;
 let ORIGAMI_SCALE_FACTOR = 200;
 
 class Blinds {
-  constructor() {
-    rectSize = windowWidth / tileCount;
+  constructor(x1, x2, y1, y2, color) {
+    this.x1 = x1;
+    this.x2 = x2;
+    this.y1 = y1;
+    this.y2 = y2;
+    this.color = color;
   }
 
-  drawBlinds(rms) {
-    fill(ColorScheme.BLACK_INACTIVE);
+  draw(rms) {
+    push();
+    fill(this.color);
+    let rectSizeX = (this.x2 - this.x1) / tileCount;
+    let rectSizeY = (this.y2 - this.y1) / tileCount;
+
     randomSeed(actRandomSeed);
 
     for (let gridY = 0; gridY < tileCount; gridY++) {
       for (let gridX = 0; gridX < tileCount; gridX++) {
 
-        let posX = windowWidth / tileCount * gridX;
-        let posY = windowHeight / tileCount * gridY;
+        let posX = this.x1 + ((this.x2 - this.x1) / tileCount * gridX);
+        let posY = (this.y2 - this.y1) / tileCount * gridY;
 
         let shiftX1 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
         let shiftY1 = rms * ORIGAMI_SCALE_FACTOR * random(-1, 1);
@@ -32,14 +40,14 @@ class Blinds {
         translate(posX, posY);
         beginShape();
         vertex(shiftX1, shiftY1);
-        vertex(rectSize + shiftX2, shiftY2);
-        vertex(rectSize + shiftX3, rectSize + shiftY3);
-        vertex(shiftX4, rectSize + shiftY4);
+        vertex(rectSizeX + shiftX2, shiftY2);
+        vertex(rectSizeX + shiftX3, rectSizeY + shiftY3);
+        vertex(shiftX4, rectSizeY + shiftY4);
         endShape();
         pop();
       }
     }
 
-    fill(0);
+    pop();
   }
 }

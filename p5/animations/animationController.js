@@ -9,10 +9,38 @@ let moireAnim;
 
 class AnimationController {
   constructor() {
-    noiseAnim = new Noise();
-    boxesAnim = new Boxes();
-    linesAnim = new Lines();
-    blindsAnim = new Blinds();
+
+  }
+
+  loadAnimations() {
+    noiseAnim = new Noise(
+      0,
+      windowWidth,
+      0,
+      windowHeight,
+      ColorScheme.BLACK_INACTIVE
+    );
+    boxesAnim = new Boxes(
+      0,
+      windowWidth,
+      0,
+      windowHeight,
+      ColorScheme.BLACK_INACTIVE
+    );
+    linesAnim = new Lines(
+      0,
+      windowWidth,
+      0,
+      windowHeight,
+      ColorScheme.BLACK_INACTIVE
+    );
+    blindsAnim = new Blinds(
+      0,
+      windowWidth,
+      0,
+      windowHeight,
+      ColorScheme.BLACK_INACTIVE
+    );
   }
 
   createJukeboxAnimation(xPosition, width) {
@@ -37,23 +65,33 @@ class AnimationController {
   }
 
   createFluidAnimation(xPosition, yPosition, width, height, color) {
-    let fluidAnim = new Moire(
+    // let fluidAnim = new Moire(
+    //   xPosition,
+    //   yPosition,
+    //   xPosition,
+    //   yPosition + height,
+    //   width,
+    //   color
+    // )
+
+    let fluidAnim = new Blinds(
       xPosition,
+      xPosition + width,
       yPosition,
-      xPosition,
       yPosition + height,
-      width,
       color
-    )
+    );
 
     return fluidAnim;
   }
 
-  drawFluidAnimation(anim, xPosition) {
-    anim.x1 = xPosition;
-    anim.x2 = xPosition;
-    anim.drawMoire();
-  }
+  // drawFluidAnimation(anim, x1, x2) {
+  //   anim.x1 = x1;
+  //   anim.x2 = x2;
+  //   let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
+  //   let rms = sound.amplitudeAnalyzer.getLevel();
+  //   anim.draw(rms);
+  // }
 
   setFluidAnimationColor(anim, color) {
     anim.color = color;
@@ -80,41 +118,63 @@ class AnimationController {
     }
   }
 
-  drawBackgroundSoundAnimations() {
+  drawFluidAnimation(x1, x2, color) {
     audioManager.sounds
       .filter(sound => sound.isPlaying())
-      .filter(sound => FOREGROUND_ANIMATIONS.indexOf(sound.animation) === -1)
-      .forEach(sound => { this.drawSoundAnimation(sound); });
+      .forEach(sound => { this.drawSoundAnimation(sound, x1, x2, color); });
   }
 
-  drawForegroundSoundAnimations() {
-    audioManager.sounds
-      .filter(sound => sound.isPlaying())
-      .filter(sound => FOREGROUND_ANIMATIONS.indexOf(sound.animation) !== -1)
-      .forEach(sound => { this.drawSoundAnimation(sound); });
-  }
+  // drawBackgroundSoundAnimations() {
+  //   audioManager.sounds
+  //     .filter(sound => sound.isPlaying())
+  //     .filter(sound => FOREGROUND_ANIMATIONS.indexOf(sound.animation) === -1)
+  //     .forEach(sound => { this.drawSoundAnimation(sound); });
+  // }
 
-  drawSoundAnimation(sound) {
+  // drawForegroundSoundAnimations() {
+  //   audioManager.sounds
+  //     .filter(sound => sound.isPlaying())
+  //     .filter(sound => FOREGROUND_ANIMATIONS.indexOf(sound.animation) !== -1)
+  //     .forEach(sound => { this.drawSoundAnimation(sound); });
+  // }
+
+  drawSoundAnimation(sound, x1, x2, color) {
     // if (sound.animationType === 0) {
     //   this.drawVolumeAnimations(sound);
     // } else {
     //   this.drawFrequencyAnimations(sound);
     // }
-    this.drawVolumeAnimations(sound);
+    this.drawVolumeAnimations(sound, x1, x2, color);
   }
 
-  drawVolumeAnimations(sound) {
+  drawVolumeAnimations(sound, x1, x2, color) {
     let rms = sound.amplitudeAnalyzer.getLevel();
 
     if (sound.animation === 0) {
-      noiseAnim.drawNoise(rms);
+      noiseAnim.x1 = x1;
+      noiseAnim.x2 = x2;
+      noiseAnim.color = color;
+      noiseAnim.updateAgentPositions();
+      noiseAnim.draw(rms);
     } else if (sound.animation === 1) {
-      boxesAnim.drawBoxes(rms);
+      boxesAnim.x1 = x1;
+      boxesAnim.x2 = x2;
+      boxesAnim.color = color;
+      boxesAnim.draw(rms);
     } else if (sound.animation === 2) {
-      blindsAnim.drawBlinds(rms);
+      blindsAnim.x1 = x1;
+      blindsAnim.x2 = x2;
+      blindsAnim.color = color;
+      blindsAnim.draw(rms);
     } else if (sound.animation === 3) {
+      linesAnim.x1 = x1;
+      linesAnim.x2 = x2;
+      linesAnim.color = color;
       linesAnim.drawLines1(rms);
     } else if (sound.animation === 4) {
+      linesAnim.x1 = x1;
+      linesAnim.x2 = x2;
+      linesAnim.color = color;
       linesAnim.drawLines2(rms);
     }
   }

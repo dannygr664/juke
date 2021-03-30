@@ -76,8 +76,9 @@ class FluidManager {
     for (let i = 0; i < this.fluids.length; i++) {
       drawSprite(this.fluids[i]);
       animationController.drawFluidAnimation(
-        this.fluids[i].animation,
-        this.fluids[i].position.x - this.fluids[i].width / 2
+        this.fluids[i].position.x - this.fluids[i].width / 2,
+        this.fluids[i].position.x + this.fluids[i].width / 2,
+        this.currentAnimationColor
       );
     }
   }
