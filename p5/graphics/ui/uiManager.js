@@ -1,3 +1,6 @@
+const CURSOR_WIDTH = 20;
+const CURSOR_HEIGHT = 20;
+
 class UIManager {
   constructor() {
     textAlign(LEFT, TOP)
@@ -14,16 +17,43 @@ class UIManager {
   }
 
   drawMainMenu() {
+    const TITLE_TEXT_SIZE = windowHeight / 5;
+    const ITEM_TEXT_SIZE = windowHeight / 15;
+    const TEXT_X = windowWidth / 2;
+    const CURSOR_X = windowWidth / 5;
+
+    const TITLE_Y = windowHeight / 3;
+    const ITEM1_Y = windowHeight / 2;
+    const ITEM2_Y = 5 * windowHeight / 8;
+    const ITEM3_Y = 3 * windowHeight / 4;
+
     push();
     textAlign(CENTER, CENTER);
     textFont('HelveticaNeue-UltraLight');
-    textSize(200);
-    text('Juke', windowWidth / 2, windowHeight / 3);
-    textSize(70);
+    textSize(TITLE_TEXT_SIZE);
+    text('Juke', TEXT_X, TITLE_Y);
+    textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
-    text('Play', windowWidth / 2, windowHeight / 2);
-    text('How To Play', windowWidth / 2, 5 * windowHeight / 8);
-    text('Credits', windowWidth / 2, 3 * windowHeight / 4);
+    text('Play', TEXT_X, ITEM1_Y);
+    text('How To Play', TEXT_X, ITEM2_Y);
+    text('Credits', TEXT_X, ITEM3_Y);
+
+    let currentItemSelected = levelManager.getCurrentLevel().currentItemSelected;
+    let cursorY = -windowHeight;
+    if (currentItemSelected === 0) {
+      cursorY = ITEM1_Y;
+    } else if (currentItemSelected === 1) {
+      cursorY = ITEM2_Y;
+    } else if (currentItemSelected === 2) {
+      cursorY = ITEM3_Y;
+    }
+
+    rect(
+      CURSOR_X - CURSOR_WIDTH / 2,
+      cursorY - CURSOR_HEIGHT / 2,
+      CURSOR_WIDTH,
+      CURSOR_HEIGHT
+    );
     pop();
   }
 

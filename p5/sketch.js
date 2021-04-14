@@ -76,9 +76,7 @@ function draw() {
 
   uiManager.drawUI();
 
-  if (currentLevel.genre === 'City') {
-    handleControls();
-  } else {
+  if (currentLevel.genre !== 'City') {
     player.speed = player.baseSpeed * audioManager.soundSpeed;
     player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
 
@@ -110,11 +108,7 @@ function draw() {
 
 
 function handleControls() {
-  if (currentLevel === 'City') {
-    if (keyIsDown(RIGHT_ARROW)) {
-      print('main menu control activated!');
-    }
-  } else {
+  if (currentLevel.genre !== 'City') {
     if (keyIsDown(RIGHT_ARROW)) {
       player.sprite.setSpeed(player.speed, 0);
     } else if (keyIsDown(LEFT_ARROW)) {
@@ -191,8 +185,31 @@ function changeLevel() {
 }
 
 
-function keyReleased() {
-  if (key === '2') {
-    changeLevel();
+function keyPressed() {
+  if (currentLevel.genre === 'City') {
+    if (keyCode === DOWN_ARROW) {
+      currentLevel.currentItemSelected =
+        (currentLevel.currentItemSelected + 1) % currentLevel.menuItems.length;
+    } else if (keyCode === UP_ARROW) {
+      if (currentLevel.currentItemSelected === 0) {
+        currentLevel.currentItemSelected = currentLevel.menuItems.length - 1;
+      } else {
+        currentLevel.currentItemSelected =
+          (currentLevel.currentItemSelected - 1) % currentLevel.menuItems.length;
+      }
+    } else if (key === ' ') {
+      currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
+      switch (currentSelection) {
+        case 'Play':
+          changeLevel();
+          break;
+        case 'How To Play':
+          print('How to play!');
+          break;
+        case 'Credits':
+          print('Credits');
+          break;
+      }
+    }
   }
 }
