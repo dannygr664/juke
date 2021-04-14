@@ -26,6 +26,7 @@ function preload() {
 
   audioManager.loadSounds();
   loadFont('graphics/fonts/HelveticaNeue-UltraLight.ttf');
+  loadFont('graphics/fonts/HelveticaNeue-Thin.ttf');
 }
 
 

@@ -17,8 +17,13 @@ class UIManager {
     push();
     textAlign(CENTER, CENTER);
     textFont('HelveticaNeue-UltraLight');
-    textSize(100);
+    textSize(200);
     text('Juke', windowWidth / 2, windowHeight / 3);
+    textSize(70);
+    textFont('HelveticaNeue-Thin');
+    text('Play', windowWidth / 2, windowHeight / 2);
+    text('How To Play', windowWidth / 2, 5 * windowHeight / 8);
+    text('Credits', windowWidth / 2, 3 * windowHeight / 4);
     pop();
   }
 
