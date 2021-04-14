@@ -47,7 +47,6 @@ class AudioManager {
     });
 
     let etherealAudioFileNames = [
-      '11Parts_88bpm4-4_L21M',
       'Angel1_88bpm4-4_L8M',
       '2Parts_88bpm4-4_L17M',
       '3Parts_88bpm4-4_L17M',
@@ -58,7 +57,7 @@ class AudioManager {
       '8Parts_88bpm4-4_L17M',
       '9Parts_88bpm4-4_L17M',
       '10Parts_88bpm4-4_L17M',
-      '11Parts_88bpm4-4_L21M',
+      '11Parts_88bpm4-4_L21M'
     ];
 
     etherealAudioFileNames.forEach(etherealAudioFileName => {
@@ -90,9 +89,6 @@ class AudioManager {
     for (let i = 0; i < audioFilePaths.length; i++) {
       let sound = loadSound(audioFilePaths[i]);
       sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePaths[i]);
-
-      sound.addCue(0, this.resetDidPlayerFallFlag);
-
       this.sounds.push(sound);
     }
   }
@@ -103,6 +99,12 @@ class AudioManager {
       this.sounds[i].animationType = animationController.getSoundAnimationTypeForSoundAnimation(
         this.sounds[i].animation
       );
+    }
+  }
+
+  assignSoundCues() {
+    for (let i = 0; i < this.sounds.length; i++) {
+      this.sounds[i].addCue(0, this.resetDidPlayerFallFlag);
     }
   }
 
@@ -144,10 +146,12 @@ class AudioManager {
 
     this.reverbLevel = INITIAL_REVERB;
 
+    print(this.levelSounds);
+
     this.loopSoundWithAnalysisAndAnimation(
       this.levelSounds[0],
-      this.levelSounds.animationType,
-      this.levelSounds.animation
+      this.levelSounds[0].animationType,
+      this.levelSounds[0].animation
     );
 
     this.currentSound = 0;

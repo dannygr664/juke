@@ -6,11 +6,15 @@ class LoFi {
     noStroke();
     this.initialDrawMode = 0;
     this.fluidAnimationColors = [
-      ColorScheme.RED,
-      ColorScheme.BLUE,
-      ColorScheme.GREEN,
-      ColorScheme.YELLOW,
+      ColorScheme.LOFI_HIGHEST_SPEED,
+      ColorScheme.LOFI_HIGHER_SPEED,
+      ColorScheme.LOFI_LOWER_SPEED,
+      ColorScheme.LOFI_LOWEST_SPEED
     ];
+    this.jukeboxAnimationColors = [
+      ColorScheme.BLACK
+    ];
+    this.defaultJukeboxAnimationColor = ColorScheme.BLACK;
     this.genre = 'LoFi';
   }
 

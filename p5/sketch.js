@@ -23,6 +23,7 @@ let jukeboxManager;
 function preload() {
   audioManager = new AudioManager();
   animationController = new AnimationController();
+
   audioManager.loadSounds();
 }
 
@@ -50,6 +51,8 @@ function setup() {
   audioManager.loadReverb();
   audioManager.startSounds(currentLevel.genre);
 
+  animationController.loadAnimations();
+
   uiManager = new UIManager();
 
   player = new Player();
@@ -58,6 +61,7 @@ function setup() {
   jukeboxManager = new JukeboxManager();
 
   audioManager.assignSoundAnimations();
+  audioManager.assignSoundCues();
 }
 
 
@@ -66,7 +70,7 @@ function draw() {
 
   audioManager.update();
 
-  animationController.drawBackgroundSoundAnimations();
+  //animationController.drawBackgroundSoundAnimations();
 
   player.speed = player.baseSpeed * audioManager.soundSpeed;
   player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
@@ -85,7 +89,7 @@ function draw() {
   }
 
   fluidManager.drawFluids();
-  animationController.drawForegroundSoundAnimations();
+  //animationController.drawForegroundSoundAnimations();
   jukeboxManager.drawJukeboxes();
   platformManager.drawPlatforms();
   drawSprite(player.sprite);
@@ -164,6 +168,8 @@ function changeLevel() {
   levelManager.changeLevel();
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
+  fluidManager.changeLevel();
+  jukeboxManager.changeLevel();
   colorFilter = currentLevel.initialColorFilter;
   drawMode = currentLevel.initialDrawMode;
 

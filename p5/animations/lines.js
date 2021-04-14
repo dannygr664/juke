@@ -14,20 +14,25 @@ let posX;
 let posY;
 
 class Lines {
-  constructor() {
+  constructor(x1, x2, y1, y2, color) {
+    this.x1 = x1;
+    this.x2 = x2;
+    this.y1 = y1;
+    this.y2 = y2;
+    this.color = color;
     posX = windowWidth / 2;
     posY = windowHeight / 2;
   }
 
   drawLines1(rms) {
-    this.drawLines(0, rms);
+    this.draw(0, rms);
   }
 
   drawLines2(rms) {
-    this.drawLines(1, rms);
+    this.draw(1, rms);
   }
 
-  drawLines(drawMode, rms) {
+  draw(drawMode, rms) {
     noStroke();
 
     for (let i = 0; i <= map(rms, 0, 0.05, 0, windowWidth); i++) {

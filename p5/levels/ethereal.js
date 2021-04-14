@@ -1,31 +1,35 @@
 class Ethereal {
   constructor() {
-    this.initialBackgroundColor = ColorScheme.WHITE;
+    this.initialBackgroundColor = ColorScheme.ETHEREAL_BACKGROUND_COLOR;
     this.initialColorFilter = ColorScheme.CLEAR;
     fill(0);
     noStroke();
     this.initialDrawMode = 0;
     this.fluidAnimationColors = [
-      ColorScheme.RED,
-      ColorScheme.BLUE,
-      ColorScheme.GREEN,
-      ColorScheme.YELLOW,
+      ColorScheme.ETHEREAL_HIGHEST_REVERB,
+      ColorScheme.ETHEREAL_HIGHER_REVERB,
+      ColorScheme.ETHEREAL_LOWER_REVERB,
+      ColorScheme.ETHEREAL_LOWEST_REVERB
     ];
+    this.jukeboxAnimationColors = [
+      ColorScheme.WHITE
+    ];
+    this.defaultJukeboxAnimationColor = ColorScheme.WHITE;
     this.genre = 'Ethereal';
   }
 
   handleFluidEnter(_, fluid) {
     switch (fluid.animation.color) {
-      case ColorScheme.RED:
+      case ColorScheme.ETHEREAL_LOWEST_REVERB:
         audioManager.updateReverb(0);
         break;
-      case ColorScheme.BLUE:
+      case ColorScheme.ETHEREAL_HIGHER_REVERB:
         audioManager.updateReverb(0.75);
         break;
-      case ColorScheme.GREEN:
+      case ColorScheme.ETHEREAL_HIGHEST_REVERB:
         audioManager.updateReverb(1);
         break;
-      case ColorScheme.YELLOW:
+      case ColorScheme.ETHEREAL_LOWER_REVERB:
         audioManager.updateReverb(0.25);
         break;
     }
