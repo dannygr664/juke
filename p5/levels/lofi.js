@@ -11,6 +11,10 @@ class LoFi {
       ColorScheme.LOFI_LOWER_SPEED,
       ColorScheme.LOFI_LOWEST_SPEED
     ];
+    this.jukeboxAnimationColors = [
+      ColorScheme.BLACK
+    ];
+    this.defaultJukeboxAnimationColor = ColorScheme.BLACK;
     this.genre = 'LoFi';
   }
 

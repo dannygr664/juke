@@ -4,14 +4,8 @@ class JukeboxManager {
   constructor() {
     this.baseSpeed = 0;
     this.speed = 0;
-    this.jukeboxAnimationColors = [
-      ColorScheme.BLACK,
-      ColorScheme.RED_SAT,
-      ColorScheme.BLUE_SAT,
-      ColorScheme.GREEN_SAT,
-      ColorScheme.YELLOW_SAT,
-    ];
-    this.currentAnimationColor = ColorScheme.BLACK;
+    this.jukeboxAnimationColors = levelManager.getCurrentLevel().jukeboxAnimationColors;
+    this.currentAnimationColor = levelManager.getCurrentLevel().defaultJukeboxAnimationColor;
 
     this.jukeboxes = new Group();
 
@@ -89,5 +83,15 @@ class JukeboxManager {
     for (let i = 0; i < this.jukeboxes.length; i++) {
       this.jukeboxes[i].setSpeed(this.baseSpeed, 180);
     }
+  }
+
+  changeLevel() {
+    for (let i = 0; i < this.jukeboxes.length; i++) {
+      let jukebox = this.jukeboxes[i];
+      if (jukebox.position.x < windowWidth + jukebox.width / 2) {
+        this.spawnJukebox(jukebox);
+      }
+    }
+    this.didPlayerFall = false;
   }
 }

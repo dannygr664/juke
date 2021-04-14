@@ -168,6 +168,8 @@ function changeLevel() {
   levelManager.changeLevel();
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
+  fluidManager.changeLevel();
+  jukeboxManager.changeLevel();
   colorFilter = currentLevel.initialColorFilter;
   drawMode = currentLevel.initialDrawMode;
 

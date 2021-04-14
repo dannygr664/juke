@@ -96,4 +96,16 @@ class FluidManager {
       animationController.setFluidAnimationColor(this.fluids[i].animation, this.currentAnimationColor);
     }
   }
+
+  changeLevel() {
+    this.fluidAnimationColors = levelManager.getCurrentLevel().fluidAnimationColors;
+    this.currentAnimationColor = random(this.fluidAnimationColors);
+    for (let i = 0; i < this.fluids.length; i++) {
+      let fluid = this.fluids[i];
+      if (fluid.position.x < windowWidth + fluid.width / 2) {
+        this.spawnFluid(fluid);
+      }
+      fluid.setSpeed(this.baseSpeed, 180);
+    }
+  }
 }
