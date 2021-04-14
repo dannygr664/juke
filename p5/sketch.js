@@ -25,6 +25,7 @@ function preload() {
   animationController = new AnimationController();
 
   audioManager.loadSounds();
+  loadFont('graphics/fonts/HelveticaNeue-UltraLight.ttf');
 }
 
 
@@ -44,8 +45,8 @@ function setup() {
 
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
-  colorFilter = currentLevel.initialColorFilter;
-  drawMode = currentLevel.initialDrawMode;
+  // colorFilter = currentLevel.initialColorFilter;
+  // drawMode = currentLevel.initialDrawMode;
 
   audioManager.loadFilter();
   audioManager.loadReverb();
@@ -72,42 +73,54 @@ function draw() {
 
   //animationController.drawBackgroundSoundAnimations();
 
-  player.speed = player.baseSpeed * audioManager.soundSpeed;
-  player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
-
-  if (player.isReviving) {
-    revivingLoop();
-  } else {
-    handleControls();
-
-    handleCollisionsAndJumping();
-
-    platformManager.managePlatforms();
-    fluidManager.manageFluids();
-    jukeboxManager.manageJukeboxes();
-    handleFalling();
-  }
-
-  fluidManager.drawFluids();
-  //animationController.drawForegroundSoundAnimations();
-  jukeboxManager.drawJukeboxes();
-  platformManager.drawPlatforms();
-  drawSprite(player.sprite);
   uiManager.drawUI();
-  push();
-  fill(colorFilter);
-  rect(0, 0, window.width, window.height);
-  pop();
+
+  if (currentLevel.genre === 'City') {
+    handleControls();
+  } else {
+    player.speed = player.baseSpeed * audioManager.soundSpeed;
+    player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
+
+    if (player.isReviving) {
+      revivingLoop();
+    } else {
+      handleControls();
+
+      handleCollisionsAndJumping();
+
+      platformManager.managePlatforms();
+      fluidManager.manageFluids();
+      jukeboxManager.manageJukeboxes();
+      handleFalling();
+    }
+
+    fluidManager.drawFluids();
+    //animationController.drawForegroundSoundAnimations();
+    jukeboxManager.drawJukeboxes();
+    platformManager.drawPlatforms();
+    drawSprite(player.sprite);
+
+    push();
+    fill(colorFilter);
+    rect(0, 0, window.width, window.height);
+    pop();
+  }
 }
 
 
 function handleControls() {
-  if (keyIsDown(RIGHT_ARROW)) {
-    player.sprite.setSpeed(player.speed, 0);
-  } else if (keyIsDown(LEFT_ARROW)) {
-    player.sprite.setSpeed(player.speed, 180);
+  if (currentLevel === 'City') {
+    if (keyIsDown(RIGHT_ARROW)) {
+      print('main menu control activated!');
+    }
   } else {
-    player.sprite.setSpeed(0, 0);
+    if (keyIsDown(RIGHT_ARROW)) {
+      player.sprite.setSpeed(player.speed, 0);
+    } else if (keyIsDown(LEFT_ARROW)) {
+      player.sprite.setSpeed(player.speed, 180);
+    } else {
+      player.sprite.setSpeed(0, 0);
+    }
   }
 }
 

@@ -6,6 +6,23 @@ class UIManager {
   }
 
   drawUI() {
+    if (levelManager.getCurrentLevel().genre === 'City') {
+      this.drawMainMenu();
+    } else {
+      this.drawGameUI();
+    }
+  }
+
+  drawMainMenu() {
+    push();
+    textAlign(CENTER, CENTER);
+    textFont('HelveticaNeue-UltraLight');
+    textSize(100);
+    text('Juke', windowWidth / 2, windowHeight / 3);
+    pop();
+  }
+
+  drawGameUI() {
     this.drawVolumeMeter();
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();

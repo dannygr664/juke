@@ -34,6 +34,18 @@ class AudioManager {
   getAudioFilePaths() {
     this.audioFilePaths = [];
 
+    let cityAudioFileNames = [
+      //'Intro_88bpm4-4_L1M',
+      'Section1_88bpm4-4_L4M',
+      'Section2_88bpm4-4_L8M',
+      'Section3_88bpm4-4_L4M',
+      'Ending_88bpm4-4_L6B'
+    ];
+
+    cityAudioFileNames.forEach(cityAudioFileName => {
+      this.audioFilePaths.push(`audio/City/Juke_City_${cityAudioFileName}.wav`);
+    });
+
     let spaceshipAudioFileNames = [
       'Intro_76,88bpm4-4_L4M',
       'Section1_76,88bpm4-4_L4M',

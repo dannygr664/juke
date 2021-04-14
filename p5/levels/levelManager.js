@@ -1,11 +1,11 @@
-const NUMBER_OF_LEVELS = 3;
-
 class LevelManager {
   constructor() {
     this.levels = [];
+    let mainMenu = new MainMenu();
     let level1 = new Spaceship();
     let level2 = new LoFi();
     let level3 = new Ethereal();
+    this.levels.push(mainMenu);
     this.levels.push(level1);
     this.levels.push(level2);
     this.levels.push(level3);
@@ -18,6 +18,6 @@ class LevelManager {
 
   changeLevel() {
     audioManager.stopSounds();
-    this.currentLevel = (this.currentLevel + 1) % NUMBER_OF_LEVELS;
+    this.currentLevel = (this.currentLevel + 1) % this.levels.length;
   }
 }
