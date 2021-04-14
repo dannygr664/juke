@@ -25,8 +25,8 @@ function preload() {
   animationController = new AnimationController();
 
   audioManager.loadSounds();
-  loadFont('graphics/fonts/HelveticaNeue-UltraLight.ttf');
-  loadFont('graphics/fonts/HelveticaNeue-Thin.ttf');
+  titleFont = loadFont('graphics/fonts/HelveticaNeue-UltraLight.ttf');
+  itemFont = loadFont('graphics/fonts/HelveticaNeue-Thin.ttf');
 }
 
 
