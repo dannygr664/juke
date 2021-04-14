@@ -35,7 +35,7 @@ class AudioManager {
     this.audioFilePaths = [];
 
     let cityAudioFileNames = [
-      //'Intro_88bpm4-4_L1M',
+      'Intro_88bpm4-4_L1M',
       'Section1_88bpm4-4_L4M',
       'Section2_88bpm4-4_L8M',
       'Section3_88bpm4-4_L4M',

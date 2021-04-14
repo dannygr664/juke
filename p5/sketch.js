@@ -64,6 +64,8 @@ function setup() {
 
   audioManager.assignSoundAnimations();
   audioManager.assignSoundCues();
+
+  audioManager.unloopCurrentSound();
 }
 
 
