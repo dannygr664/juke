@@ -38,4 +38,15 @@ class Player {
     this.gravitySpeed = 0;
     this.sprite.setSpeed(REVIVING_SPEED, 270);
   }
+
+  handlePausing() {
+    this.sprite.shapeColor = ColorScheme.BLACK_INACTIVE;
+    this.sprite.setSpeed(0, 270);
+    this.sprite.setSpeed(0, 90);
+  }
+
+  handleUnpausing() {
+    this.sprite.shapeColor = ColorScheme.BLACK;
+    this.sprite.setSpeed(this.jumpSpeed, 270);
+  }
 }

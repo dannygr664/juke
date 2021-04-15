@@ -22,6 +22,9 @@ class UIManager {
     if (levelManager.getCurrentLevel().genre === 'City') {
       this.drawMainMenu();
     } else {
+      if (isPaused) {
+        this.drawPauseMenu();
+      }
       this.drawGameUI();
     }
   }
@@ -80,6 +83,15 @@ class UIManager {
       CURSOR_HEIGHT
     );
     pop();
+  }
+
+  drawPauseMenu() {
+    const TEXT_X = windowWidth / 2;
+    push();
+    textAlign(CENTER, CENTER);
+    textFont('HelveticaNeue-Thin');
+    textSize(50);
+    text('PAUSED', TEXT_X, windowWidth / 2);
   }
 
   drawGameUI() {

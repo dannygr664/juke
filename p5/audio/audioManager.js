@@ -158,8 +158,6 @@ class AudioManager {
 
     this.reverbLevel = INITIAL_REVERB;
 
-    print(this.levelSounds);
-
     this.loopSoundWithAnalysisAndAnimation(
       this.levelSounds[0],
       this.levelSounds[0].animationType,
@@ -242,6 +240,14 @@ class AudioManager {
     this.filter.set(ALIVE_LPF_CUTOFF, ALIVE_LPF_PEAK_VOLUME);
   }
 
+  handlePausing() {
+    this.levelSounds[this.currentSound].pause();
+  }
+
+  handleUnpausing() {
+    this.levelSounds[this.currentSound].play();;
+  }
+
   toggleSound(soundIndex) {
     let sound = this.levelSounds[soundIndex];
     if (sound.isPlaying()) {
@@ -286,7 +292,7 @@ class AudioManager {
   }
 
   tryToPlayNextSound() {
-    if (!this.levelSounds[this.currentSound].isPlaying()) {
+    if (!this.levelSounds[this.currentSound].isPlaying() && !isPaused) {
       this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
       this.toggleSound(this.currentSound);
       this.waitingToChange = false;

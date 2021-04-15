@@ -58,13 +58,29 @@ class PlatformManager {
   }
 
   handleFalling() {
+    this.pausePlatforms();
+  }
+
+  handleRevived() {
+    this.resumePlatforms();
+  }
+
+  handlePausing() {
+    this.pausePlatforms();
+  }
+
+  handleUnpausing() {
+    this.resumePlatforms();
+  }
+
+  pausePlatforms() {
     for (let i = 0; i < this.platforms.length; i++) {
       this.platforms[i].shapeColor = ColorScheme.BLACK_INACTIVE;
       this.platforms[i].setSpeed(0, 180);
     }
   }
 
-  handleRevived() {
+  resumePlatforms() {
     for (let i = 0; i < this.platforms.length; i++) {
       this.platforms[i].shapeColor = ColorScheme.BLACK;
       this.platforms[i].setSpeed(this.baseSpeed, 180);

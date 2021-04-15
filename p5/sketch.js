@@ -21,6 +21,7 @@ let fluidManager;
 let jukeboxManager;
 
 function preload() {
+  isLoaded = false;
   audioManager = new AudioManager();
   animationController = new AnimationController();
 
@@ -35,6 +36,10 @@ function setup() {
   window.onkeydown = function (e) {
     return !(e.keyCode == 32);
   };
+
+  isLoaded = true;
+
+  isPaused = false;
 
   colorMode(HSB, 360, 100, 100, 100);
 
@@ -79,20 +84,22 @@ function draw() {
   uiManager.drawUI();
 
   if (currentLevel.genre !== 'City') {
-    player.speed = player.baseSpeed * audioManager.soundSpeed;
-    player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
+    if (!isPaused) {
+      player.speed = player.baseSpeed * audioManager.soundSpeed;
+      player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
 
-    if (player.isReviving) {
-      revivingLoop();
-    } else {
-      handleControls();
+      if (player.isReviving) {
+        revivingLoop();
+      } else {
+        handleControls();
 
-      handleCollisionsAndJumping();
+        handleCollisionsAndJumping();
 
-      platformManager.managePlatforms();
-      fluidManager.manageFluids();
-      jukeboxManager.manageJukeboxes();
-      handleFalling();
+        platformManager.managePlatforms();
+        fluidManager.manageFluids();
+        jukeboxManager.manageJukeboxes();
+        handleFalling();
+      }
     }
 
     fluidManager.drawFluids();
@@ -110,7 +117,7 @@ function draw() {
 
 
 function handleControls() {
-  if (currentLevel.genre !== 'City') {
+  if (currentLevel.genre !== 'City' && !isPaused) {
     if (keyIsDown(RIGHT_ARROW)) {
       player.sprite.setSpeed(player.speed, 0);
     } else if (keyIsDown(LEFT_ARROW)) {
@@ -187,30 +194,63 @@ function changeLevel() {
 }
 
 
+function handlePausing() {
+  player.handlePausing();
+  audioManager.handlePausing();
+  if (!player.isReviving) {
+    platformManager.handlePausing();
+    fluidManager.handlePausing();
+    jukeboxManager.handlePausing();
+  }
+}
+
+
+function handleUnpausing() {
+  player.handleUnpausing();
+  audioManager.handleUnpausing();
+  if (!player.isReviving) {
+    platformManager.handleUnpausing();
+    fluidManager.handleUnpausing();
+    jukeboxManager.handleUnpausing();
+  }
+}
+
+
 function keyPressed() {
-  if (currentLevel.genre === 'City') {
-    if (keyCode === DOWN_ARROW) {
-      currentLevel.currentItemSelected =
-        (currentLevel.currentItemSelected + 1) % currentLevel.menuItems.length;
-    } else if (keyCode === UP_ARROW) {
-      if (currentLevel.currentItemSelected === 0) {
-        currentLevel.currentItemSelected = currentLevel.menuItems.length - 1;
-      } else {
+  if (isLoaded) {
+    if (currentLevel.genre === 'City') {
+      if (keyCode === DOWN_ARROW) {
         currentLevel.currentItemSelected =
-          (currentLevel.currentItemSelected - 1) % currentLevel.menuItems.length;
+          (currentLevel.currentItemSelected + 1) % currentLevel.menuItems.length;
+      } else if (keyCode === UP_ARROW) {
+        if (currentLevel.currentItemSelected === 0) {
+          currentLevel.currentItemSelected = currentLevel.menuItems.length - 1;
+        } else {
+          currentLevel.currentItemSelected =
+            (currentLevel.currentItemSelected - 1) % currentLevel.menuItems.length;
+        }
+      } else if (key === ' ') {
+        currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
+        switch (currentSelection) {
+          case 'Play':
+            changeLevel();
+            break;
+          case 'How To Play':
+            print('How to play!');
+            break;
+          case 'Credits':
+            print('Credits');
+            break;
+        }
       }
-    } else if (key === ' ') {
-      currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
-      switch (currentSelection) {
-        case 'Play':
-          changeLevel();
-          break;
-        case 'How To Play':
-          print('How to play!');
-          break;
-        case 'Credits':
-          print('Credits');
-          break;
+    } else {
+      if (keyCode === ESCAPE) {
+        if (isPaused) {
+          handleUnpausing();
+        } else {
+          handlePausing();
+        }
+        isPaused = !isPaused;
       }
     }
   }
