@@ -81,8 +81,6 @@ function draw() {
 
   //animationController.drawBackgroundSoundAnimations();
 
-  uiManager.drawUI();
-
   if (currentLevel.genre !== 'City') {
     if (!isPaused) {
       player.speed = player.baseSpeed * audioManager.soundSpeed;
@@ -113,6 +111,8 @@ function draw() {
     rect(0, 0, window.width, window.height);
     pop();
   }
+
+  uiManager.drawUI();
 }
 
 
