@@ -70,7 +70,6 @@ class JukeboxManager {
   }
 
   handleFalling() {
-    //animationController.setJukeboxAnimationColor(ColorScheme.BLACK_INACTIVE);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       this.jukeboxes[i].setSpeed(0, 180);
       this.spawnJukebox(this.jukeboxes[i]);
@@ -79,7 +78,6 @@ class JukeboxManager {
   }
 
   handleRevived() {
-    //animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       this.jukeboxes[i].setSpeed(this.baseSpeed, 180);
     }
@@ -93,7 +91,7 @@ class JukeboxManager {
   }
 
   handleUnpausing() {
-    animationController.setJukeboxAnimationColor(this.currentAnimationColor);
+    animationController.setJukeboxAnimationColor(ColorScheme.BLACK);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       this.jukeboxes[i].setSpeed(this.baseSpeed, 180);
     }
