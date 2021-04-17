@@ -42,12 +42,15 @@ class UIManager {
 
     let jitter = 0;//map(mouseX, 0, windowWidth, 0, 20);
 
+    let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
+    let rms = sound.amplitudeAnalyzer.getLevel();
+
     for (let i = 0; i < this.titlePoints.length; i++) {
       push();
       stroke(0);
       strokeWeight(1);
       let point = this.titlePoints[i];
-      if (random(100) < 1) {
+      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
         point.platformWidth = random(5, 15);
       }
       line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
