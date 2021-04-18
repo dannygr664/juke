@@ -103,6 +103,7 @@ class UIManager {
     textFont('HelveticaNeue-Thin');
     textSize(20);
 
+    this.drawSongProgressMeter();
     this.drawVolumeMeter();
 
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
@@ -113,6 +114,18 @@ class UIManager {
     if (currentLevelNumber > 2) {
       this.drawReverbMeter();
     }
+    pop();
+  }
+
+  drawSongProgressMeter() {
+    push();
+    stroke(ColorScheme.BLACK);
+    fill(ColorScheme.CLEAR);
+    rect(windowWidth / 2 - 100, 5, 200, 20);
+    noStroke();
+    fill(ColorScheme.BLACK);
+    //text('Song Progress', windowWidth / 2, 5);
+    rect(windowWidth / 2 - 100, 5, map(audioManager.currentSound, 0, audioManager.levelSounds.length, 0, 200), 20);
     pop();
   }
 
