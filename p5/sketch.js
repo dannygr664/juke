@@ -10,6 +10,7 @@
 let audioFilePaths = [];
 let sounds = [];
 let audioManager;
+let midiManager;
 
 let animationController;
 let uiManager;
@@ -36,6 +37,9 @@ function setup() {
   window.onkeydown = function (e) {
     return !(e.keyCode == 32);
   };
+
+  MIDIManager.initialize();
+  MIDIManager.connectToMIDIDevice();
 
   isLoaded = true;
 
