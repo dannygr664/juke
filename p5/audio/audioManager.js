@@ -116,11 +116,11 @@ class AudioManager {
 
   assignSoundCues() {
     for (let i = 0; i < this.sounds.length; i++) {
-      this.sounds[i].addCue(0, this.resetDidPlayerFallFlag);
+      this.sounds[i].addCue(0.1, this.resetDidPlayerFallFlag);
     }
   }
 
-  resetDidPlayerFallFlag() {
+  resetDidPlayerFallFlag(time) {
     if (!player.isReviving) {
       jukeboxManager.didPlayerFall = false;
     }
@@ -274,6 +274,10 @@ class AudioManager {
     return (sound.currentTime() > songDuration - (lengthOfBeat * 4));
   }
 
+  isFinalSound() {
+    return (this.currentSound === this.levelSounds.length - 1);
+  }
+
   getDurationOfFourBeats() {
     let sound = this.levelSounds[this.currentSound];
     const numberOfBeats = sound.soundInfo.length;
@@ -293,9 +297,14 @@ class AudioManager {
 
   tryToPlayNextSound() {
     if (!this.levelSounds[this.currentSound].isPlaying() && !isPaused) {
-      this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
-      this.toggleSound(this.currentSound);
-      this.waitingToChange = false;
+      if (this.isFinalSound()) {
+        this.waitingToChange = false;
+        changeLevel();
+      } else {
+        this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
+        this.toggleSound(this.currentSound);
+        this.waitingToChange = false;
+      }
     }
   }
 

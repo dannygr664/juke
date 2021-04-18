@@ -41,6 +41,9 @@ class JukeboxManager {
         this.spawnJukebox(jukebox);
       }
       if (audioManager.isSoundAlmostOver() && !this.didPlayerFall && this.baseSpeed === 0) {
+        if (audioManager.isFinalSound()) {
+          animationController.setJukeboxAnimationColor(ColorScheme.ETHEREAL_GOLD);
+        }
         this.baseSpeed = this.calculateJukeboxSweepSpeed();
         jukebox.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
       }
@@ -91,7 +94,7 @@ class JukeboxManager {
   }
 
   handleUnpausing() {
-    animationController.setJukeboxAnimationColor(ColorScheme.BLACK);
+    animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       this.jukeboxes[i].setSpeed(this.baseSpeed, 180);
     }
