@@ -102,9 +102,17 @@ class UIManager {
     textAlign(LEFT, TOP)
     textFont('HelveticaNeue-Thin');
     textSize(20);
+
     this.drawVolumeMeter();
-    this.drawSoundSpeedMeter();
-    this.drawReverbMeter();
+
+    let currentLevelNumber = levelManager.getCurrentLevelNumber();
+    if (currentLevelNumber > 1) {
+      this.drawSoundSpeedMeter();
+    }
+
+    if (currentLevelNumber > 2) {
+      this.drawReverbMeter();
+    }
     pop();
   }
 

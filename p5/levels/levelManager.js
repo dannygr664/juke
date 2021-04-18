@@ -16,6 +16,10 @@ class LevelManager {
     return this.levels[this.currentLevel];
   }
 
+  getCurrentLevelNumber() {
+    return this.currentLevel;
+  }
+
   changeLevel() {
     audioManager.stopSounds();
     this.currentLevel = (this.currentLevel + 1) % this.levels.length;
