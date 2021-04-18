@@ -1,6 +1,10 @@
 const NOTE_ON = 144;
 const NOTE_OFF = 128;
 
+const NOTE_MAX = 72;
+const NOTE_MIN = 48;
+const MAX_NOTE_INDEX = NOTE_MAX - NOTE_MIN;
+
 class MIDIManager {
   static initialize() {
     MIDIManager.osc = new p5.Oscillator('sine');
@@ -16,6 +20,9 @@ class MIDIManager {
           const inputs = access.inputs.values();
 
           for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+            if (platformManager.mode !== MIDI_MODE) {
+              platformManager.enableMIDIMode();
+            }
             // each time there is a midi message call the onMIDIMessage function
             input.value.onmidimessage = MIDIManager.onMIDIMessage;
           }
@@ -40,9 +47,16 @@ class MIDIManager {
     let note = message.data[1];
     let frequency = MIDIManager.midiNoteToFrequency(note);
     let velocity = message.data[2];
-    if (eventType === NOTE_ON && velocity > 0) {
-      MIDIManager.playNote(frequency);
+
+    if (!isPaused && !player.isReviving) {
+      if (eventType === NOTE_ON && velocity > 0) {
+        let platformIndex = MAX_NOTE_INDEX - (note - NOTE_MIN);
+        platformManager.spawnPlatform(platformManager.platforms.get(platformIndex));
+        platformManager.triggerPlatform(platformManager.platforms.get(platformIndex));
+        MIDIManager.playNote(frequency);
+      }
     }
+
     if (eventType === NOTE_OFF || velocity === 0) {
       MIDIManager.stopNote(frequency);
     }

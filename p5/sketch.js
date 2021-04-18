@@ -38,9 +38,6 @@ function setup() {
     return !(e.keyCode == 32);
   };
 
-  MIDIManager.initialize();
-  MIDIManager.connectToMIDIDevice();
-
   isLoaded = true;
 
   isPaused = false;
@@ -70,6 +67,9 @@ function setup() {
   platformManager = new PlatformManager();
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
+
+  MIDIManager.initialize();
+  MIDIManager.connectToMIDIDevice();
 
   audioManager.assignSoundAnimations();
   audioManager.assignSoundCues();
