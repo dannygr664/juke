@@ -247,7 +247,7 @@ function keyPressed() {
             currentLevel.currentItemSelected =
               (currentLevel.currentItemSelected - 1) % currentLevel.menuItems.length;
           }
-        } else if (key === ' ') {
+        } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
           currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
           switch (currentSelection) {
             case 'Play':
