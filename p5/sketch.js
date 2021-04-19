@@ -229,31 +229,42 @@ function handleUnpausing() {
 function keyPressed() {
   if (isLoaded) {
     if (currentLevel.genre === TITLE_GENRE) {
-      if (keyCode === DOWN_ARROW) {
-        currentLevel.currentItemSelected =
-          (currentLevel.currentItemSelected + 1) % currentLevel.menuItems.length;
-      } else if (keyCode === UP_ARROW) {
-        if (currentLevel.currentItemSelected === 0) {
-          currentLevel.currentItemSelected = currentLevel.menuItems.length - 1;
-        } else {
+      // Main Menu
+      if (currentLevel.currentScreen === 0) {
+        if (keyCode === DOWN_ARROW) {
           currentLevel.currentItemSelected =
-            (currentLevel.currentItemSelected - 1) % currentLevel.menuItems.length;
+            (currentLevel.currentItemSelected + 1) % currentLevel.menuItems.length;
+        } else if (keyCode === UP_ARROW) {
+          if (currentLevel.currentItemSelected === 0) {
+            currentLevel.currentItemSelected = currentLevel.menuItems.length - 1;
+          } else {
+            currentLevel.currentItemSelected =
+              (currentLevel.currentItemSelected - 1) % currentLevel.menuItems.length;
+          }
+        } else if (key === ' ') {
+          currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
+          switch (currentSelection) {
+            case 'Play':
+              changeLevel();
+              break;
+            case 'How To Play':
+              currentLevel.currentScreen = 1;
+              break;
+            case 'Credits':
+              currentLevel.currentScreen = 2;
+              break;
+          }
         }
-      } else if (key === ' ') {
-        currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
-        switch (currentSelection) {
-          case 'Play':
-            changeLevel();
-            break;
-          case 'How To Play':
-            currentLevel.currentScreen = 1;
-            break;
-          case 'Credits':
-            currentLevel.currentScreen = 2;
-            break;
+        // How To Play
+      } else if (currentLevel.currentScreen === 1) {
+        if (keyCode === ESCAPE) {
+          currentLevel.currentScreen = 0;
         }
-      } else if (keyCode === ESCAPE) {
-        currentLevel.currentScreen = 0;
+        // Credits
+      } else if (currentLevel.currentScreen === 2) {
+        if (keyCode === ESCAPE) {
+          currentLevel.currentScreen = 0;
+        }
       }
     } else {
       if (keyCode === ESCAPE) {
