@@ -30,6 +30,8 @@ class Player {
     this.sprite.shapeColor = levelManager.getCurrentLevel().playerColor;
     this.sprite.position.x = PLAYER_X_INITIAL;
     this.sprite.position.y = PLAYER_Y_INITIAL;
+    this.sprite.width = DEFAULT_PLAYER_WIDTH;
+    this.sprite.height = DEFAULT_PLAYER_HEIGHT;
   }
 
   jump() {
