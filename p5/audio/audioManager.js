@@ -47,10 +47,10 @@ class AudioManager {
     });
 
     let spaceshipAudioFileNames = [
-      'Intro_76,88bpm4-4_L4M',
-      'Section1_76,88bpm4-4_L4M',
-      'Section2_76,88bpm4-4_L8M',
-      'Section3_76,88bpm4-4_L8M',
+      // 'Intro_76,88bpm4-4_L4M',
+      // 'Section1_76,88bpm4-4_L4M',
+      // 'Section2_76,88bpm4-4_L8M',
+      // 'Section3_76,88bpm4-4_L8M',
       'Ending_76,88bpm4-4_L2M'
     ];
 
@@ -201,6 +201,15 @@ class AudioManager {
       this.volume -= VOLUME_STEP;
     }
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
+    let volumeScaleFactor = this.volume / INITIAL_VOLUME;
+    let sizeScaleFactor;
+    if (volumeScaleFactor >= 1) {
+      sizeScaleFactor = volumeScaleFactor;
+    } else {
+      sizeScaleFactor = map(volumeScaleFactor, 0, 1, 0.25, 1);
+    }
+    player.sprite.width = DEFAULT_PLAYER_WIDTH * sizeScaleFactor;
+    player.sprite.height = DEFAULT_PLAYER_HEIGHT * sizeScaleFactor;
     this.updateVolume(this.volume);
   }
 
