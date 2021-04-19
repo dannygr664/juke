@@ -93,7 +93,25 @@ class UIManager {
   }
 
   drawHowToPlayScreen() {
-    console.log('How to play!');
+    const SUBTITLE_TEXT_SIZE = windowHeight / 15;
+    const ITEM_TEXT_SIZE = windowHeight / 25;
+    const TEXT_X = windowWidth / 2;
+
+    const ITEM1_Y = windowHeight / 4;
+    const ITEM2_Y = 3 * windowHeight / 8;
+    const ITEM3_Y = windowHeight / 2;
+    const ITEM4_Y = 5 * windowHeight / 8;
+    const ITEM5_Y = 3 * windowHeight / 4;
+    push();
+    textSize(SUBTITLE_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    text('HOW TO PLAY', TEXT_X, ITEM1_Y);
+    textSize(ITEM_TEXT_SIZE);
+    text('Use the ARROW KEYS to move, and the SPACE BAR to jump.', TEXT_X, ITEM2_Y);
+    text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
+    text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
+    text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
+    pop();
   }
 
   drawCreditsScreen() {
