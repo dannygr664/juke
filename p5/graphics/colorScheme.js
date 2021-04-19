@@ -1,5 +1,3 @@
-const FILTER_ALPHA = 30;
-
 class ColorScheme {
   static initializeColorScheme() {
     // Define colors
@@ -11,10 +9,6 @@ class ColorScheme {
     this.BLUE_SAT = color(213, 100, 49);
     this.GREEN_SAT = color(142, 100, 40);
     this.YELLOW_SAT = color(40, 100, 95);
-    this.RED_FILTER = color(356, 100, 67, FILTER_ALPHA);
-    this.BLUE_FILTER = color(213, 100, 49, FILTER_ALPHA);
-    this.GREEN_FILTER = color(142, 100, 40, FILTER_ALPHA);
-    this.YELLOW_FILTER = color(40, 100, 95, FILTER_ALPHA);
     this.GOLD = color(36, 72, 63);
     this.ORANGE_LOW_SAT = color(17, 20, 87);
     this.ORANGE_MED_SAT = color(17, 40, 87);
@@ -26,11 +20,9 @@ class ColorScheme {
     this.ETHEREAL_GOLD = color(42, 66, 79);
     this.BLACK = color(0);
     this.BLACK_INACTIVE = color(0, 0, 70);
-    this.BLACK_INACTIVE_FILTER = color(0, 0, 70, FILTER_ALPHA);
     this.GRAY = color(37, 7, 84);
     this.GREY = color(211, 5, 52);
     this.WHITE = color(360);
-    this.WHITE_FILTER = color(360, FILTER_ALPHA);
     this.CLEAR = color(360, 0);
 
     // Assign color schemes for each level
@@ -50,32 +42,5 @@ class ColorScheme {
     this.ETHEREAL_LOWER_REVERB = this.ETHEREAL_SILVER;
     this.ETHEREAL_HIGHER_REVERB = this.ETHEREAL_GOLD;
     this.ETHEREAL_HIGHEST_REVERB = this.WHITE;
-  }
-
-  static getFilterColor(color) {
-    switch (color) {
-      case this.RED:
-      case this.RED_SAT:
-        return this.RED_FILTER;
-      case this.BLUE:
-      case this.BLUE_SAT:
-        return this.BLUE_FILTER;
-      case this.GREEN:
-      case this.GREEN_SAT:
-        return this.GREEN_FILTER
-      case this.YELLOW:
-      case this.YELLOW_SAT:
-        return this.YELLOW_FILTER;
-      case this.BLACK:
-        return this.CLEAR;
-      case this.BLACK_INACTIVE:
-        return this.BLACK_INACTIVE_FILTER;
-      case this.WHITE:
-        return this.WHITE_FILTER;
-      case this.CLEAR:
-        return this.CLEAR;
-      default:
-        return this.CLEAR;
-    }
   }
 }

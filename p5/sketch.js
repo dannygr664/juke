@@ -54,8 +54,6 @@ function setup() {
 
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
-  // colorFilter = currentLevel.initialColorFilter;
-  // drawMode = currentLevel.initialDrawMode;
 
   audioManager.loadFilter();
   audioManager.loadReverb();
@@ -113,11 +111,6 @@ function draw() {
     jukeboxManager.drawJukeboxes();
     platformManager.drawPlatforms();
     drawSprite(player.sprite);
-
-    push();
-    fill(colorFilter);
-    rect(0, 0, window.width, window.height);
-    pop();
   }
 
   uiManager.drawUI();
@@ -197,7 +190,6 @@ function incrementLevel() {
   platformManager.changeLevel();
   fluidManager.changeLevel();
   jukeboxManager.changeLevel();
-  colorFilter = currentLevel.initialColorFilter;
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
@@ -212,7 +204,6 @@ function changeLevel(level) {
   platformManager.changeLevel();
   fluidManager.changeLevel();
   jukeboxManager.changeLevel();
-  colorFilter = currentLevel.initialColorFilter;
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
