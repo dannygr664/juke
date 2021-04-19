@@ -81,9 +81,11 @@ function setup() {
 function draw() {
   background(backgroundColor);
 
-  audioManager.update();
-
   //animationController.drawBackgroundSoundAnimations();
+
+  if (!isPaused) {
+    audioManager.update();
+  }
 
   if (currentLevel.genre !== 'City') {
     if (!isPaused) {

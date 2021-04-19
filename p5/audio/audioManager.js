@@ -186,29 +186,33 @@ class AudioManager {
     if (this.waitingToChange) {
       this.tryToPlayNextSound();
     }
-    // this.updateVolume();
-    // this.updateSoundSpeed();
+    if (levelManager.getCurrentLevelNumber() > 1) {
+      this.handleVolumeControls();
+    }
+    if (levelManager.getCurrentLevelNumber() > 2) {
+      this.handleSoundSpeedControls();
+    }
   }
 
-  // updateVolume() {
-  //   if (keyDown('q' || 'Q')) {
-  //     this.volume += VOLUME_STEP;
-  //   } else if (keyDown('z' || 'Z')) {
-  //     this.volume -= VOLUME_STEP;
-  //   }
-  //   this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-  //   updateVolume(this.volume);
-  // }
+  handleVolumeControls() {
+    if (keyDown('q' || 'Q')) {
+      this.volume += VOLUME_STEP;
+    } else if (keyDown('z' || 'Z')) {
+      this.volume -= VOLUME_STEP;
+    }
+    this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
+    this.updateVolume(this.volume);
+  }
 
-  // updateSoundSpeed() {
-  //   if (keyDown('w' || 'W')) {
-  //     this.soundSpeed += SOUND_SPEED_STEP;
-  //   } else if (keyDown('x' || 'X')) {
-  //     this.soundSpeed -= SOUND_SPEED_STEP;
-  //   }
-  //   this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
-  //   updateSoundSpeed(this.soundSpeed);
-  // }
+  handleSoundSpeedControls() {
+    if (keyDown('w' || 'W')) {
+      this.soundSpeed += SOUND_SPEED_STEP;
+    } else if (keyDown('x' || 'X')) {
+      this.soundSpeed -= SOUND_SPEED_STEP;
+    }
+    this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
+    this.updateSoundSpeed(this.soundSpeed);
+  }
 
   updateVolume(newVolume) {
     this.volume = newVolume;
