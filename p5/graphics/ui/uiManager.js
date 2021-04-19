@@ -94,6 +94,7 @@ class UIManager {
     textAlign(CENTER, CENTER);
     textFont('HelveticaNeue-Thin');
     textSize(50);
+    fill(levelManager.getCurrentLevel().playerColor);
     text('PAUSED', TEXT_X, windowWidth / 2);
   }
 
@@ -119,11 +120,11 @@ class UIManager {
 
   drawSongProgressMeter() {
     push();
-    stroke(ColorScheme.BLACK);
+    stroke(levelManager.getCurrentLevel().playerColor);
     fill(ColorScheme.CLEAR);
     rect(windowWidth / 2 - 100, 5, 200, 20);
     noStroke();
-    fill(ColorScheme.BLACK);
+    fill(levelManager.getCurrentLevel().playerColor);
     //text('Song Progress', windowWidth / 2, 5);
     rect(windowWidth / 2 - 100, 5, map(audioManager.currentSound, 0, audioManager.levelSounds.length, 0, 200), 20);
     pop();
@@ -132,7 +133,7 @@ class UIManager {
   drawVolumeMeter() {
     push();
     noStroke();
-    fill(ColorScheme.BLACK);
+    fill(levelManager.getCurrentLevel().playerColor);
     text('Volume', 0, 5);
     fill(ColorScheme.RED);
     rect(70, 5, map(audioManager.volume, 0, 1, 0, 200), 20);
@@ -142,7 +143,7 @@ class UIManager {
   drawSoundSpeedMeter() {
     push();
     noStroke();
-    fill(ColorScheme.BLACK);
+    fill(levelManager.getCurrentLevel().playerColor);
     text('Speed', 0, 35);
     fill(ColorScheme.GREEN);
     rect(70, 35, map(audioManager.soundSpeed, 0.01, 4, 0, 200), 20);
@@ -152,7 +153,7 @@ class UIManager {
   drawReverbMeter() {
     push();
     noStroke();
-    fill(ColorScheme.BLACK);
+    fill(levelManager.getCurrentLevel().playerColor);
     text('Reverb', 0, 65);
     fill(ColorScheme.BLUE);
     rect(70, 65, map(audioManager.reverbLevel, 0, 1, 0, 200), 20);

@@ -20,7 +20,7 @@ class Player {
 
     this.sprite = createSprite(
       PLAYER_X_INITIAL, PLAYER_Y_INITIAL, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
-    this.sprite.shapeColor = ColorScheme.BLACK;
+    this.sprite.shapeColor = levelManager.getCurrentLevel().playerColor;
   }
 
   jump() {
@@ -46,7 +46,11 @@ class Player {
   }
 
   handleUnpausing() {
-    this.sprite.shapeColor = ColorScheme.BLACK;
+    this.sprite.shapeColor = levelManager.getCurrentLevel().playerColor;
     this.sprite.setSpeed(this.jumpSpeed, 270);
+  }
+
+  changeLevel() {
+    this.sprite.shapeColor = levelManager.getCurrentLevel().playerColor;
   }
 }

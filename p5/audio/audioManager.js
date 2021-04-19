@@ -87,7 +87,7 @@ class AudioManager {
       'Section6_87bpm4-4_L14M',
       'Break_87bpm4-4_L4M',
       'Build_87bpm4-4_L1M',
-      'Ending_87bpm4-4_L4.5B'
+      //'Ending_87bpm4-4_L4.5B'
     ];
 
     lofiAudioFileNames.forEach(lofiAudioFileName => {

@@ -5,6 +5,8 @@ class Spaceship {
     fill(0);
     noStroke();
     this.initialDrawMode = 0;
+    this.playerColor = ColorScheme.BLACK;
+    this.platformColor = ColorScheme.BLACK;
     this.fluidAnimationColors = [
       ColorScheme.SPACESHIP_HIGHEST_VOLUME,
       ColorScheme.SPACESHIP_HIGHER_VOLUME,

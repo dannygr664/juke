@@ -5,6 +5,8 @@ class Ethereal {
     fill(0);
     noStroke();
     this.initialDrawMode = 0;
+    this.playerColor = ColorScheme.WHITE;
+    this.platformColor = ColorScheme.WHITE;
     this.fluidAnimationColors = [
       ColorScheme.ETHEREAL_HIGHEST_REVERB,
       ColorScheme.ETHEREAL_HIGHER_REVERB,

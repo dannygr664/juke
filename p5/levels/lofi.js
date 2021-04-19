@@ -5,6 +5,8 @@ class LoFi {
     fill(0);
     noStroke();
     this.initialDrawMode = 0;
+    this.playerColor = ColorScheme.BLACK;
+    this.platformColor = ColorScheme.BLACK;
     this.fluidAnimationColors = [
       ColorScheme.LOFI_HIGHEST_SPEED,
       ColorScheme.LOFI_HIGHER_SPEED,

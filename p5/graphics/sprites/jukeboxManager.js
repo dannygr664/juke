@@ -101,6 +101,9 @@ class JukeboxManager {
   }
 
   changeLevel() {
+    this.jukeboxAnimationColors = levelManager.getCurrentLevel().jukeboxAnimationColors;
+    this.currentAnimationColor = levelManager.getCurrentLevel().defaultJukeboxAnimationColor;
+    animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       let jukebox = this.jukeboxes[i];
       if (jukebox.position.x < windowWidth + jukebox.width / 2) {

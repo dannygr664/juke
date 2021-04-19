@@ -191,6 +191,8 @@ function changeLevel() {
   levelManager.changeLevel();
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
+  player.changeLevel();
+  platformManager.changeLevel();
   fluidManager.changeLevel();
   jukeboxManager.changeLevel();
   colorFilter = currentLevel.initialColorFilter;

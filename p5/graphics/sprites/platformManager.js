@@ -43,7 +43,7 @@ class PlatformManager {
         this.plaformWidth,
         this.platformHeight
       );
-      platform.shapeColor = ColorScheme.BLACK;
+      platform.shapeColor = levelManager.getCurrentLevel().platformColor;
       platform.setSpeed(this.baseSpeed, 180);
       this.platforms.add(platform);
     }
@@ -57,7 +57,7 @@ class PlatformManager {
         this.plaformWidth,
         this.platformHeight
       );
-      platform.shapeColor = ColorScheme.BLACK;
+      platform.shapeColor = levelManager.getCurrentLevel().platformColor;
       platform.setSpeed(this.baseSpeed, 0);
       this.platforms.add(platform);
     }
@@ -85,7 +85,7 @@ class PlatformManager {
 
   spawnPlatform(platform) {
     platform.position.x = windowWidth + this.platformWidth / 2;
-    platform.shapeColor = ColorScheme.BLACK;
+    platform.shapeColor = levelManager.getCurrentLevel().platformColor;
   }
 
   triggerPlatform(platform) {
@@ -123,8 +123,14 @@ class PlatformManager {
 
   resumePlatforms() {
     for (let i = 0; i < this.platforms.size(); i++) {
-      this.platforms[i].shapeColor = ColorScheme.BLACK;
+      this.platforms[i].shapeColor = levelManager.getCurrentLevel().platformColor;
       this.platforms[i].setSpeed(this.baseSpeed, 180);
+    }
+  }
+
+  changeLevel() {
+    for (let i = 0; i < this.platforms.size(); i++) {
+      this.platforms[i].shapeColor = levelManager.getCurrentLevel().platformColor;
     }
   }
 }
