@@ -115,7 +115,27 @@ class UIManager {
   }
 
   drawCreditsScreen() {
-    console.log('Credits!');
+    const SUBTITLE_TEXT_SIZE = windowHeight / 15;
+    const ITEM_TEXT_SIZE = windowHeight / 25;
+    const TEXT_X = windowWidth / 2;
+
+    const ITEM1_Y = windowHeight / 4;
+    const ITEM2_Y = 3 * windowHeight / 8;
+    const ITEM3_Y = windowHeight / 2;
+    const ITEM4_Y = 5 * windowHeight / 8;
+    const ITEM5_Y = 3 * windowHeight / 4;
+    const ITEM6_Y = 7 * windowHeight / 8;
+    push();
+    textSize(SUBTITLE_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    text('CREDITS', TEXT_X, ITEM1_Y);
+    textSize(ITEM_TEXT_SIZE);
+    text('Game Concept, Visuals, and Programming by Daniel Greenberg', TEXT_X, ITEM2_Y);
+    text('"Beat Cypher #3" by Jesús Pineda', TEXT_X, ITEM3_Y);
+    text('"Cypher 5" by Calvin McCormack', TEXT_X, ITEM4_Y);
+    text('"It\'s Too Late" by Guillermo Montalvan and Daniel Greenberg', TEXT_X, ITEM5_Y);
+    text('"Ethereal" by Angel Rose (ft. Mateo Falgas)', TEXT_X, ITEM6_Y);
+    pop();
   }
 
   drawPauseMenu() {
