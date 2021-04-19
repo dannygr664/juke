@@ -183,7 +183,7 @@ function revivingLoop() {
 
 
 function incrementLevel() {
-  levelManager.incremenetLevel();
+  levelManager.incrementLevel();
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
   player.changeLevel();
