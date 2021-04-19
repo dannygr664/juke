@@ -246,12 +246,14 @@ function keyPressed() {
             changeLevel();
             break;
           case 'How To Play':
-            print('How to play!');
+            currentLevel.currentScreen = 1;
             break;
           case 'Credits':
-            print('Credits');
+            currentLevel.currentScreen = 2;
             break;
         }
+      } else if (keyCode === ESCAPE) {
+        currentLevel.currentScreen = 0;
       }
     } else {
       if (keyCode === ESCAPE) {

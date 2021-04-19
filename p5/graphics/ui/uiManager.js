@@ -32,60 +32,63 @@ class UIManager {
   drawMainMenu() {
     const TITLE_POINT_SIZE = 3;
 
-    const ITEM_TEXT_SIZE = windowHeight / 15;
-    const TEXT_X = windowWidth / 2;
-    const CURSOR_X = windowWidth / 5;
+    let currentScreen = levelManager.getCurrentLevel().currentScreen;
+    if (currentScreen === 0) {
+      const ITEM_TEXT_SIZE = windowHeight / 15;
+      const TEXT_X = windowWidth / 2;
+      const CURSOR_X = windowWidth / 5;
 
-    const ITEM1_Y = windowHeight / 2;
-    const ITEM2_Y = 5 * windowHeight / 8;
-    const ITEM3_Y = 3 * windowHeight / 4;
+      const ITEM1_Y = windowHeight / 2;
+      const ITEM2_Y = 5 * windowHeight / 8;
+      const ITEM3_Y = 3 * windowHeight / 4;
 
-    let jitter = 0;//map(mouseX, 0, windowWidth, 0, 20);
+      let jitter = 0;//map(mouseX, 0, windowWidth, 0, 20);
 
-    let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
-    let rms = sound.amplitudeAnalyzer.getLevel();
+      let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
+      let rms = sound.amplitudeAnalyzer.getLevel();
 
-    for (let i = 0; i < this.titlePoints.length; i++) {
-      push();
-      stroke(0);
-      strokeWeight(1);
-      let point = this.titlePoints[i];
-      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
-        point.platformWidth = random(5, 15);
+      for (let i = 0; i < this.titlePoints.length; i++) {
+        push();
+        stroke(0);
+        strokeWeight(1);
+        let point = this.titlePoints[i];
+        if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+          point.platformWidth = random(5, 15);
+        }
+        line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
+        pop();
+        // ellipse(
+        //   point.x - this.titleBounds.w / 2 + jitter * -Math.sin(point.alpha + PI / 2),
+        //   point.y - this.titleBounds.h / 2 + jitter * Math.sin(point.alpha + PI / 2),
+        //   TITLE_POINT_SIZE
+        // );
       }
-      line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
+
+      push();
+      textSize(ITEM_TEXT_SIZE);
+      textFont('HelveticaNeue-Thin');
+      text('Play', TEXT_X, ITEM1_Y);
+      text('How To Play', TEXT_X, ITEM2_Y);
+      text('Credits', TEXT_X, ITEM3_Y);
+
+      let currentItemSelected = levelManager.getCurrentLevel().currentItemSelected;
+      let cursorY = -windowHeight;
+      if (currentItemSelected === 0) {
+        cursorY = ITEM1_Y;
+      } else if (currentItemSelected === 1) {
+        cursorY = ITEM2_Y;
+      } else if (currentItemSelected === 2) {
+        cursorY = ITEM3_Y;
+      }
+
+      rect(
+        CURSOR_X - CURSOR_WIDTH / 2,
+        cursorY - CURSOR_HEIGHT / 2,
+        CURSOR_WIDTH,
+        CURSOR_HEIGHT
+      );
       pop();
-      // ellipse(
-      //   point.x - this.titleBounds.w / 2 + jitter * -Math.sin(point.alpha + PI / 2),
-      //   point.y - this.titleBounds.h / 2 + jitter * Math.sin(point.alpha + PI / 2),
-      //   TITLE_POINT_SIZE
-      // );
     }
-
-    push();
-    textSize(ITEM_TEXT_SIZE);
-    textFont('HelveticaNeue-Thin');
-    text('Play', TEXT_X, ITEM1_Y);
-    text('How To Play', TEXT_X, ITEM2_Y);
-    text('Credits', TEXT_X, ITEM3_Y);
-
-    let currentItemSelected = levelManager.getCurrentLevel().currentItemSelected;
-    let cursorY = -windowHeight;
-    if (currentItemSelected === 0) {
-      cursorY = ITEM1_Y;
-    } else if (currentItemSelected === 1) {
-      cursorY = ITEM2_Y;
-    } else if (currentItemSelected === 2) {
-      cursorY = ITEM3_Y;
-    }
-
-    rect(
-      CURSOR_X - CURSOR_WIDTH / 2,
-      cursorY - CURSOR_HEIGHT / 2,
-      CURSOR_WIDTH,
-      CURSOR_HEIGHT
-    );
-    pop();
   }
 
   drawPauseMenu() {
