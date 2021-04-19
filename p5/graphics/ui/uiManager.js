@@ -19,7 +19,7 @@ class UIManager {
   }
 
   drawUI() {
-    if (levelManager.getCurrentLevel().genre === 'City') {
+    if (levelManager.getCurrentLevel().genre === TITLE_GENRE) {
       this.drawMainMenu();
     } else {
       if (isPaused) {

@@ -21,7 +21,7 @@ class LevelManager {
   }
 
   changeLevel() {
-    if (this.getCurrentLevel().genre === 'City') {
+    if (this.getCurrentLevel().genre === TITLE_GENRE) {
       audioManager.stopSounds();
     }
     this.currentLevel = (this.currentLevel + 1) % this.levels.length;

@@ -7,6 +7,8 @@
  * - 1 to cycle through parts
  */
 
+let TITLE_GENRE = 'City';
+
 let audioFilePaths = [];
 let sounds = [];
 let audioManager;
@@ -87,7 +89,7 @@ function draw() {
     audioManager.update();
   }
 
-  if (currentLevel.genre !== 'City') {
+  if (currentLevel.genre !== TITLE_GENRE) {
     if (!isPaused) {
       player.speed = player.baseSpeed * audioManager.soundSpeed;
       player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
@@ -123,7 +125,7 @@ function draw() {
 
 
 function handleControls() {
-  if (currentLevel.genre !== 'City' && !isPaused) {
+  if (currentLevel.genre !== TITLE_GENRE && !isPaused) {
     if (keyIsDown(RIGHT_ARROW)) {
       player.sprite.setSpeed(player.speed, 0);
     } else if (keyIsDown(LEFT_ARROW)) {
@@ -226,7 +228,7 @@ function handleUnpausing() {
 
 function keyPressed() {
   if (isLoaded) {
-    if (currentLevel.genre === 'City') {
+    if (currentLevel.genre === TITLE_GENRE) {
       if (keyCode === DOWN_ARROW) {
         currentLevel.currentItemSelected =
           (currentLevel.currentItemSelected + 1) % currentLevel.menuItems.length;
