@@ -256,7 +256,7 @@ class AudioManager {
     let sound = this.levelSounds[soundIndex];
     if (sound.isPlaying()) {
       sound.amp(0, this.volumeRampTime);
-      sound.pause();
+      sound.stop();
     } else {
       if (sound.soundInfo.genre === 'Ethereal') {
         this.reverb.process(sound, INITIAL_REVERB_TIME, INITIAL_REVERB_DECAY_RATE, false);
@@ -313,6 +313,8 @@ class AudioManager {
   }
 
   stopSounds() {
-    this.toggleSound(this.currentSound);
+    let sound = this.levelSounds[this.currentSound];
+    sound.amp(0, this.volumeRampTime);
+    sound.stop();
   }
 }

@@ -291,6 +291,7 @@ function keyPressed() {
         isPaused = !isPaused;
       } else if (isPaused) {
         if (key === 'q' || key === 'Q') {
+          audioManager.stopSounds();
           isPaused = !isPaused;
           changeLevel(0);
           audioManager.unloopCurrentSound();
