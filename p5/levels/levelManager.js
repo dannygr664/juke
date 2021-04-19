@@ -20,10 +20,15 @@ class LevelManager {
     return this.currentLevel;
   }
 
-  changeLevel() {
+  incrementLevel() {
+    let nextLevel = (this.currentLevel + 1) % this.levels.length;
+    this.changeLevel(nextLevel);
+  }
+
+  changeLevel(level) {
     if (this.getCurrentLevel().genre === TITLE_GENRE) {
       audioManager.stopSounds();
     }
-    this.currentLevel = (this.currentLevel + 1) % this.levels.length;
+    this.currentLevel = level;
   }
 }

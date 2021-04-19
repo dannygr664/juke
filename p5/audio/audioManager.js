@@ -295,15 +295,15 @@ class AudioManager {
     let sound = this.levelSounds[this.currentSound];
     if (sound.isLooping()) {
       sound.setLoop(false);
-      this.waitingToChange = true;
     }
+    this.waitingToChange = true;
   }
 
   tryToPlayNextSound() {
     if (!this.levelSounds[this.currentSound].isPlaying() && !isPaused) {
       if (this.isFinalSound()) {
         this.waitingToChange = false;
-        changeLevel();
+        incrementLevel();
       } else {
         this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
         this.toggleSound(this.currentSound);

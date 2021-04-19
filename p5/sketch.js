@@ -189,8 +189,23 @@ function revivingLoop() {
 }
 
 
-function changeLevel() {
-  levelManager.changeLevel();
+function incrementLevel() {
+  levelManager.incremenetLevel();
+  currentLevel = levelManager.getCurrentLevel();
+  backgroundColor = currentLevel.initialBackgroundColor;
+  player.changeLevel();
+  platformManager.changeLevel();
+  fluidManager.changeLevel();
+  jukeboxManager.changeLevel();
+  colorFilter = currentLevel.initialColorFilter;
+  drawMode = currentLevel.initialDrawMode;
+
+  audioManager.startSounds(currentLevel.genre);
+}
+
+
+function changeLevel(level) {
+  levelManager.changeLevel(level);
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
   player.changeLevel();
@@ -245,7 +260,7 @@ function keyPressed() {
           currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
           switch (currentSelection) {
             case 'Play':
-              changeLevel();
+              changeLevel(1);
               break;
             case 'How To Play':
               currentLevel.currentScreen = 1;
@@ -274,6 +289,12 @@ function keyPressed() {
           handlePausing();
         }
         isPaused = !isPaused;
+      } else if (isPaused) {
+        if (key === 'q' || key === 'Q') {
+          isPaused = !isPaused;
+          changeLevel(0);
+          audioManager.unloopCurrentSound();
+        }
       }
     }
   }
