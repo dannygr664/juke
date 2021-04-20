@@ -47,10 +47,10 @@ class AudioManager {
     });
 
     let spaceshipAudioFileNames = [
-      // 'Intro_76,88bpm4-4_L4M',
-      // 'Section1_76,88bpm4-4_L4M',
-      // 'Section2_76,88bpm4-4_L8M',
-      // 'Section3_76,88bpm4-4_L8M',
+      'Intro_76,88bpm4-4_L4M',
+      'Section1_76,88bpm4-4_L4M',
+      'Section2_76,88bpm4-4_L8M',
+      'Section3_76,88bpm4-4_L8M',
       'Ending_76,88bpm4-4_L2M'
     ];
 
