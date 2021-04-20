@@ -1,5 +1,4 @@
 const DEFAULT_BASE_PLATFORM_SPEED = 0.5;
-const DEFAULT_NUMBER_OF_PLATFORMS = 8;
 const DEFAULT_PLATFORM_HEIGHT = 5;
 const DEFAULT_PLATFORM_SPACING = 200;
 
@@ -17,7 +16,7 @@ class PlatformManager {
     this.platformYMax = windowHeight;
     this.platformWidth = windowWidth / 4;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
-    this.platformSpacing = DEFAULT_PLATFORM_SPACING;
+    this.platformSpacing = windowWidth / 7;
 
     startingPlatformWidth = windowWidth / 1.5;
 
@@ -36,6 +35,8 @@ class PlatformManager {
   }
 
   initializePlatforms() {
+    const DEFAULT_NUMBER_OF_PLATFORMS = windowWidth / this.platformSpacing;
+
     for (let i = 0; i < DEFAULT_NUMBER_OF_PLATFORMS; i++) {
       let platform = createSprite(
         windowWidth / 2 + i * this.platformSpacing,
