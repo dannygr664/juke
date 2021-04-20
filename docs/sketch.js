@@ -262,7 +262,7 @@ function handleUnpausing() {
 
 
 function keyPressed() {
-  if (isLoaded) {
+  if (isLoaded && isAwake) {
     if (currentLevel.genre === TITLE_GENRE) {
       // Main Menu
       if (currentLevel.currentScreen === 0) {
