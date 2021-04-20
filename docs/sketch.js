@@ -23,6 +23,10 @@ let platformManager;
 let fluidManager;
 let jukeboxManager;
 
+const MIN_WIDTH = 800;
+const MAX_WIDTH = 900;
+const MIN_HEIGHT = 500;
+
 function preload() {
   isLoaded = false;
   audioManager = new AudioManager();
@@ -42,13 +46,23 @@ function setup() {
 
   isLoaded = true;
 
+  isAwake = false;
+
   isPaused = false;
 
   colorMode(HSB, 360, 100, 100, 100);
 
   ColorScheme.initializeColorScheme();
 
-  createCanvas(windowWidth, windowHeight);
+  let canvasWidth = windowWidth;
+  let canvasHeight = windowHeight;
+  canvasWidth = constrain(canvasWidth, MIN_WIDTH, MAX_WIDTH);
+  canvasHeight = max(canvasHeight, MIN_HEIGHT);
+
+  canvas = createCanvas(canvasWidth, canvasHeight);
+  canvas.style('display', 'block');
+
+  centerCanvas();
 
   levelManager = new LevelManager();
 
@@ -57,11 +71,22 @@ function setup() {
 
   audioManager.loadFilter();
   audioManager.loadReverb();
+
+  uiManager = new UIManager();
+}
+
+
+function centerCanvas() {
+  let x = (windowWidth - width) / 2;
+  let y = (windowHeight - height) / 2;
+  canvas.position(x, y);
+}
+
+
+function wakeUp() {
   audioManager.startSounds(currentLevel.genre);
 
   animationController.loadAnimations();
-
-  uiManager = new UIManager();
 
   player = new Player();
   platformManager = new PlatformManager();
@@ -75,6 +100,8 @@ function setup() {
   audioManager.assignSoundCues();
 
   audioManager.unloopCurrentSound();
+
+  isAwake = true;
 }
 
 
@@ -83,34 +110,36 @@ function draw() {
 
   //animationController.drawBackgroundSoundAnimations();
 
-  if (!isPaused) {
-    audioManager.update();
-  }
-
-  if (currentLevel.genre !== TITLE_GENRE) {
+  if (isAwake) {
     if (!isPaused) {
-      player.speed = player.baseSpeed * audioManager.soundSpeed;
-      player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
-
-      if (player.isReviving) {
-        revivingLoop();
-      } else {
-        handleControls();
-
-        handleCollisionsAndJumping();
-
-        platformManager.managePlatforms();
-        fluidManager.manageFluids();
-        jukeboxManager.manageJukeboxes();
-        handleFalling();
-      }
+      audioManager.update();
     }
 
-    fluidManager.drawFluids();
-    //animationController.drawForegroundSoundAnimations();
-    jukeboxManager.drawJukeboxes();
-    platformManager.drawPlatforms();
-    drawSprite(player.sprite);
+    if (currentLevel.genre !== TITLE_GENRE) {
+      if (!isPaused) {
+        player.speed = player.baseSpeed * audioManager.soundSpeed;
+        player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
+
+        if (player.isReviving) {
+          revivingLoop();
+        } else {
+          handleControls();
+
+          handleCollisionsAndJumping();
+
+          platformManager.managePlatforms();
+          fluidManager.manageFluids();
+          jukeboxManager.manageJukeboxes();
+          handleFalling();
+        }
+      }
+
+      fluidManager.drawFluids();
+      //animationController.drawForegroundSoundAnimations();
+      jukeboxManager.drawJukeboxes();
+      platformManager.drawPlatforms();
+      drawSprite(player.sprite);
+    }
   }
 
   uiManager.drawUI();
@@ -156,7 +185,7 @@ function handleCollisionsAndJumping() {
 
 
 function handleFalling() {
-  if (player.sprite.position.y > windowHeight) {
+  if (player.sprite.position.y > height) {
     player.handleFalling();
     audioManager.handleFalling();
     platformManager.handleFalling();
@@ -167,7 +196,7 @@ function handleFalling() {
 
 
 function revivingLoop() {
-  if (player.sprite.position.y < windowHeight / 6) {
+  if (player.sprite.position.y < height / 6) {
     player.sprite.setSpeed(0, 270);
     if (keyDown(' ')) {
       player.isReviving = false;
@@ -290,4 +319,16 @@ function keyPressed() {
       }
     }
   }
+}
+
+
+function mousePressed() {
+  if (!isAwake) {
+    wakeUp();
+  }
+}
+
+
+function windowResized() {
+  centerCanvas();
 }

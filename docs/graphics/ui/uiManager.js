@@ -3,9 +3,9 @@ const CURSOR_HEIGHT = 20;
 
 class UIManager {
   constructor() {
-    const TITLE_TEXT_SIZE = windowHeight / 4;
-    const TITLE_X = windowWidth / 2;
-    const TITLE_Y = 3 * windowHeight / 8;
+    const TITLE_TEXT_SIZE = height / 4;
+    const TITLE_X = width / 2;
+    const TITLE_Y = 3 * height / 8;
     textAlign(CENTER, CENTER);
     textFont('HelveticaNeue-UltraLight');
     textSize(TITLE_TEXT_SIZE);
@@ -20,13 +20,28 @@ class UIManager {
 
   drawUI() {
     if (levelManager.getCurrentLevel().genre === TITLE_GENRE) {
-      this.drawMainMenu();
+      if (!isAwake) {
+        this.drawClickToStart();
+      } else {
+        this.drawMainMenu();
+      }
     } else {
       if (isPaused) {
         this.drawPauseMenu();
       }
       this.drawGameUI();
     }
+  }
+
+  drawClickToStart() {
+    push();
+    const TEXT_SIZE = height / 15;
+    fill(ColorScheme.BLACK);
+    textAlign(CENTER, CENTER);
+    textFont('HelveticaNeue-Thin');
+    textSize(TEXT_SIZE);
+    text('Click to start', width / 2, height / 2);
+    pop();
   }
 
   drawMainMenu() {
@@ -43,13 +58,13 @@ class UIManager {
   }
 
   drawMainMenuScreen() {
-    const ITEM_TEXT_SIZE = windowHeight / 15;
-    const TEXT_X = windowWidth / 2;
-    const CURSOR_X = windowWidth / 5;
+    const ITEM_TEXT_SIZE = height / 15;
+    const TEXT_X = width / 2;
+    const CURSOR_X = width / 5;
 
-    const ITEM1_Y = windowHeight / 2;
-    const ITEM2_Y = 5 * windowHeight / 8;
-    const ITEM3_Y = 3 * windowHeight / 4;
+    const ITEM1_Y = height / 2;
+    const ITEM2_Y = 5 * height / 8;
+    const ITEM3_Y = 3 * height / 4;
 
     let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
     let rms = sound.amplitudeAnalyzer.getLevel();
@@ -74,7 +89,7 @@ class UIManager {
     text('Credits', TEXT_X, ITEM3_Y);
 
     let currentItemSelected = levelManager.getCurrentLevel().currentItemSelected;
-    let cursorY = -windowHeight;
+    let cursorY = -height;
     if (currentItemSelected === 0) {
       cursorY = ITEM1_Y;
     } else if (currentItemSelected === 1) {
@@ -93,17 +108,17 @@ class UIManager {
   }
 
   drawHowToPlayScreen() {
-    const SUBTITLE_TEXT_SIZE = windowHeight / 15;
-    const ITEM_TEXT_SIZE = windowHeight / 25;
-    const TEXT_X = windowWidth / 2;
-    const BACK_TEXT_X = windowWidth / 9;
-    const BACK_TEXT_Y = windowHeight / 20;
+    const SUBTITLE_TEXT_SIZE = height / 15;
+    const ITEM_TEXT_SIZE = height / 25;
+    const TEXT_X = width / 2;
+    const BACK_TEXT_X = width / 9;
+    const BACK_TEXT_Y = height / 20;
 
-    const ITEM1_Y = windowHeight / 4;
-    const ITEM2_Y = 3 * windowHeight / 8;
-    const ITEM3_Y = windowHeight / 2;
-    const ITEM4_Y = 5 * windowHeight / 8;
-    const ITEM5_Y = 3 * windowHeight / 4;
+    const ITEM1_Y = height / 4;
+    const ITEM2_Y = 3 * height / 8;
+    const ITEM3_Y = height / 2;
+    const ITEM4_Y = 5 * height / 8;
+    const ITEM5_Y = 3 * height / 4;
     push();
     textFont('HelveticaNeue-Thin');
     textSize(ITEM_TEXT_SIZE);
@@ -119,18 +134,18 @@ class UIManager {
   }
 
   drawCreditsScreen() {
-    const SUBTITLE_TEXT_SIZE = windowHeight / 15;
-    const ITEM_TEXT_SIZE = windowHeight / 25;
-    const TEXT_X = windowWidth / 2;
-    const BACK_TEXT_X = windowWidth / 9;
-    const BACK_TEXT_Y = windowHeight / 20;
+    const SUBTITLE_TEXT_SIZE = height / 15;
+    const ITEM_TEXT_SIZE = height / 25;
+    const TEXT_X = width / 2;
+    const BACK_TEXT_X = width / 9;
+    const BACK_TEXT_Y = height / 20;
 
-    const ITEM1_Y = windowHeight / 4;
-    const ITEM2_Y = 3 * windowHeight / 8;
-    const ITEM3_Y = windowHeight / 2;
-    const ITEM4_Y = 5 * windowHeight / 8;
-    const ITEM5_Y = 3 * windowHeight / 4;
-    const ITEM6_Y = 7 * windowHeight / 8;
+    const ITEM1_Y = height / 4;
+    const ITEM2_Y = 3 * height / 8;
+    const ITEM3_Y = height / 2;
+    const ITEM4_Y = 5 * height / 8;
+    const ITEM5_Y = 3 * height / 4;
+    const ITEM6_Y = 7 * height / 8;
     push();
     textFont('HelveticaNeue-Thin');
     textSize(ITEM_TEXT_SIZE);
@@ -147,15 +162,15 @@ class UIManager {
   }
 
   drawPauseMenu() {
-    const TEXT_X = windowWidth / 2;
+    const TEXT_X = width / 2;
     push();
     textAlign(CENTER, CENTER);
     textFont('HelveticaNeue-Thin');
     textSize(50);
     fill(levelManager.getCurrentLevel().playerColor);
-    text('PAUSED', TEXT_X, windowWidth / 2);
+    text('PAUSED', TEXT_X, width / 2);
     textSize(30);
-    text('[Press Q to return to Main Menu]', TEXT_X, 5 * windowWidth / 8);
+    text('[Press Q to return to Main Menu]', TEXT_X, 5 * width / 8);
   }
 
   drawGameUI() {
@@ -182,11 +197,11 @@ class UIManager {
     push();
     stroke(levelManager.getCurrentLevel().playerColor);
     fill(ColorScheme.CLEAR);
-    rect(windowWidth / 2 - 100, 5, 200, 20);
+    rect(width / 2 - 100, 5, 200, 20);
     noStroke();
     fill(levelManager.getCurrentLevel().playerColor);
-    //text('Song Progress', windowWidth / 2, 5);
-    rect(windowWidth / 2 - 100, 5, map(audioManager.currentSound, 0, audioManager.levelSounds.length, 0, 200), 20);
+    //text('Song Progress', width / 2, 5);
+    rect(width / 2 - 100, 5, map(audioManager.currentSound, 0, audioManager.levelSounds.length, 0, 200), 20);
     pop();
   }
 

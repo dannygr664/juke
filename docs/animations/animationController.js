@@ -15,30 +15,30 @@ class AnimationController {
   loadAnimations() {
     noiseAnim = new Noise(
       0,
-      windowWidth,
+      width,
       0,
-      windowHeight,
+      height,
       ColorScheme.BLACK_INACTIVE
     );
     boxesAnim = new Boxes(
       0,
-      windowWidth,
+      width,
       0,
-      windowHeight,
+      height,
       ColorScheme.BLACK_INACTIVE
     );
     linesAnim = new Lines(
       0,
-      windowWidth,
+      width,
       0,
-      windowHeight,
+      height,
       ColorScheme.BLACK_INACTIVE
     );
     blindsAnim = new Blinds(
       0,
-      windowWidth,
+      width,
       0,
-      windowHeight,
+      height,
       ColorScheme.BLACK_INACTIVE
     );
   }
@@ -48,7 +48,7 @@ class AnimationController {
       xPosition,
       0,
       xPosition,
-      windowHeight,
+      height,
       width,
       ColorScheme.BLACK
     )
@@ -151,9 +151,9 @@ class AnimationController {
     let spectrumStep = 10;
     for (let i = 0; i < spectrum.length; i += spectrumStep) {
       rect(
-        map(i, 0, spectrum.length - 1, 0, windowWidth),
+        map(i, 0, spectrum.length - 1, 0, width),
         0,
-        windowWidth / (255 / spectrumStep),
+        width / (255 / spectrumStep),
         map(spectrum[i], 0, 255, height, 0)
       );
     }
