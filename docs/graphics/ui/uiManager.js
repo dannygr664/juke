@@ -109,9 +109,9 @@ class UIManager {
 
   drawHowToPlayScreen() {
     const SUBTITLE_TEXT_SIZE = height / 15;
-    const ITEM_TEXT_SIZE = height / 25;
+    const ITEM_TEXT_SIZE = height / 35;
     const TEXT_X = width / 2;
-    const BACK_TEXT_X = width / 9;
+    const BACK_TEXT_X = width / 7;
     const BACK_TEXT_Y = height / 20;
 
     const ITEM1_Y = height / 4;
@@ -126,7 +126,7 @@ class UIManager {
     textSize(SUBTITLE_TEXT_SIZE);
     text('HOW TO PLAY', TEXT_X, ITEM1_Y);
     textSize(ITEM_TEXT_SIZE);
-    text('ARROW KEYS to move, SPACE BAR to jump, ESC to pause .', TEXT_X, ITEM2_Y);
+    text('ARROW KEYS to move, SPACE BAR to jump/revive, ESC to pause.', TEXT_X, ITEM2_Y);
     text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
     text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
     text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
@@ -135,9 +135,9 @@ class UIManager {
 
   drawCreditsScreen() {
     const SUBTITLE_TEXT_SIZE = height / 15;
-    const ITEM_TEXT_SIZE = height / 25;
+    const ITEM_TEXT_SIZE = height / 35;
     const TEXT_X = width / 2;
-    const BACK_TEXT_X = width / 9;
+    const BACK_TEXT_X = width / 7;
     const BACK_TEXT_Y = height / 20;
 
     const ITEM1_Y = height / 4;
@@ -220,7 +220,13 @@ class UIManager {
     fill(levelManager.getCurrentLevel().playerColor);
     text('Volume', 0, 5);
     fill(ColorScheme.RED);
-    rect(70, 5, map(audioManager.volume, 0, 1, 0, 200), 20);
+    let rectWidth = map(audioManager.volume, 0, 1, 0, 200);
+    rect(70, 5, rectWidth, 20);
+    let currentLevelNumber = levelManager.getCurrentLevelNumber();
+    fill(levelManager.getCurrentLevel().playerColor);
+    if (currentLevelNumber > 1) {
+      text('Q/Z', 75 + rectWidth, 5);
+    }
     pop();
   }
 
@@ -230,7 +236,13 @@ class UIManager {
     fill(levelManager.getCurrentLevel().playerColor);
     text('Speed', 0, 35);
     fill(ColorScheme.GREEN);
-    rect(70, 35, map(audioManager.soundSpeed, 0.01, 4, 0, 200), 20);
+    let rectWidth = map(audioManager.soundSpeed, 0.01, 4, 0, 200);
+    rect(70, 35, rectWidth, 20);
+    let currentLevelNumber = levelManager.getCurrentLevelNumber();
+    fill(levelManager.getCurrentLevel().playerColor);
+    if (currentLevelNumber > 2) {
+      text('W/X', 75 + rectWidth, 35);
+    }
     pop();
   }
 
