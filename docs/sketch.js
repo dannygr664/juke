@@ -59,8 +59,10 @@ function setup() {
   canvasWidth = constrain(canvasWidth, MIN_WIDTH, MAX_WIDTH);
   canvasHeight = max(canvasHeight, MIN_HEIGHT);
 
-  let canvas = createCanvas(canvasWidth, canvasHeight);
+  canvas = createCanvas(canvasWidth, canvasHeight);
   canvas.style('display', 'block');
+
+  centerCanvas();
 
   levelManager = new LevelManager();
 
@@ -71,6 +73,13 @@ function setup() {
   audioManager.loadReverb();
 
   uiManager = new UIManager();
+}
+
+
+function centerCanvas() {
+  let x = (windowWidth - width) / 2;
+  let y = (windowHeight - height) / 2;
+  canvas.position(x, y);
 }
 
 
@@ -317,4 +326,9 @@ function mousePressed() {
   if (!isAwake) {
     wakeUp();
   }
+}
+
+
+function windowResized() {
+  centerCanvas();
 }
