@@ -222,6 +222,10 @@ function incrementLevel() {
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
+
+  if (currentLevel.genre === TITLE_GENRE) {
+    audioManager.unloopCurrentSound();
+  }
 }
 
 
@@ -236,6 +240,10 @@ function changeLevel(level) {
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
+
+  if (currentLevel.genre === TITLE_GENRE) {
+    audioManager.unloopCurrentSound();
+  }
 }
 
 
@@ -314,7 +322,6 @@ function keyPressed() {
           audioManager.stopSounds();
           isPaused = !isPaused;
           changeLevel(0);
-          audioManager.unloopCurrentSound();
         }
       }
     }
