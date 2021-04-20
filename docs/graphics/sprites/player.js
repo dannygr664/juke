@@ -7,8 +7,8 @@ const REVIVING_SPEED = 50;
 
 class Player {
   constructor() {
-    const PLAYER_X_INITIAL = windowWidth / 2;
-    const PLAYER_Y_INITIAL = windowHeight / 2 - windowHeight / 8;
+    const PLAYER_X_INITIAL = width / 2;
+    const PLAYER_Y_INITIAL = height / 2 - height / 8;
 
     this.sprite = createSprite(
       PLAYER_X_INITIAL, PLAYER_Y_INITIAL, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
@@ -17,8 +17,8 @@ class Player {
   }
 
   resetPlayer() {
-    const PLAYER_X_INITIAL = windowWidth / 2;
-    const PLAYER_Y_INITIAL = windowHeight / 2 - windowHeight / 8;
+    const PLAYER_X_INITIAL = width / 2;
+    const PLAYER_Y_INITIAL = height / 2 - height / 8;
 
     this.baseSpeed = DEFAULT_BASE_PLAYER_SPEED;
     this.speed = 0;

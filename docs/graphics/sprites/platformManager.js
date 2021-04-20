@@ -12,13 +12,13 @@ class PlatformManager {
     this.mode = PLATFORMER_MODE;
     this.baseSpeed = DEFAULT_BASE_PLATFORM_SPEED;
     this.platforms = new Group();
-    this.platformYMin = windowHeight / 4;
-    this.platformYMax = windowHeight;
-    this.platformWidth = windowWidth / 4;
+    this.platformYMin = height / 4;
+    this.platformYMax = height;
+    this.platformWidth = width / 4;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
-    this.platformSpacing = windowWidth / 7;
+    this.platformSpacing = width / 7;
 
-    startingPlatformWidth = windowWidth / 1.5;
+    startingPlatformWidth = width / 1.5;
 
     this.initializePlatforms();
   }
@@ -35,11 +35,11 @@ class PlatformManager {
   }
 
   initializePlatforms() {
-    const DEFAULT_NUMBER_OF_PLATFORMS = windowWidth / this.platformSpacing;
+    const DEFAULT_NUMBER_OF_PLATFORMS = width / this.platformSpacing;
 
     for (let i = 0; i < DEFAULT_NUMBER_OF_PLATFORMS; i++) {
       let platform = createSprite(
-        windowWidth / 2 + i * this.platformSpacing,
+        width / 2 + i * this.platformSpacing,
         random(this.platformYMin, this.platformYMax),
         this.plaformWidth,
         this.platformHeight
@@ -54,7 +54,7 @@ class PlatformManager {
     for (let i = 0; i < numberOfPlatforms; i++) {
       let platform = createSprite(
         -this.platformWidth / 2,
-        (i + 0.5) * windowHeight / numberOfPlatforms,
+        (i + 0.5) * height / numberOfPlatforms,
         this.plaformWidth,
         this.platformHeight
       );
@@ -85,7 +85,7 @@ class PlatformManager {
   }
 
   spawnPlatform(platform) {
-    platform.position.x = windowWidth + this.platformWidth / 2;
+    platform.position.x = width + this.platformWidth / 2;
     platform.shapeColor = levelManager.getCurrentLevel().platformColor;
   }
 

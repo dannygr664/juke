@@ -23,6 +23,10 @@ let platformManager;
 let fluidManager;
 let jukeboxManager;
 
+const MIN_WIDTH = 800;
+const MAX_WIDTH = 900;
+const MIN_HEIGHT = 500;
+
 function preload() {
   isLoaded = false;
   audioManager = new AudioManager();
@@ -50,7 +54,12 @@ function setup() {
 
   ColorScheme.initializeColorScheme();
 
-  createCanvas(windowWidth, windowHeight);
+  let canvasWidth = windowWidth;
+  let canvasHeight = windowHeight;
+  canvasWidth = constrain(canvasWidth, MIN_WIDTH, MAX_WIDTH);
+  canvasHeight = max(canvasHeight, MIN_HEIGHT);
+
+  createCanvas(canvasWidth, canvasHeight);
 
   levelManager = new LevelManager();
 
@@ -166,7 +175,7 @@ function handleCollisionsAndJumping() {
 
 
 function handleFalling() {
-  if (player.sprite.position.y > windowHeight) {
+  if (player.sprite.position.y > height) {
     player.handleFalling();
     audioManager.handleFalling();
     platformManager.handleFalling();
@@ -177,7 +186,7 @@ function handleFalling() {
 
 
 function revivingLoop() {
-  if (player.sprite.position.y < windowHeight / 6) {
+  if (player.sprite.position.y < height / 6) {
     player.sprite.setSpeed(0, 270);
     if (keyDown(' ')) {
       player.isReviving = false;

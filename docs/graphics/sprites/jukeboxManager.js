@@ -10,9 +10,9 @@ class JukeboxManager {
     this.jukeboxes = new Group();
 
     const JUKEBOX_WIDTH = 60;
-    const JUKEBOX_HEIGHT = windowHeight;
-    const JUKEBOX_X_INITIAL = windowWidth + JUKEBOX_WIDTH / 2
-    const JUKEBOX_Y_INITIAL = windowHeight / 2;
+    const JUKEBOX_HEIGHT = height;
+    const JUKEBOX_X_INITIAL = width + JUKEBOX_WIDTH / 2
+    const JUKEBOX_Y_INITIAL = height / 2;
 
     animationController.createJukeboxAnimation(
       JUKEBOX_X_INITIAL,
@@ -56,7 +56,7 @@ class JukeboxManager {
   }
 
   spawnJukebox(jukebox) {
-    jukebox.position.x = windowWidth + jukebox.width / 2;
+    jukebox.position.x = width + jukebox.width / 2;
     this.currentAnimationColor = random(this.jukeboxAnimationColors);
     animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     this.baseSpeed = 0;
@@ -106,7 +106,7 @@ class JukeboxManager {
     animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       let jukebox = this.jukeboxes[i];
-      if (jukebox.position.x < windowWidth + jukebox.width / 2) {
+      if (jukebox.position.x < width + jukebox.width / 2) {
         this.spawnJukebox(jukebox);
       }
     }

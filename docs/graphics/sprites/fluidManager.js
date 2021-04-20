@@ -11,15 +11,15 @@ class FluidManager {
     this.currentAnimationColor = random(this.fluidAnimationColors);
     this.fluids = new Group();
 
-    fluidXInitial = windowWidth;
-    this.fluidWidthMin = windowWidth / 1.5;
-    this.fluidWidthMax = windowWidth;
-    this.fluidHeightMin = windowHeight / 1.5;
-    this.fluidHeightMax = windowHeight;
-    this.fluidYMin = windowHeight / 2 - windowHeight / 8;
-    this.fluidYMax = windowHeight / 2;
-    this.fluidSpacingMin = windowWidth / 8;
-    this.fluidSpacingMax = windowWidth;
+    fluidXInitial = width;
+    this.fluidWidthMin = width / 1.5;
+    this.fluidWidthMax = width;
+    this.fluidHeightMin = height / 1.5;
+    this.fluidHeightMax = height;
+    this.fluidYMin = height / 2 - height / 8;
+    this.fluidYMax = height / 2;
+    this.fluidSpacingMin = width / 8;
+    this.fluidSpacingMax = width;
 
     for (let i = 0; i < NUMBER_OF_FLUIDS; i++) {
       let fluid = createSprite(
@@ -65,7 +65,7 @@ class FluidManager {
     animationController.setFluidAnimationColor(fluid.animation, this.currentAnimationColor);
     fluid.width = random(this.fluidWidthMin, this.fluidWidthMax);
     fluid.height = random(this.fluidHeightMin, this.fluidHeightMax);
-    fluid.position.x = windowWidth + fluid.width / 2 + random(
+    fluid.position.x = width + fluid.width / 2 + random(
       this.fluidSpacingMin,
       this.fluidSpacingMax
     );
@@ -116,7 +116,7 @@ class FluidManager {
     this.currentAnimationColor = random(this.fluidAnimationColors);
     for (let i = 0; i < this.fluids.length; i++) {
       let fluid = this.fluids[i];
-      if (fluid.position.x < windowWidth + fluid.width / 2) {
+      if (fluid.position.x < width + fluid.width / 2) {
         this.spawnFluid(fluid);
       }
       fluid.setSpeed(this.baseSpeed, 180);

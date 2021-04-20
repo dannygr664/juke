@@ -20,8 +20,8 @@ class Lines {
     this.y1 = y1;
     this.y2 = y2;
     this.color = color;
-    posX = windowWidth / 2;
-    posY = windowHeight / 2;
+    posX = width / 2;
+    posY = height / 2;
   }
 
   drawLines1(rms) {
@@ -35,7 +35,7 @@ class Lines {
   draw(drawMode, rms) {
     noStroke();
 
-    for (let i = 0; i <= map(rms, 0, 0.05, 0, windowWidth); i++) {
+    for (let i = 0; i <= map(rms, 0, 0.05, 0, width); i++) {
       // random number for the direction of the next step
       if (drawMode == 0) {
         direction = int(random(3));
@@ -65,10 +65,10 @@ class Lines {
         posY -= stepSize;
       }
 
-      if (posX > windowWidth) posX = 0;
+      if (posX > width) posX = 0;
       if (posX < 0) posX = width;
       if (posY < 0) posY = height;
-      if (posY > windowHeight) posY = 0;
+      if (posY > height) posY = 0;
 
       fill(0, 40);
       ellipse(posX + stepSize / 2, posY + stepSize / 2, diameter, diameter);
