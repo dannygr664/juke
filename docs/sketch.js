@@ -42,6 +42,8 @@ function setup() {
 
   isLoaded = true;
 
+  isAwake = false;
+
   isPaused = false;
 
   colorMode(HSB, 360, 100, 100, 100);
@@ -57,11 +59,15 @@ function setup() {
 
   audioManager.loadFilter();
   audioManager.loadReverb();
+
+  uiManager = new UIManager();
+}
+
+
+function wakeUp() {
   audioManager.startSounds(currentLevel.genre);
 
   animationController.loadAnimations();
-
-  uiManager = new UIManager();
 
   player = new Player();
   platformManager = new PlatformManager();
@@ -75,6 +81,8 @@ function setup() {
   audioManager.assignSoundCues();
 
   audioManager.unloopCurrentSound();
+
+  isAwake = true;
 }
 
 
@@ -83,34 +91,36 @@ function draw() {
 
   //animationController.drawBackgroundSoundAnimations();
 
-  if (!isPaused) {
-    audioManager.update();
-  }
-
-  if (currentLevel.genre !== TITLE_GENRE) {
+  if (isAwake) {
     if (!isPaused) {
-      player.speed = player.baseSpeed * audioManager.soundSpeed;
-      player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
-
-      if (player.isReviving) {
-        revivingLoop();
-      } else {
-        handleControls();
-
-        handleCollisionsAndJumping();
-
-        platformManager.managePlatforms();
-        fluidManager.manageFluids();
-        jukeboxManager.manageJukeboxes();
-        handleFalling();
-      }
+      audioManager.update();
     }
 
-    fluidManager.drawFluids();
-    //animationController.drawForegroundSoundAnimations();
-    jukeboxManager.drawJukeboxes();
-    platformManager.drawPlatforms();
-    drawSprite(player.sprite);
+    if (currentLevel.genre !== TITLE_GENRE) {
+      if (!isPaused) {
+        player.speed = player.baseSpeed * audioManager.soundSpeed;
+        player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
+
+        if (player.isReviving) {
+          revivingLoop();
+        } else {
+          handleControls();
+
+          handleCollisionsAndJumping();
+
+          platformManager.managePlatforms();
+          fluidManager.manageFluids();
+          jukeboxManager.manageJukeboxes();
+          handleFalling();
+        }
+      }
+
+      fluidManager.drawFluids();
+      //animationController.drawForegroundSoundAnimations();
+      jukeboxManager.drawJukeboxes();
+      platformManager.drawPlatforms();
+      drawSprite(player.sprite);
+    }
   }
 
   uiManager.drawUI();
@@ -289,5 +299,12 @@ function keyPressed() {
         }
       }
     }
+  }
+}
+
+
+function mousePressed() {
+  if (!isAwake) {
+    wakeUp();
   }
 }

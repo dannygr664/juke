@@ -20,13 +20,28 @@ class UIManager {
 
   drawUI() {
     if (levelManager.getCurrentLevel().genre === TITLE_GENRE) {
-      this.drawMainMenu();
+      if (!isAwake) {
+        this.drawClickToStart();
+      } else {
+        this.drawMainMenu();
+      }
     } else {
       if (isPaused) {
         this.drawPauseMenu();
       }
       this.drawGameUI();
     }
+  }
+
+  drawClickToStart() {
+    push();
+    const TEXT_SIZE = windowHeight / 15;
+    fill(ColorScheme.BLACK);
+    textAlign(CENTER, CENTER);
+    textFont('HelveticaNeue-Thin');
+    textSize(TEXT_SIZE);
+    text('Click to start', windowWidth / 2, windowHeight / 2);
+    pop();
   }
 
   drawMainMenu() {
