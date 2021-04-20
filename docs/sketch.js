@@ -59,7 +59,8 @@ function setup() {
   canvasWidth = constrain(canvasWidth, MIN_WIDTH, MAX_WIDTH);
   canvasHeight = max(canvasHeight, MIN_HEIGHT);
 
-  createCanvas(canvasWidth, canvasHeight);
+  let canvas = createCanvas(canvasWidth, canvasHeight);
+  canvas.style('display', 'block');
 
   levelManager = new LevelManager();
 
