@@ -34,11 +34,23 @@ class AudioManager {
   getAudioFilePaths() {
     this.audioFilePaths = [];
 
+    let cityAudioFileNames = [
+      'Intro_88bpm4-4_L1M',
+      'Section1_88bpm4-4_L4M',
+      'Section2_88bpm4-4_L8M',
+      'Section3_88bpm4-4_L4M',
+      'Ending_88bpm4-4_L6B'
+    ];
+
+    cityAudioFileNames.forEach(cityAudioFileName => {
+      this.audioFilePaths.push(`audio/City/Juke_City_${cityAudioFileName}.wav`);
+    });
+
     let spaceshipAudioFileNames = [
-      'Intro_76,88bpm4-4_L4M',
-      'Section1_76,88bpm4-4_L4M',
-      'Section2_76,88bpm4-4_L8M',
-      'Section3_76,88bpm4-4_L8M',
+      // 'Intro_76,88bpm4-4_L4M',
+      // 'Section1_76,88bpm4-4_L4M',
+      // 'Section2_76,88bpm4-4_L8M',
+      // 'Section3_76,88bpm4-4_L8M',
       'Ending_76,88bpm4-4_L2M'
     ];
 
@@ -75,7 +87,7 @@ class AudioManager {
       'Section6_87bpm4-4_L14M',
       'Break_87bpm4-4_L4M',
       'Build_87bpm4-4_L1M',
-      'Ending_87bpm4-4_L4.5B'
+      //'Ending_87bpm4-4_L4.5B'
     ];
 
     lofiAudioFileNames.forEach(lofiAudioFileName => {
@@ -104,11 +116,11 @@ class AudioManager {
 
   assignSoundCues() {
     for (let i = 0; i < this.sounds.length; i++) {
-      this.sounds[i].addCue(0, this.resetDidPlayerFallFlag);
+      this.sounds[i].addCue(0.1, this.resetDidPlayerFallFlag);
     }
   }
 
-  resetDidPlayerFallFlag() {
+  resetDidPlayerFallFlag(time) {
     if (!player.isReviving) {
       jukeboxManager.didPlayerFall = false;
     }
@@ -146,8 +158,6 @@ class AudioManager {
 
     this.reverbLevel = INITIAL_REVERB;
 
-    print(this.levelSounds);
-
     this.loopSoundWithAnalysisAndAnimation(
       this.levelSounds[0],
       this.levelSounds[0].animationType,
@@ -176,29 +186,42 @@ class AudioManager {
     if (this.waitingToChange) {
       this.tryToPlayNextSound();
     }
-    // this.updateVolume();
-    // this.updateSoundSpeed();
+    if (levelManager.getCurrentLevelNumber() > 1) {
+      this.handleVolumeControls();
+    }
+    if (levelManager.getCurrentLevelNumber() > 2) {
+      this.handleSoundSpeedControls();
+    }
   }
 
-  // updateVolume() {
-  //   if (keyDown('q' || 'Q')) {
-  //     this.volume += VOLUME_STEP;
-  //   } else if (keyDown('z' || 'Z')) {
-  //     this.volume -= VOLUME_STEP;
-  //   }
-  //   this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-  //   updateVolume(this.volume);
-  // }
+  handleVolumeControls() {
+    if (keyDown('q' || 'Q')) {
+      this.volume += VOLUME_STEP;
+    } else if (keyDown('z' || 'Z')) {
+      this.volume -= VOLUME_STEP;
+    }
+    this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
+    let volumeScaleFactor = this.volume / INITIAL_VOLUME;
+    let sizeScaleFactor;
+    if (volumeScaleFactor >= 1) {
+      sizeScaleFactor = volumeScaleFactor;
+    } else {
+      sizeScaleFactor = map(volumeScaleFactor, 0, 1, 0.25, 1);
+    }
+    player.sprite.width = DEFAULT_PLAYER_WIDTH * sizeScaleFactor;
+    player.sprite.height = DEFAULT_PLAYER_HEIGHT * sizeScaleFactor;
+    this.updateVolume(this.volume);
+  }
 
-  // updateSoundSpeed() {
-  //   if (keyDown('w' || 'W')) {
-  //     this.soundSpeed += SOUND_SPEED_STEP;
-  //   } else if (keyDown('x' || 'X')) {
-  //     this.soundSpeed -= SOUND_SPEED_STEP;
-  //   }
-  //   this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
-  //   updateSoundSpeed(this.soundSpeed);
-  // }
+  handleSoundSpeedControls() {
+    if (keyDown('w' || 'W')) {
+      this.soundSpeed += SOUND_SPEED_STEP;
+    } else if (keyDown('x' || 'X')) {
+      this.soundSpeed -= SOUND_SPEED_STEP;
+    }
+    this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
+    this.updateSoundSpeed(this.soundSpeed);
+  }
 
   updateVolume(newVolume) {
     this.volume = newVolume;
@@ -230,11 +253,19 @@ class AudioManager {
     this.filter.set(ALIVE_LPF_CUTOFF, ALIVE_LPF_PEAK_VOLUME);
   }
 
+  handlePausing() {
+    this.levelSounds[this.currentSound].pause();
+  }
+
+  handleUnpausing() {
+    this.levelSounds[this.currentSound].play();;
+  }
+
   toggleSound(soundIndex) {
     let sound = this.levelSounds[soundIndex];
     if (sound.isPlaying()) {
       sound.amp(0, this.volumeRampTime);
-      sound.pause();
+      sound.stop();
     } else {
       if (sound.soundInfo.genre === 'Ethereal') {
         this.reverb.process(sound, INITIAL_REVERB_TIME, INITIAL_REVERB_DECAY_RATE, false);
@@ -256,6 +287,10 @@ class AudioManager {
     return (sound.currentTime() > songDuration - (lengthOfBeat * 4));
   }
 
+  isFinalSound() {
+    return (this.currentSound === this.levelSounds.length - 1);
+  }
+
   getDurationOfFourBeats() {
     let sound = this.levelSounds[this.currentSound];
     const numberOfBeats = sound.soundInfo.length;
@@ -269,19 +304,26 @@ class AudioManager {
     let sound = this.levelSounds[this.currentSound];
     if (sound.isLooping()) {
       sound.setLoop(false);
-      this.waitingToChange = true;
     }
+    this.waitingToChange = true;
   }
 
   tryToPlayNextSound() {
-    if (!this.levelSounds[this.currentSound].isPlaying()) {
-      this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
-      this.toggleSound(this.currentSound);
-      this.waitingToChange = false;
+    if (!this.levelSounds[this.currentSound].isPlaying() && !isPaused) {
+      if (this.isFinalSound()) {
+        this.waitingToChange = false;
+        incrementLevel();
+      } else {
+        this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
+        this.toggleSound(this.currentSound);
+        this.waitingToChange = false;
+      }
     }
   }
 
   stopSounds() {
-    this.toggleSound(this.currentSound);
+    let sound = this.levelSounds[this.currentSound];
+    sound.amp(0, this.volumeRampTime);
+    sound.stop();
   }
 }

@@ -65,15 +65,6 @@ class AnimationController {
   }
 
   createFluidAnimation(xPosition, yPosition, width, height, color) {
-    // let fluidAnim = new Moire(
-    //   xPosition,
-    //   yPosition,
-    //   xPosition,
-    //   yPosition + height,
-    //   width,
-    //   color
-    // )
-
     let fluidAnim = new Blinds(
       xPosition,
       xPosition + width,
@@ -84,14 +75,6 @@ class AnimationController {
 
     return fluidAnim;
   }
-
-  // drawFluidAnimation(anim, x1, x2) {
-  //   anim.x1 = x1;
-  //   anim.x2 = x2;
-  //   let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
-  //   let rms = sound.amplitudeAnalyzer.getLevel();
-  //   anim.draw(rms);
-  // }
 
   setFluidAnimationColor(anim, color) {
     anim.color = color;
@@ -124,26 +107,7 @@ class AnimationController {
       .forEach(sound => { this.drawSoundAnimation(sound, x1, x2, color); });
   }
 
-  // drawBackgroundSoundAnimations() {
-  //   audioManager.sounds
-  //     .filter(sound => sound.isPlaying())
-  //     .filter(sound => FOREGROUND_ANIMATIONS.indexOf(sound.animation) === -1)
-  //     .forEach(sound => { this.drawSoundAnimation(sound); });
-  // }
-
-  // drawForegroundSoundAnimations() {
-  //   audioManager.sounds
-  //     .filter(sound => sound.isPlaying())
-  //     .filter(sound => FOREGROUND_ANIMATIONS.indexOf(sound.animation) !== -1)
-  //     .forEach(sound => { this.drawSoundAnimation(sound); });
-  // }
-
   drawSoundAnimation(sound, x1, x2, color) {
-    // if (sound.animationType === 0) {
-    //   this.drawVolumeAnimations(sound);
-    // } else {
-    //   this.drawFrequencyAnimations(sound);
-    // }
     this.drawVolumeAnimations(sound, x1, x2, color);
   }
 

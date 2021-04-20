@@ -97,6 +97,20 @@ class FluidManager {
     }
   }
 
+  handlePausing() {
+    for (let i = 0; i < this.fluids.length; i++) {
+      animationController.setFluidAnimationColor(this.fluids[i].animation, ColorScheme.BLACK_INACTIVE);
+      this.fluids[i].setSpeed(0, 180);
+    }
+  }
+
+  handleUnpausing() {
+    for (let i = 0; i < this.fluids.length; i++) {
+      this.fluids[i].setSpeed(this.baseSpeed, 180);
+      animationController.setFluidAnimationColor(this.fluids[i].animation, this.currentAnimationColor);
+    }
+  }
+
   changeLevel() {
     this.fluidAnimationColors = levelManager.getCurrentLevel().fluidAnimationColors;
     this.currentAnimationColor = random(this.fluidAnimationColors);

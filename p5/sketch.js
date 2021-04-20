@@ -7,9 +7,12 @@
  * - 1 to cycle through parts
  */
 
+let TITLE_GENRE = 'City';
+
 let audioFilePaths = [];
 let sounds = [];
 let audioManager;
+let midiManager;
 
 let animationController;
 let uiManager;
@@ -21,10 +24,13 @@ let fluidManager;
 let jukeboxManager;
 
 function preload() {
+  isLoaded = false;
   audioManager = new AudioManager();
   animationController = new AnimationController();
 
   audioManager.loadSounds();
+  titleFont = loadFont('graphics/fonts/HelveticaNeue-UltraLight.ttf');
+  itemFont = loadFont('graphics/fonts/HelveticaNeue-Thin.ttf');
 }
 
 
@@ -33,6 +39,10 @@ function setup() {
   window.onkeydown = function (e) {
     return !(e.keyCode == 32);
   };
+
+  isLoaded = true;
+
+  isPaused = false;
 
   colorMode(HSB, 360, 100, 100, 100);
 
@@ -44,8 +54,6 @@ function setup() {
 
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
-  colorFilter = currentLevel.initialColorFilter;
-  drawMode = currentLevel.initialDrawMode;
 
   audioManager.loadFilter();
   audioManager.loadReverb();
@@ -60,54 +68,64 @@ function setup() {
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
 
+  MIDIManager.initialize();
+  MIDIManager.connectToMIDIDevice();
+
   audioManager.assignSoundAnimations();
   audioManager.assignSoundCues();
+
+  audioManager.unloopCurrentSound();
 }
 
 
 function draw() {
   background(backgroundColor);
 
-  audioManager.update();
-
   //animationController.drawBackgroundSoundAnimations();
 
-  player.speed = player.baseSpeed * audioManager.soundSpeed;
-  player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
-
-  if (player.isReviving) {
-    revivingLoop();
-  } else {
-    handleControls();
-
-    handleCollisionsAndJumping();
-
-    platformManager.managePlatforms();
-    fluidManager.manageFluids();
-    jukeboxManager.manageJukeboxes();
-    handleFalling();
+  if (!isPaused) {
+    audioManager.update();
   }
 
-  fluidManager.drawFluids();
-  //animationController.drawForegroundSoundAnimations();
-  jukeboxManager.drawJukeboxes();
-  platformManager.drawPlatforms();
-  drawSprite(player.sprite);
+  if (currentLevel.genre !== TITLE_GENRE) {
+    if (!isPaused) {
+      player.speed = player.baseSpeed * audioManager.soundSpeed;
+      player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
+
+      if (player.isReviving) {
+        revivingLoop();
+      } else {
+        handleControls();
+
+        handleCollisionsAndJumping();
+
+        platformManager.managePlatforms();
+        fluidManager.manageFluids();
+        jukeboxManager.manageJukeboxes();
+        handleFalling();
+      }
+    }
+
+    fluidManager.drawFluids();
+    //animationController.drawForegroundSoundAnimations();
+    jukeboxManager.drawJukeboxes();
+    platformManager.drawPlatforms();
+    drawSprite(player.sprite);
+  }
+
   uiManager.drawUI();
-  push();
-  fill(colorFilter);
-  rect(0, 0, window.width, window.height);
-  pop();
 }
 
 
 function handleControls() {
-  if (keyIsDown(RIGHT_ARROW)) {
-    player.sprite.setSpeed(player.speed, 0);
-  } else if (keyIsDown(LEFT_ARROW)) {
-    player.sprite.setSpeed(player.speed, 180);
-  } else {
-    player.sprite.setSpeed(0, 0);
+  if (currentLevel.genre !== TITLE_GENRE && !isPaused) {
+    if (keyIsDown(RIGHT_ARROW)) {
+      player.sprite.setSpeed(player.speed, 0);
+    } else if (keyIsDown(LEFT_ARROW)) {
+      player.sprite.setSpeed(player.speed, 180);
+    } else {
+      player.sprite.setSpeed(0, 0);
+    }
   }
 }
 
@@ -164,21 +182,112 @@ function revivingLoop() {
 }
 
 
-function changeLevel() {
-  levelManager.changeLevel();
+function incrementLevel() {
+  levelManager.incrementLevel();
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
+  player.changeLevel();
+  platformManager.changeLevel();
   fluidManager.changeLevel();
   jukeboxManager.changeLevel();
-  colorFilter = currentLevel.initialColorFilter;
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
 }
 
 
-function keyReleased() {
-  if (key === '2') {
-    changeLevel();
+function changeLevel(level) {
+  levelManager.changeLevel(level);
+  currentLevel = levelManager.getCurrentLevel();
+  backgroundColor = currentLevel.initialBackgroundColor;
+  player.changeLevel();
+  platformManager.changeLevel();
+  fluidManager.changeLevel();
+  jukeboxManager.changeLevel();
+  drawMode = currentLevel.initialDrawMode;
+
+  audioManager.startSounds(currentLevel.genre);
+}
+
+
+function handlePausing() {
+  player.handlePausing();
+  audioManager.handlePausing();
+  if (!player.isReviving) {
+    platformManager.handlePausing();
+    fluidManager.handlePausing();
+    jukeboxManager.handlePausing();
+  }
+}
+
+
+function handleUnpausing() {
+  player.handleUnpausing();
+  audioManager.handleUnpausing();
+  if (!player.isReviving) {
+    platformManager.handleUnpausing();
+    fluidManager.handleUnpausing();
+    jukeboxManager.handleUnpausing();
+  }
+}
+
+
+function keyPressed() {
+  if (isLoaded) {
+    if (currentLevel.genre === TITLE_GENRE) {
+      // Main Menu
+      if (currentLevel.currentScreen === 0) {
+        if (keyCode === DOWN_ARROW) {
+          currentLevel.currentItemSelected =
+            (currentLevel.currentItemSelected + 1) % currentLevel.menuItems.length;
+        } else if (keyCode === UP_ARROW) {
+          if (currentLevel.currentItemSelected === 0) {
+            currentLevel.currentItemSelected = currentLevel.menuItems.length - 1;
+          } else {
+            currentLevel.currentItemSelected =
+              (currentLevel.currentItemSelected - 1) % currentLevel.menuItems.length;
+          }
+        } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
+          currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
+          switch (currentSelection) {
+            case 'Play':
+              changeLevel(1);
+              break;
+            case 'How To Play':
+              currentLevel.currentScreen = 1;
+              break;
+            case 'Credits':
+              currentLevel.currentScreen = 2;
+              break;
+          }
+        }
+        // How To Play
+      } else if (currentLevel.currentScreen === 1) {
+        if (keyCode === ESCAPE) {
+          currentLevel.currentScreen = 0;
+        }
+        // Credits
+      } else if (currentLevel.currentScreen === 2) {
+        if (keyCode === ESCAPE) {
+          currentLevel.currentScreen = 0;
+        }
+      }
+    } else {
+      if (keyCode === ESCAPE) {
+        if (isPaused) {
+          handleUnpausing();
+        } else {
+          handlePausing();
+        }
+        isPaused = !isPaused;
+      } else if (isPaused) {
+        if (key === 'q' || key === 'Q') {
+          audioManager.stopSounds();
+          isPaused = !isPaused;
+          changeLevel(0);
+          audioManager.unloopCurrentSound();
+        }
+      }
+    }
   }
 }

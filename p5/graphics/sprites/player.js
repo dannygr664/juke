@@ -7,6 +7,19 @@ const REVIVING_SPEED = 50;
 
 class Player {
   constructor() {
+    const PLAYER_X_INITIAL = windowWidth / 2;
+    const PLAYER_Y_INITIAL = windowHeight / 2 - windowHeight / 8;
+
+    this.sprite = createSprite(
+      PLAYER_X_INITIAL, PLAYER_Y_INITIAL, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
+
+    this.resetPlayer();
+  }
+
+  resetPlayer() {
+    const PLAYER_X_INITIAL = windowWidth / 2;
+    const PLAYER_Y_INITIAL = windowHeight / 2 - windowHeight / 8;
+
     this.baseSpeed = DEFAULT_BASE_PLAYER_SPEED;
     this.speed = 0;
     this.jumpForce = DEFAULT_JUMP_FORCE;
@@ -14,13 +27,11 @@ class Player {
     this.isReviving = false;
     this.gravityForce = DEFAULT_GRAVITY_FORCE;
     this.gravitySpeed = 0;
-
-    const PLAYER_X_INITIAL = windowWidth / 2;
-    const PLAYER_Y_INITIAL = windowHeight / 2 - windowHeight / 8;
-
-    this.sprite = createSprite(
-      PLAYER_X_INITIAL, PLAYER_Y_INITIAL, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
-    this.sprite.shapeColor = ColorScheme.BLACK;
+    this.sprite.shapeColor = levelManager.getCurrentLevel().playerColor;
+    this.sprite.position.x = PLAYER_X_INITIAL;
+    this.sprite.position.y = PLAYER_Y_INITIAL;
+    this.sprite.width = DEFAULT_PLAYER_WIDTH;
+    this.sprite.height = DEFAULT_PLAYER_HEIGHT;
   }
 
   jump() {
@@ -37,5 +48,20 @@ class Player {
     this.isReviving = true;
     this.gravitySpeed = 0;
     this.sprite.setSpeed(REVIVING_SPEED, 270);
+  }
+
+  handlePausing() {
+    this.sprite.shapeColor = ColorScheme.BLACK_INACTIVE;
+    this.sprite.setSpeed(0, 270);
+    this.sprite.setSpeed(0, 90);
+  }
+
+  handleUnpausing() {
+    this.sprite.shapeColor = levelManager.getCurrentLevel().playerColor;
+    this.sprite.setSpeed(this.jumpSpeed, 270);
+  }
+
+  changeLevel() {
+    this.resetPlayer();
   }
 }

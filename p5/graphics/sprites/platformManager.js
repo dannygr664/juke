@@ -1,12 +1,16 @@
 const DEFAULT_BASE_PLATFORM_SPEED = 0.5;
-const NUMBER_OF_PLATFORMS = 8;
+const DEFAULT_NUMBER_OF_PLATFORMS = 8;
 const DEFAULT_PLATFORM_HEIGHT = 5;
 const DEFAULT_PLATFORM_SPACING = 200;
+
+const PLATFORMER_MODE = 0;
+const MIDI_MODE = 1;
 
 let startingPlatformWidth;
 
 class PlatformManager {
   constructor() {
+    this.mode = PLATFORMER_MODE;
     this.baseSpeed = DEFAULT_BASE_PLATFORM_SPEED;
     this.platforms = new Group();
     this.platformYMin = windowHeight / 4;
@@ -17,26 +21,60 @@ class PlatformManager {
 
     startingPlatformWidth = windowWidth / 1.5;
 
-    for (let i = 0; i < NUMBER_OF_PLATFORMS; i++) {
+    this.initializePlatforms();
+  }
+
+  enableMIDIMode() {
+    this.mode = MIDI_MODE;
+    for (let i = 0; i < this.platforms.size(); i++) {
+      let toRemove = this.platforms.get(i);
+      this.platforms.remove(toRemove);
+      toRemove.remove();
+    }
+    this.platforms.clear();
+    this.initializeMIDIPlatforms(25);
+  }
+
+  initializePlatforms() {
+    for (let i = 0; i < DEFAULT_NUMBER_OF_PLATFORMS; i++) {
       let platform = createSprite(
         windowWidth / 2 + i * this.platformSpacing,
         random(this.platformYMin, this.platformYMax),
-        (i === 0) ? startingPlatformWidth : this.platformWidth,
+        this.plaformWidth,
         this.platformHeight
       );
-      platform.shapeColor = ColorScheme.BLACK;
+      platform.shapeColor = levelManager.getCurrentLevel().platformColor;
       platform.setSpeed(this.baseSpeed, 180);
       this.platforms.add(platform);
     }
   }
 
+  initializeMIDIPlatforms(numberOfPlatforms) {
+    for (let i = 0; i < numberOfPlatforms; i++) {
+      let platform = createSprite(
+        -this.platformWidth / 2,
+        (i + 0.5) * windowHeight / numberOfPlatforms,
+        this.plaformWidth,
+        this.platformHeight
+      );
+      platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+      platform.setSpeed(this.baseSpeed, 0);
+      this.platforms.add(platform);
+    }
+  }
+
   managePlatforms() {
-    for (let i = 0; i < this.platforms.length; i++) {
-      if (this.platforms[i].position.x < -this.platforms[i].width / 2) {
-        this.spawnPlatform(this.platforms[i]);
+    for (let i = 0; i < this.platforms.size(); i++) {
+      if (this.platforms.get(i).position.x < -this.platforms.get(i).width / 2) {
+        if (this.mode === PLATFORMER_MODE) {
+          this.spawnPlatform(this.platforms.get(i));
+          this.triggerPlatform(this.platforms.get(i));
+        } else if (this.mode === MIDI_MODE) {
+          this.platforms.get(i).setSpeed(0, 180);
+        }
       }
       this.baseSpeed = this.calculatePlatformSpeed();
-      this.platforms[i].setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
+      this.platforms.get(i).setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
     }
   }
 
@@ -46,28 +84,53 @@ class PlatformManager {
   }
 
   spawnPlatform(platform) {
-    platform.width = this.platformWidth; // to reset initial platform
     platform.position.x = windowWidth + this.platformWidth / 2;
-    platform.position.y = random(this.platformYMin, this.platformYMax);
+    platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+  }
+
+  triggerPlatform(platform) {
+    platform.setSpeed(this.baseSpeed, 180);
   }
 
   drawPlatforms() {
-    for (let i = 0; i < this.platforms.length; i++) {
+    for (let i = 0; i < this.platforms.size(); i++) {
       drawSprite(this.platforms[i]);
     }
   }
 
   handleFalling() {
-    for (let i = 0; i < this.platforms.length; i++) {
+    this.pausePlatforms();
+  }
+
+  handleRevived() {
+    this.resumePlatforms();
+  }
+
+  handlePausing() {
+    this.pausePlatforms();
+  }
+
+  handleUnpausing() {
+    this.resumePlatforms();
+  }
+
+  pausePlatforms() {
+    for (let i = 0; i < this.platforms.size(); i++) {
       this.platforms[i].shapeColor = ColorScheme.BLACK_INACTIVE;
       this.platforms[i].setSpeed(0, 180);
     }
   }
 
-  handleRevived() {
-    for (let i = 0; i < this.platforms.length; i++) {
-      this.platforms[i].shapeColor = ColorScheme.BLACK;
+  resumePlatforms() {
+    for (let i = 0; i < this.platforms.size(); i++) {
+      this.platforms[i].shapeColor = levelManager.getCurrentLevel().platformColor;
       this.platforms[i].setSpeed(this.baseSpeed, 180);
+    }
+  }
+
+  changeLevel() {
+    for (let i = 0; i < this.platforms.size(); i++) {
+      this.platforms[i].shapeColor = levelManager.getCurrentLevel().platformColor;
     }
   }
 }
