@@ -199,9 +199,18 @@ class UIManager {
     fill(ColorScheme.CLEAR);
     rect(width / 2 - 100, 5, 200, 20);
     noStroke();
-    fill(levelManager.getCurrentLevel().playerColor);
+    let fillColor = levelManager.getCurrentLevel().playerColor;
+    fillColor.setAlpha(50);
+    fill(fillColor);
     //text('Song Progress', width / 2, 5);
     rect(width / 2 - 100, 5, map(audioManager.currentSound, 0, audioManager.levelSounds.length, 0, 200), 20);
+
+    if (jukeboxManager.didPlayerFall) {
+      fillColor.setAlpha(10);
+    }
+    fill(fillColor);
+    rect(width / 2 - 100, 5, map(audioManager.levelSounds[audioManager.currentSound].currentTime(), 0, audioManager.levelSounds[audioManager.currentSound].duration(), 0, 200), 20);
+    fillColor.setAlpha(100);
     pop();
   }
 
