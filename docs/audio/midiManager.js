@@ -48,7 +48,7 @@ class MIDIManager {
     let frequency = MIDIManager.midiNoteToFrequency(note);
     let velocity = message.data[2];
 
-    if (!isPaused && !player.isReviving) {
+    if (!isPaused) {
       if (eventType === NOTE_ON && velocity > 0) {
         let platformIndex = MAX_NOTE_INDEX - (note - NOTE_MIN);
         platformManager.spawnPlatform(platformManager.platforms.get(platformIndex));
