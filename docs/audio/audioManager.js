@@ -210,10 +210,11 @@ class AudioManager {
   }
 
   handleSoundSpeedControls() {
+    let step = (audioManager.soundSpeed >= 1) ? SOUND_SPEED_STEP : (SOUND_SPEED_STEP / 2);
     if (keyDown('w' || 'W')) {
-      this.soundSpeed += SOUND_SPEED_STEP;
+      this.soundSpeed += step;
     } else if (keyDown('x' || 'X')) {
-      this.soundSpeed -= SOUND_SPEED_STEP;
+      this.soundSpeed -= step;
     }
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
 
