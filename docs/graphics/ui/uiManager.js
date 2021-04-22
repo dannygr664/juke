@@ -226,7 +226,7 @@ class UIManager {
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
     fill(levelManager.getCurrentLevel().playerColor);
     if (currentLevelNumber > 1) {
-      text('Q/Z', 75 + rectWidth, 5);
+      text('Q/A/Z', 75 + rectWidth, 5);
     }
     pop();
   }
@@ -242,7 +242,7 @@ class UIManager {
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
     fill(levelManager.getCurrentLevel().playerColor);
     if (currentLevelNumber > 2) {
-      text('W/X', 75 + rectWidth, 35);
+      text('W/S/X', 75 + rectWidth, 35);
     }
     pop();
   }

@@ -203,6 +203,8 @@ class AudioManager {
       this.volume += VOLUME_STEP;
     } else if (keyDown('z' || 'Z')) {
       this.volume -= VOLUME_STEP;
+    } else if (keyDown('a' || 'A')) {
+      this.volume = INITIAL_VOLUME;
     }
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
 
@@ -215,6 +217,8 @@ class AudioManager {
       this.soundSpeed += step;
     } else if (keyDown('x' || 'X')) {
       this.soundSpeed -= step;
+    } else if (keyDown('s' || 'S')) {
+      this.soundSpeed = INITIAL_SOUND_SPEED;
     }
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
 
