@@ -18,6 +18,7 @@ class PlatformManager {
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
     this.platformSpacing = width / 7;
     this.beatTimer = 0;
+    this.platformColor = levelManager.getCurrentLevel().platformColor;
 
     startingPlatformWidth = width / 1.5;
 
@@ -35,7 +36,7 @@ class PlatformManager {
       startingPlatformWidth,
       this.platformHeight
     );
-    platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+    platform.shapeColor = this.platformColor;
     platform.setSpeed(this.baseSpeed, 180);
     platform.setDefaultCollider();
     this.platforms.add(platform);
@@ -49,7 +50,7 @@ class PlatformManager {
       this.plaformWidth,
       this.platformHeight
     );
-    platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+    platform.shapeColor = this.platformColor;
     platform.setSpeed(this.baseSpeed, 180);
     platform.setDefaultCollider();
     this.platforms.add(platform);
@@ -64,7 +65,7 @@ class PlatformManager {
         this.plaformWidth,
         this.platformHeight
       );
-      platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+      platform.shapeColor = this.platformColor;
       platform.setSpeed(this.baseSpeed, 0);
       this.platforms.add(platform);
     }
@@ -152,14 +153,19 @@ class PlatformManager {
 
   resumePlatforms() {
     for (let i = 0; i < this.platforms.size(); i++) {
-      this.platforms[i].shapeColor = levelManager.getCurrentLevel().platformColor;
+      this.platforms[i].shapeColor = this.platformColor;
       this.platforms[i].setSpeed(this.baseSpeed, 180);
     }
   }
 
   changeLevel() {
+    this.updatePlatformColor(levelManager.getCurrentLevel().platformColor);
+  }
+
+  updatePlatformColor(newColor) {
+    this.platformColor = newColor;
     for (let i = 0; i < this.platforms.size(); i++) {
-      this.platforms[i].shapeColor = levelManager.getCurrentLevel().platformColor;
+      this.platforms[i].shapeColor = this.platformColor;
     }
   }
 }

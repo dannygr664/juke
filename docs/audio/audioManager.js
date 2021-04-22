@@ -355,6 +355,8 @@ class AudioManager {
       } else {
         this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
         this.toggleSound(this.currentSound);
+        player.updatePlayerColor(backgroundColor);
+        platformManager.updatePlatformColor(backgroundColor);
         this.waitingToChange = false;
       }
     }
