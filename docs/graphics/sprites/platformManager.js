@@ -86,6 +86,7 @@ class PlatformManager {
       if (this.platforms.get(i).position.x < -this.platforms.get(i).width / 2) {
         this.platforms.get(i).remove();
       } else {
+        this.updatePlatformWidth(this.platforms.get(i));
         this.updatePlatformSpeed(this.platforms.get(i));
       }
     }
@@ -115,6 +116,13 @@ class PlatformManager {
     let platform = this.createPlatformAtHeight(yPos);
 
     return platform;
+  }
+
+  updatePlatformWidth(platform) {
+    if (platform.width !== startingPlatformWidth) {
+      let rms = audioManager.getCurrentSound().amplitudeAnalyzer.getLevel();
+      platform.width = map(rms, 0, 0.05, 7 * this.platformWidth / 8, this.platformWidth);
+    }
   }
 
   updatePlatformSpeed(platform) {
