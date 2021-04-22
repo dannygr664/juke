@@ -209,7 +209,7 @@ class UIManager {
       fillColor.setAlpha(10);
     }
     fill(fillColor);
-    rect(width / 2 - 100, 5, map(audioManager.levelSounds[audioManager.currentSound].currentTime(), 0, audioManager.levelSounds[audioManager.currentSound].duration(), 0, 200), 20);
+    rect(width / 2 - 100, 5, map(audioManager.getCurrentSound().currentTime(), 0, audioManager.getCurrentSound().duration(), 0, 200), 20);
     fillColor.setAlpha(100);
     pop();
   }

@@ -182,6 +182,10 @@ class AudioManager {
     sound.animation = animation;
   }
 
+  getCurrentSound() {
+    return this.levelSounds[this.currentSound];
+  }
+
   update() {
     if (this.waitingToChange) {
       this.tryToPlayNextSound();
@@ -262,11 +266,11 @@ class AudioManager {
   }
 
   handlePausing() {
-    this.levelSounds[this.currentSound].pause();
+    this.getCurrentSound().pause();
   }
 
   handleUnpausing() {
-    this.levelSounds[this.currentSound].play();;
+    this.getCurrentSound().play();;
   }
 
   toggleSound(soundIndex) {
@@ -288,7 +292,7 @@ class AudioManager {
   }
 
   isSoundAlmostOver() {
-    let sound = this.levelSounds[this.currentSound];
+    let sound = this.getCurrentSound();
     const numberOfBeats = sound.soundInfo.length;
     const songDuration = sound.duration();
     const lengthOfBeat = songDuration / numberOfBeats;
@@ -300,7 +304,7 @@ class AudioManager {
   }
 
   getDurationOfFourBeats() {
-    let sound = this.levelSounds[this.currentSound];
+    let sound = this.getCurrentSound();
     const numberOfBeats = sound.soundInfo.length;
     const songDuration = sound.duration();
     const lengthOfBeat = songDuration / numberOfBeats;
@@ -309,7 +313,7 @@ class AudioManager {
 
   unloopCurrentSound() {
     // Turn looping off
-    let sound = this.levelSounds[this.currentSound];
+    let sound = this.getCurrentSound();
     if (sound.isLooping()) {
       sound.setLoop(false);
     }
@@ -317,7 +321,7 @@ class AudioManager {
   }
 
   tryToPlayNextSound() {
-    if (!this.levelSounds[this.currentSound].isPlaying() && !isPaused) {
+    if (!this.getCurrentSound().isPlaying() && !isPaused) {
       if (this.isFinalSound()) {
         this.waitingToChange = false;
         incrementLevel();
@@ -330,7 +334,7 @@ class AudioManager {
   }
 
   stopSounds() {
-    let sound = this.levelSounds[this.currentSound];
+    let sound = this.getCurrentSound();
     sound.amp(0, this.volumeRampTime);
     sound.stop();
   }
