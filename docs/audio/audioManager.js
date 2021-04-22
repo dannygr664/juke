@@ -303,12 +303,12 @@ class AudioManager {
     return (this.currentSound === this.levelSounds.length - 1);
   }
 
-  getDurationOfFourBeats() {
+  getDurationOfBeat() {
     let sound = this.getCurrentSound();
     const numberOfBeats = sound.soundInfo.length;
     const songDuration = sound.duration();
     const lengthOfBeat = songDuration / numberOfBeats;
-    return lengthOfBeat * 4;
+    return lengthOfBeat;
   }
 
   unloopCurrentSound() {

@@ -80,7 +80,7 @@ class PlatformManager {
   }
 
   calculatePlatformSpeed() {
-    let durationOfFourBeats = audioManager.getDurationOfFourBeats();
+    let durationOfFourBeats = audioManager.getDurationOfBeat() * 4;
     return durationOfFourBeats * 1.5;
   }
 
