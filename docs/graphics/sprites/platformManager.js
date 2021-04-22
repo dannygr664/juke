@@ -26,13 +26,6 @@ class PlatformManager {
 
   enableMIDIMode() {
     this.mode = MIDI_MODE;
-    for (let i = 0; i < this.platforms.size(); i++) {
-      let toRemove = this.platforms.get(i);
-      this.platforms.remove(toRemove);
-      toRemove.remove();
-    }
-    this.platforms.clear();
-    this.initializeMIDIPlatforms(25);
   }
 
   createInitialPlatform() {
@@ -78,21 +71,19 @@ class PlatformManager {
   }
 
   managePlatforms() {
-    let oldBeatTimer = this.beatTimer;
-    this.beatTimer = audioManager.getCurrentSound().currentTime()
-      % audioManager.getDurationOfBeat();
-    if (oldBeatTimer > this.beatTimer) {
-      let newPlatform = this.spawnPlatform();
-      this.updatePlatformSpeed(newPlatform);
+    if (this.mode === PLATFORMER_MODE) {
+      let oldBeatTimer = this.beatTimer;
+      this.beatTimer = audioManager.getCurrentSound().currentTime()
+        % audioManager.getDurationOfBeat();
+      if (oldBeatTimer > this.beatTimer) {
+        let newPlatform = this.spawnPlatform();
+        this.updatePlatformSpeed(newPlatform);
+      }
     }
 
     for (let i = 0; i < this.platforms.size(); i++) {
       if (this.platforms.get(i).position.x < -this.platforms.get(i).width / 2) {
-        if (this.mode === PLATFORMER_MODE) {
-          this.platforms.get(i).remove();
-        } else if (this.mode === MIDI_MODE) {
-          this.platforms.get(i).setSpeed(0, 180);
-        }
+        this.platforms.get(i).remove();
       } else {
         this.updatePlatformSpeed(this.platforms.get(i));
       }

@@ -50,9 +50,8 @@ class MIDIManager {
 
     if (!isPaused) {
       if (eventType === NOTE_ON && velocity > 0) {
-        let platformIndex = MAX_NOTE_INDEX - (note - NOTE_MIN);
-        platformManager.spawnPlatform(platformManager.platforms.get(platformIndex));
-        platformManager.triggerPlatform(platformManager.platforms.get(platformIndex));
+        platformManager.createPlatformAtHeight(map(note, NOTE_MIN, NOTE_MAX, height, 0));
+
         MIDIManager.playNote(frequency);
       }
     }
