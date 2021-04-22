@@ -12,6 +12,7 @@ class Player {
 
     this.sprite = createSprite(
       PLAYER_X_INITIAL, PLAYER_Y_INITIAL, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
+    this.sprite.setDefaultCollider();
 
     this.resetPlayer();
   }

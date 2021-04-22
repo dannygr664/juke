@@ -28,6 +28,7 @@ class JukeboxManager {
       );
       jukebox.shapeColor = ColorScheme.CLEAR;
       jukebox.setSpeed(0, 180);
+      jukebox.setDefaultCollider();
       this.jukeboxes.add(jukebox);
     }
 
