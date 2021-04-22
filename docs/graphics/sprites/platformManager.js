@@ -21,7 +21,7 @@ class PlatformManager {
 
     startingPlatformWidth = width / 1.5;
 
-    this.initializePlatforms();
+    this.createInitialPlatform();
   }
 
   enableMIDIMode() {
@@ -41,6 +41,20 @@ class PlatformManager {
     // for (let i = 0; i < DEFAULT_NUMBER_OF_PLATFORMS; i++) {
     //   this.createPlatformAtHeight(height / 2 - this.platformheight / 2);
     // }
+  }
+
+  createInitialPlatform() {
+    let platform = createSprite(
+      width - this.platformWidth / 2,
+      height / 2 - this.platformHeight / 2,
+      startingPlatformWidth,
+      this.platformHeight
+    );
+    platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+    platform.setSpeed(this.baseSpeed, 180);
+    platform.setDefaultCollider();
+    this.platforms.add(platform);
+    return platform;
   }
 
   createPlatformAtHeight(yPos) {
