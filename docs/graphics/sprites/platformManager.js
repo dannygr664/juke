@@ -40,7 +40,7 @@ class PlatformManager {
     for (let i = 0; i < DEFAULT_NUMBER_OF_PLATFORMS; i++) {
       let platform = createSprite(
         width / 2 + i * this.platformSpacing,
-        random(this.platformYMin, this.platformYMax),
+        height / 2 - this.platformHeight / 2,
         this.plaformWidth,
         this.platformHeight
       );
@@ -86,6 +86,23 @@ class PlatformManager {
 
   spawnPlatform(platform) {
     platform.position.x = width + this.platformWidth / 2;
+
+    let sound = audioManager.getCurrentSound();
+    let spectrum = sound.fft.analyze();
+    let peakAmplitudeValue = 0;
+    let peakFrequencyIndex = 0;
+    // let spectralCentroid = sound.fft.getCentroid();
+    // let nyquistFrequency = 22050;
+    // let meanFrequencyIndex = spectralCentroid / (nyquistFrequency / spectrum.length);
+    // platform.position.y = map(meanFrequencyIndex, 0, spectrum.length / 2, height, 0);
+    for (let i = 0; i < spectrum.length; i++) {
+      if (spectrum[i] > peakAmplitudeValue) {
+        peakFrequencyIndex = i;
+      }
+    }
+
+    platform.position.y = map(peakFrequencyIndex, 0, spectrum.length, height, 0);
+
     platform.shapeColor = levelManager.getCurrentLevel().platformColor;
   }
 
