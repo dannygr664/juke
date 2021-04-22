@@ -32,7 +32,7 @@ class Noise {
     rect(0, 0, this.x2 - this.x1, this.y2 - this.y1);
 
     noiseStrength = audioManager.reverbLevel;
-    strokeWidth = map(rms, 0, 0.1, 0.5, map(audioManager.volume, 0, 1, 4, 10));
+    strokeWidth = map(rms, 0, 0.1, map(audioManager.volume, 1, 0, 4, 10), 0.5);
 
     // Draw agents
     stroke(player.isReviving ? ColorScheme.BLACK_INACTIVE : this.color, agentAlpha);
