@@ -26,13 +26,13 @@ class Noise {
     }
   }
 
-  draw(rms) {
+  draw() {
     push();
     fill(255, overlayAlpha);
     rect(0, 0, this.x2 - this.x1, this.y2 - this.y1);
 
     noiseStrength = audioManager.reverbLevel;
-    strokeWidth = map(rms, 0, 0.1, map(audioManager.volume, 1, 0, 4, 10), 0.5);
+    strokeWidth = map(audioManager.reverbLevel, REVERB_MIN, REVERB_MAX, 0.5, 10);
 
     // Draw agents
     stroke(player.isReviving ? ColorScheme.BLACK_INACTIVE : this.color, agentAlpha);
