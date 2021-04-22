@@ -26,7 +26,7 @@ class ColorScheme {
     this.CLEAR = color(360, 0);
 
     // Assign color schemes for each level
-    this.SPACESHIP_BACKGROUND_COLOR = this.GRAY;
+    this.SPACESHIP_BACKGROUND_COLOR = this.WHITE;
     this.SPACESHIP_LOWEST_VOLUME = this.ORANGE_LOW_SAT;
     this.SPACESHIP_LOWER_VOLUME = this.ORANGE_MED_SAT;
     this.SPACESHIP_HIGHER_VOLUME = this.ORANGE_HIGH_SAT;
@@ -37,7 +37,7 @@ class ColorScheme {
     this.LOFI_HIGHER_SPEED = this.BLUE;
     this.LOFI_HIGHEST_SPEED = this.GREEN;
 
-    this.ETHEREAL_BACKGROUND_COLOR = this.ETHEREAL_INDIGO;
+    this.ETHEREAL_BACKGROUND_COLOR = this.WHITE;
     this.ETHEREAL_LOWEST_REVERB = this.ETHEREAL_SAPPHIRE;
     this.ETHEREAL_LOWER_REVERB = this.ETHEREAL_SILVER;
     this.ETHEREAL_HIGHER_REVERB = this.ETHEREAL_GOLD;

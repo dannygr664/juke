@@ -249,7 +249,29 @@ class AudioManager {
       sound.rate(newSpeed);
     });
 
-    updateBackgroundHue(map(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX, 0, 360));
+    const RED_ANCHOR = hue(ColorScheme.RED);
+    const YELLOW_ANCHOR = hue(ColorScheme.YELLOW);
+    const BLUE_ANCHOR = hue(ColorScheme.BLUE);
+    const GREEN_ANCHOR = hue(ColorScheme.GREEN);
+
+    let saturationChange = 0;
+    let hueChange = 0;
+
+    if (this.soundSpeed <= 0.4) {
+      hueChange = map(this.soundSpeed, SOUND_SPEED_MIN, 0.4, 300, RED_ANCHOR);
+    } else if (this.soundSpeed <= 0.75) {
+      hueChange = map(this.soundSpeed, 0.4, 0.75, 0, YELLOW_ANCHOR);
+    } else if (this.soundSpeed < 1) {
+      hueChange = YELLOW_ANCHOR;
+      saturationChange = map(this.soundSpeed, 0.75, 1, 0, -100);
+    } else if (this.soundSpeed <= 2) {
+      hueChange = BLUE_ANCHOR;
+      saturationChange = map(this.soundSpeed, 1, 2, -100, 0);
+    } else if (this.soundSpeed <= SOUND_SPEED_MAX) {
+      hueChange = map(this.soundSpeed, 2, 4, BLUE_ANCHOR, GREEN_ANCHOR);
+    }
+
+    updateBackgroundHue(hueChange, saturationChange);
   }
 
   updateReverb(newReverb) {

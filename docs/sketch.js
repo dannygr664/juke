@@ -252,18 +252,30 @@ function handlePausing() {
 
 
 function updateBackgroundBrightness(newBrightness) {
-  let currentBgColor = currentLevel.initialBackgroundColor;
+  let currentBgColor = backgroundColor;
   let currentHue = hue(currentBgColor);
   let currentSat = saturation(currentBgColor);
   backgroundColor = color(currentHue, currentSat, newBrightness);
 }
 
 
-function updateBackgroundHue(newHue) {
-  let currentBgColor = currentLevel.initialBackgroundColor;
-  let currentSaturation = saturation(currentBgColor);
+function updateBackgroundHue(hueChange, saturationChange) {
+  let currentBgColor = backgroundColor;
+  let currentHue = hue(currentLevel.initialBackgroundColor);
   let currentBrightness = brightness(currentBgColor);
-  backgroundColor = color(newHue, currentSaturation, currentBrightness);
+  let newHue = currentHue + hueChange;
+  if (newHue < 0) {
+    newHue = 360 - newHue;
+  } else {
+    newHue = newHue % 360;
+  }
+  let saturation = (audioManager.soundSpeed === INITIAL_SOUND_SPEED ? 0 : 100);
+
+  if (audioManager.soundSpeed !== INITIAL_SOUND_SPEED) {
+    saturation += saturationChange;
+  }
+
+  backgroundColor = color(newHue, saturation, currentBrightness);
 }
 
 
