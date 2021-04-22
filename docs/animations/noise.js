@@ -31,7 +31,7 @@ class Noise {
     fill(255, overlayAlpha);
     rect(0, 0, this.x2 - this.x1, this.y2 - this.y1);
 
-    noiseStrength = map(rms, 0, 0.1, 0, 20);
+    noiseStrength = audioManager.reverbLevel;
     strokeWidth = map(rms, 0, 0.1, 0.5, map(audioManager.volume, 0, 1, 4, 10));
 
     // Draw agents
