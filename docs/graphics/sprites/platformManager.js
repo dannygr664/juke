@@ -35,14 +35,6 @@ class PlatformManager {
     this.initializeMIDIPlatforms(25);
   }
 
-  initializePlatforms() {
-    const DEFAULT_NUMBER_OF_PLATFORMS = width / this.platformSpacing;
-
-    // for (let i = 0; i < DEFAULT_NUMBER_OF_PLATFORMS; i++) {
-    //   this.createPlatformAtHeight(height / 2 - this.platformheight / 2);
-    // }
-  }
-
   createInitialPlatform() {
     let platform = createSprite(
       width - this.platformWidth / 2,
