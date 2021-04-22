@@ -193,6 +193,7 @@ function revivingLoop() {
     player.sprite.setSpeed(0, 270);
     if (keyDown(' ')) {
       player.isReviving = false;
+      player.sprite.shapeColor = player.color;
       audioManager.handleRevived();
       platformManager.handleRevived();
       fluidManager.handleRevived();

@@ -49,6 +49,7 @@ class Player {
     this.isReviving = true;
     this.gravitySpeed = 0;
     this.sprite.setSpeed(REVIVING_SPEED, 270);
+    this.sprite.shapeColor = ColorScheme.BLACK_INACTIVE;
   }
 
   handlePausing() {
