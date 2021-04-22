@@ -52,6 +52,7 @@ class PlatformManager {
     );
     platform.shapeColor = levelManager.getCurrentLevel().platformColor;
     platform.setSpeed(this.baseSpeed, 180);
+    platform.setDefaultCollider();
     this.platforms.add(platform);
     return platform;
   }
