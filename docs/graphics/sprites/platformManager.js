@@ -38,16 +38,20 @@ class PlatformManager {
     const DEFAULT_NUMBER_OF_PLATFORMS = width / this.platformSpacing;
 
     for (let i = 0; i < DEFAULT_NUMBER_OF_PLATFORMS; i++) {
-      let platform = createSprite(
-        width / 2 + i * this.platformSpacing,
-        height / 2 - this.platformHeight / 2,
-        this.plaformWidth,
-        this.platformHeight
-      );
-      platform.shapeColor = levelManager.getCurrentLevel().platformColor;
-      platform.setSpeed(this.baseSpeed, 180);
-      this.platforms.add(platform);
+      this.createPlatform();
     }
+  }
+
+  createPlatform() {
+    let platform = createSprite(
+      width / 2 + i * this.platformSpacing,
+      height / 2 - this.platformHeight / 2,
+      this.plaformWidth,
+      this.platformHeight
+    );
+    platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+    platform.setSpeed(this.baseSpeed, 180);
+    this.platforms.add(platform);
   }
 
   initializeMIDIPlatforms(numberOfPlatforms) {
