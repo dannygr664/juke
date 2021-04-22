@@ -86,7 +86,7 @@ class PlatformManager {
       if (this.platforms.get(i).position.x < -this.platforms.get(i).width / 2) {
         this.platforms.get(i).remove();
       } else {
-        this.updatePlatformWidth(this.platforms.get(i));
+        //this.updatePlatformWidth(this.platforms.get(i));
         this.updatePlatformSpeed(this.platforms.get(i));
       }
     }
