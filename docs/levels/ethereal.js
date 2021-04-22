@@ -16,6 +16,7 @@ class Ethereal {
       ColorScheme.WHITE
     ];
     this.defaultJukeboxAnimationColor = ColorScheme.WHITE;
+    this.maxEnergy = 300;
     this.genre = 'Ethereal';
   }
 

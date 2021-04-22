@@ -43,4 +43,13 @@ class ColorScheme {
     this.ETHEREAL_HIGHER_REVERB = this.ETHEREAL_GOLD;
     this.ETHEREAL_HIGHEST_REVERB = this.WHITE;
   }
+
+  static getComplementaryColor(c) {
+    return color(
+      (hue(c) + 180) % 360,
+      saturation(c),
+      brightness(c),
+      alpha(c)
+    );
+  }
 }

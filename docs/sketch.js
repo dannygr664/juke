@@ -123,6 +123,14 @@ function draw() {
           platformManager.managePlatforms();
           fluidManager.manageFluids();
           jukeboxManager.manageJukeboxes();
+          let newEnergy = player.energy + 0.05;
+          player.energy = min(newEnergy, currentLevel.maxEnergy);
+          player.updatePlayerColor(color(
+            hue(player.color),
+            saturation(player.color),
+            brightness(player.color),
+            map(player.energy, 0, currentLevel.maxEnergy, 0, 100)
+          ));
           handleFalling();
         }
       }
@@ -131,6 +139,12 @@ function draw() {
       //animationController.drawForegroundSoundAnimations();
       jukeboxManager.drawJukeboxes();
       platformManager.drawPlatforms();
+
+      push();
+      fill(ColorScheme.getComplementaryColor(player.color));
+      rect(player.sprite.position.x - player.sprite.width / 2, player.sprite.position.y - player.sprite.height / 2, player.sprite.width, map(player.energy, 0, currentLevel.maxEnergy, player.sprite.height, 0));
+      pop();
+
       drawSprite(player.sprite);
     }
   }
@@ -178,7 +192,7 @@ function handleCollisionsAndJumping() {
 
 
 function handleFalling() {
-  if (player.sprite.position.y > height) {
+  if (player.sprite.position.y > height || player.energy < 0) {
     player.handleFalling();
     audioManager.handleFalling();
     platformManager.handleFalling();

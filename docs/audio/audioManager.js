@@ -3,11 +3,13 @@ const INITIAL_VOLUME_RAMP_TIME = 0.2;
 const VOLUME_MIN = 0;
 const VOLUME_MAX = 1;
 const VOLUME_STEP = 0.01;
+const VOLUME_ENERGY_COST = 1;
 
 const INITIAL_SOUND_SPEED = 1;
 const SOUND_SPEED_MIN = 0.01;
 const SOUND_SPEED_MAX = 4;
 const SOUND_SPEED_STEP = 0.01;
+const SOUND_SPEED_ENERGY_COST = 2;
 
 const INITIAL_REVERB = 0;
 const INITIAL_REVERB_TIME = 3;
@@ -199,6 +201,8 @@ class AudioManager {
   }
 
   handleVolumeControls() {
+    let oldVolume = this.volume;
+
     if (keyDown('q' || 'Q')) {
       this.volume += VOLUME_STEP;
     } else if (keyDown('z' || 'Z')) {
@@ -206,12 +210,18 @@ class AudioManager {
     } else if (keyDown('a' || 'A')) {
       this.volume = INITIAL_VOLUME;
     }
+
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
+
+    if (this.volume !== oldVolume) {
+      player.energy -= VOLUME_ENERGY_COST;
+    }
 
     this.updateVolume(this.volume);
   }
 
   handleSoundSpeedControls() {
+    let oldSoundSpeed = this.soundSpeed;
     let step = (audioManager.soundSpeed >= 1) ? SOUND_SPEED_STEP : (SOUND_SPEED_STEP / 2);
     if (keyDown('w' || 'W')) {
       this.soundSpeed += step;
@@ -220,7 +230,12 @@ class AudioManager {
     } else if (keyDown('s' || 'S')) {
       this.soundSpeed = INITIAL_SOUND_SPEED;
     }
+
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
+
+    if (this.soundSpeed !== oldSoundSpeed) {
+      player.energy -= SOUND_SPEED_ENERGY_COST;
+    }
 
     this.updateSoundSpeed(this.soundSpeed);
   }
