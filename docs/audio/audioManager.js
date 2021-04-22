@@ -201,15 +201,7 @@ class AudioManager {
       this.volume -= VOLUME_STEP;
     }
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-    let volumeScaleFactor = this.volume / INITIAL_VOLUME;
-    let sizeScaleFactor;
-    if (volumeScaleFactor >= 1) {
-      sizeScaleFactor = volumeScaleFactor;
-    } else {
-      sizeScaleFactor = map(volumeScaleFactor, 0, 1, 0.25, 1);
-    }
-    player.sprite.width = DEFAULT_PLAYER_WIDTH * sizeScaleFactor;
-    player.sprite.height = DEFAULT_PLAYER_HEIGHT * sizeScaleFactor;
+
     this.updateVolume(this.volume);
   }
 
@@ -220,6 +212,7 @@ class AudioManager {
       this.soundSpeed -= SOUND_SPEED_STEP;
     }
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
+
     this.updateSoundSpeed(this.soundSpeed);
   }
 
@@ -229,6 +222,19 @@ class AudioManager {
     this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.amp(this.volume, this.volumeRampTime);
     });
+
+    updateBackgroundBrightness(map(this.volume, VOLUME_MIN, VOLUME_MAX, 0, 100));
+
+    let volumeScaleFactor = this.volume / INITIAL_VOLUME;
+    let sizeScaleFactor;
+    if (volumeScaleFactor >= 1) {
+      sizeScaleFactor = volumeScaleFactor;
+    } else {
+      sizeScaleFactor = map(volumeScaleFactor, 0, 1, 0.25, 1);
+    }
+
+    player.sprite.width = DEFAULT_PLAYER_WIDTH * sizeScaleFactor;
+    player.sprite.height = DEFAULT_PLAYER_HEIGHT * sizeScaleFactor;
   }
 
   updateSoundSpeed(newSpeed) {
@@ -237,6 +243,8 @@ class AudioManager {
     this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.rate(newSpeed);
     });
+
+    updateBackgroundHue(map(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX, 0, 360));
   }
 
   updateReverb(newReverb) {

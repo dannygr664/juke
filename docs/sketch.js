@@ -258,6 +258,22 @@ function handlePausing() {
 }
 
 
+function updateBackgroundBrightness(newBrightness) {
+  let currentBgColor = currentLevel.initialBackgroundColor;
+  let currentHue = hue(currentBgColor);
+  let currentSat = saturation(currentBgColor);
+  backgroundColor = color(currentHue, currentSat, newBrightness);
+}
+
+
+function updateBackgroundHue(newHue) {
+  let currentBgColor = currentLevel.initialBackgroundColor;
+  let currentSaturation = saturation(currentBgColor);
+  let currentBrightness = brightness(currentBgColor);
+  backgroundColor = color(newHue, currentSaturation, currentBrightness);
+}
+
+
 function handleUnpausing() {
   player.handleUnpausing();
   audioManager.handleUnpausing();
