@@ -54,15 +54,8 @@ function setup() {
 
   ColorScheme.initializeColorScheme();
 
-  let canvasWidth = windowWidth;
-  let canvasHeight = windowHeight;
-  canvasWidth = constrain(canvasWidth, MIN_WIDTH, MAX_WIDTH);
-  canvasHeight = max(canvasHeight, MIN_HEIGHT);
-
-  canvas = createCanvas(canvasWidth, canvasHeight);
+  canvas = createCanvas(windowWidth, windowHeight);
   canvas.style('display', 'block');
-
-  centerCanvas();
 
   levelManager = new LevelManager();
 
@@ -353,5 +346,5 @@ function mousePressed() {
 
 
 function windowResized() {
-  centerCanvas();
+  resizeCanvas(windowWidth, windowHeight);
 }

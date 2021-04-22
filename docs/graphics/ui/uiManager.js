@@ -82,6 +82,7 @@ class UIManager {
     }
 
     push();
+    textAlign(CENTER, CENTER);
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
     text('Play', TEXT_X, ITEM1_Y);
