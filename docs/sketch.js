@@ -33,6 +33,7 @@ function preload() {
   animationController = new AnimationController();
 
   audioManager.loadSounds();
+  gameTitleFont = loadFont('graphics/fonts/Zapfino.ttf');
   titleFont = loadFont('graphics/fonts/HelveticaNeue-UltraLight.ttf');
   itemFont = loadFont('graphics/fonts/HelveticaNeue-Thin.ttf');
 }

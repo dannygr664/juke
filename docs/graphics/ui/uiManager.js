@@ -3,16 +3,16 @@ const CURSOR_HEIGHT = 20;
 
 class UIManager {
   constructor() {
-    const TITLE_TEXT_SIZE = height / 4;
+    const TITLE_TEXT_SIZE = height / 5;
     const TITLE_X = width / 2;
-    const TITLE_Y = 3 * height / 8;
+    const TITLE_Y = 9 * height / 16;
     textAlign(CENTER, CENTER);
-    textFont('HelveticaNeue-UltraLight');
+    textFont('Zapfino');
     textSize(TITLE_TEXT_SIZE);
-    this.titlePoints = titleFont.textToPoints('Juke', TITLE_X, TITLE_Y, TITLE_TEXT_SIZE, {
+    this.titlePoints = gameTitleFont.textToPoints('Juke', TITLE_X, TITLE_Y, TITLE_TEXT_SIZE, {
       sampleFactor: 0.1
     });
-    this.titleBounds = titleFont.textBounds('Juke', TITLE_X, TITLE_Y);
+    this.titleBounds = gameTitleFont.textBounds('Juke', TITLE_X, TITLE_Y);
     for (let i = 0; i < this.titlePoints.length; i++) {
       this.titlePoints[i].platformWidth = random(5, 15);
     }
