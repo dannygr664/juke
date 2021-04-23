@@ -23,7 +23,7 @@ class Ethereal {
   handleFluidEnter(_, fluid) {
     switch (fluid.animation.color) {
       case ColorScheme.ETHEREAL_LOWEST_REVERB:
-        audioManager.updateReverb(0.1);
+        audioManager.updateReverb(0.25);
         break;
       case ColorScheme.ETHEREAL_HIGHER_REVERB:
         audioManager.updateReverb(0.75);
@@ -32,7 +32,7 @@ class Ethereal {
         audioManager.updateReverb(1);
         break;
       case ColorScheme.ETHEREAL_LOWER_REVERB:
-        audioManager.updateReverb(0.25);
+        audioManager.updateReverb(0.5);
         break;
     }
   }

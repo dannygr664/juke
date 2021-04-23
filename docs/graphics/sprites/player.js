@@ -29,6 +29,7 @@ class Player {
     this.gravityForce = DEFAULT_GRAVITY_FORCE;
     this.gravitySpeed = 0;
     this.color = levelManager.getCurrentLevel().playerColor;
+    this.strokeColor = ColorScheme.CLEAR;
     this.energy = levelManager.getCurrentLevel().maxEnergy;
     this.sprite.shapeColor = this.color
     this.sprite.position.x = PLAYER_X_INITIAL;
@@ -73,5 +74,9 @@ class Player {
   updatePlayerColor(newColor) {
     this.color = newColor;
     this.sprite.shapeColor = this.color;
+  }
+
+  updatePlayerStrokeColor(newColor) {
+    this.strokeColor = newColor;
   }
 }

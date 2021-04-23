@@ -297,6 +297,45 @@ class AudioManager {
     this.reverbLevel = newReverb;
     this.reverbLevel = constrain(this.reverbLevel, REVERB_MIN, REVERB_MAX);
     this.reverb.drywet(newReverb);
+
+    let reverbStrokeColor = this.getReverbStrokeColor();
+    player.updatePlayerStrokeColor(reverbStrokeColor);
+  }
+
+  getReverbStrokeColor() {
+    if (this.reverbLevel === REVERB_MIN) {
+      return ColorScheme.CLEAR;
+    } else if (this.reverbLevel <= 0.25) {
+      return color(
+        hue(ColorScheme.ETHEREAL_LOWEST_REVERB),
+        saturation(ColorScheme.ETHEREAL_LOWEST_REVERB),
+        brightness(ColorScheme.ETHEREAL_LOWEST_REVERB),
+        map(this.reverbLevel, REVERB_MIN, 0.25, 50, 100),
+      );
+    } else if (this.reverbLevel <= 0.5) {
+      return color(
+        hue(ColorScheme.ETHEREAL_LOWER_REVERB),
+        saturation(ColorScheme.ETHEREAL_LOWER_REVERB),
+        brightness(ColorScheme.ETHEREAL_LOWER_REVERB),
+        map(this.reverbLevel, 0.25, 0.5, 50, 100),
+      );
+    } else if (this.reverbLevel <= 0.75) {
+      return color(
+        hue(ColorScheme.ETHEREAL_HIGHER_REVERB),
+        saturation(ColorScheme.ETHEREAL_HIGHER_REVERB),
+        brightness(ColorScheme.ETHEREAL_HIGHER_REVERB),
+        map(this.reverbLevel, 0.5, 0.75, 50, 100),
+      );
+    } else if (this.reverbLevel <= REVERB_MAX) {
+      return color(
+        hue(ColorScheme.ETHEREAL_HIGHEST_REVERB),
+        saturation(ColorScheme.ETHEREAL_HIGHEST_REVERB),
+        brightness(ColorScheme.ETHEREAL_HIGHEST_REVERB),
+        map(this.reverbLevel, 0.75, REVERB_MAX, 50, 100),
+      );
+    } else {
+      return ColorScheme.CLEAR;
+    }
   }
 
   handleFalling() {
