@@ -243,7 +243,12 @@ class UIManager {
     fill(fillColor);
     text('Speed', 0, 35);
 
-    fill(ColorScheme.GREEN);
+    let soundSpeedFillSaturation = 100;
+    if (audioManager.soundSpeed > 0.75 && audioManager.soundSpeed < 2) {
+      soundSpeedFillSaturation = saturation(backgroundColor);
+    }
+    let soundSpeedFillColor = color(hue(backgroundColor), soundSpeedFillSaturation, 100, 100);
+    fill(soundSpeedFillColor);
     let rectWidth = map(audioManager.soundSpeed, 0.01, 4, 0, 200);
     rect(70, 35, rectWidth, 20);
     let currentLevelNumber = levelManager.getCurrentLevelNumber();

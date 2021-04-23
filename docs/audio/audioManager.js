@@ -49,10 +49,10 @@ class AudioManager {
     });
 
     let spaceshipAudioFileNames = [
-      'Intro_76,88bpm4-4_L4M',
-      'Section1_76,88bpm4-4_L4M',
-      'Section2_76,88bpm4-4_L8M',
-      'Section3_76,88bpm4-4_L8M',
+      // 'Intro_76,88bpm4-4_L4M',
+      // 'Section1_76,88bpm4-4_L4M',
+      // 'Section2_76,88bpm4-4_L8M',
+      // 'Section3_76,88bpm4-4_L8M',
       'Ending_76,88bpm4-4_L2M'
     ];
 
@@ -79,15 +79,15 @@ class AudioManager {
     });
 
     let lofiAudioFileNames = [
-      'Cymbal_87bpm4-4_L4B',
-      'Intro_87bpm4-4_L4M',
-      'Section1_87bpm4-4_L4M',
-      'Section2_87bpm4-4_L9M',
-      'Section3_87bpm4-4_L14M',
-      'Section4_87bpm4-4_L4M',
-      'Section5_87bpm4-4_L4M',
-      'Section6_87bpm4-4_L14M',
-      'Break_87bpm4-4_L4M',
+      // 'Cymbal_87bpm4-4_L4B',
+      // 'Intro_87bpm4-4_L4M',
+      // 'Section1_87bpm4-4_L4M',
+      // 'Section2_87bpm4-4_L9M',
+      // 'Section3_87bpm4-4_L14M',
+      // 'Section4_87bpm4-4_L4M',
+      // 'Section5_87bpm4-4_L4M',
+      // 'Section6_87bpm4-4_L14M',
+      // 'Break_87bpm4-4_L4M',
       'Build_87bpm4-4_L1M',
       //'Ending_87bpm4-4_L4.5B'
     ];
@@ -213,7 +213,7 @@ class AudioManager {
 
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
 
-    if (this.volume !== oldVolume) {
+    if (this.volume !== oldVolume && !player.isReviving) {
       player.energy -= VOLUME_ENERGY_COST;
     }
 
@@ -233,7 +233,7 @@ class AudioManager {
 
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
 
-    if (this.soundSpeed !== oldSoundSpeed) {
+    if (this.soundSpeed !== oldSoundSpeed && !player.isReviving) {
       player.energy -= SOUND_SPEED_ENERGY_COST;
     }
 
