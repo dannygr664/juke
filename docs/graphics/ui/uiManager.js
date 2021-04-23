@@ -269,7 +269,8 @@ class UIManager {
     noStroke();
     fill(fillColor);
     text('Reverb', 0, 65);
-    fill(ColorScheme.BLUE);
+    let reverbFillColor = player.strokeColor;
+    fill(reverbFillColor);
     rect(70, 65, map(audioManager.reverbLevel, 0, 1, 0, 200), 20);
     stroke(fillColor);
     fill(ColorScheme.CLEAR);
