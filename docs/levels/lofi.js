@@ -16,6 +16,7 @@ class LoFi {
       ColorScheme.BLACK
     ];
     this.defaultJukeboxAnimationColor = ColorScheme.BLACK;
+    this.maxEnergy = 600;
     this.genre = 'LoFi';
   }
 

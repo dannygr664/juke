@@ -12,6 +12,7 @@ class Player {
 
     this.sprite = createSprite(
       PLAYER_X_INITIAL, PLAYER_Y_INITIAL, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
+    this.sprite.setDefaultCollider();
 
     this.resetPlayer();
   }
@@ -27,7 +28,9 @@ class Player {
     this.isReviving = false;
     this.gravityForce = DEFAULT_GRAVITY_FORCE;
     this.gravitySpeed = 0;
-    this.sprite.shapeColor = levelManager.getCurrentLevel().playerColor;
+    this.color = levelManager.getCurrentLevel().playerColor;
+    this.energy = levelManager.getCurrentLevel().maxEnergy;
+    this.sprite.shapeColor = this.color
     this.sprite.position.x = PLAYER_X_INITIAL;
     this.sprite.position.y = PLAYER_Y_INITIAL;
     this.sprite.width = DEFAULT_PLAYER_WIDTH;
@@ -47,7 +50,9 @@ class Player {
   handleFalling() {
     this.isReviving = true;
     this.gravitySpeed = 0;
+    this.energy = levelManager.getCurrentLevel().maxEnergy;
     this.sprite.setSpeed(REVIVING_SPEED, 270);
+    this.sprite.shapeColor = ColorScheme.BLACK_INACTIVE;
   }
 
   handlePausing() {
@@ -57,11 +62,16 @@ class Player {
   }
 
   handleUnpausing() {
-    this.sprite.shapeColor = levelManager.getCurrentLevel().playerColor;
+    this.sprite.shapeColor = this.color
     this.sprite.setSpeed(this.jumpSpeed, 270);
   }
 
   changeLevel() {
     this.resetPlayer();
+  }
+
+  updatePlayerColor(newColor) {
+    this.color = newColor;
+    this.sprite.shapeColor = this.color;
   }
 }

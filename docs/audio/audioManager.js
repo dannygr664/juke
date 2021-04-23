@@ -3,11 +3,13 @@ const INITIAL_VOLUME_RAMP_TIME = 0.2;
 const VOLUME_MIN = 0;
 const VOLUME_MAX = 1;
 const VOLUME_STEP = 0.01;
+const VOLUME_ENERGY_COST = 1;
 
 const INITIAL_SOUND_SPEED = 1;
 const SOUND_SPEED_MIN = 0.01;
 const SOUND_SPEED_MAX = 4;
 const SOUND_SPEED_STEP = 0.01;
+const SOUND_SPEED_ENERGY_COST = 2;
 
 const INITIAL_REVERB = 0;
 const INITIAL_REVERB_TIME = 3;
@@ -182,6 +184,10 @@ class AudioManager {
     sound.animation = animation;
   }
 
+  getCurrentSound() {
+    return this.levelSounds[this.currentSound];
+  }
+
   update() {
     if (this.waitingToChange) {
       this.tryToPlayNextSound();
@@ -195,31 +201,42 @@ class AudioManager {
   }
 
   handleVolumeControls() {
+    let oldVolume = this.volume;
+
     if (keyDown('q' || 'Q')) {
       this.volume += VOLUME_STEP;
     } else if (keyDown('z' || 'Z')) {
       this.volume -= VOLUME_STEP;
+    } else if (keyDown('a' || 'A')) {
+      this.volume = INITIAL_VOLUME;
     }
+
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-    let volumeScaleFactor = this.volume / INITIAL_VOLUME;
-    let sizeScaleFactor;
-    if (volumeScaleFactor >= 1) {
-      sizeScaleFactor = volumeScaleFactor;
-    } else {
-      sizeScaleFactor = map(volumeScaleFactor, 0, 1, 0.25, 1);
+
+    if (this.volume !== oldVolume) {
+      player.energy -= VOLUME_ENERGY_COST;
     }
-    player.sprite.width = DEFAULT_PLAYER_WIDTH * sizeScaleFactor;
-    player.sprite.height = DEFAULT_PLAYER_HEIGHT * sizeScaleFactor;
+
     this.updateVolume(this.volume);
   }
 
   handleSoundSpeedControls() {
+    let oldSoundSpeed = this.soundSpeed;
+    let step = (audioManager.soundSpeed >= 1) ? SOUND_SPEED_STEP : (SOUND_SPEED_STEP / 2);
     if (keyDown('w' || 'W')) {
-      this.soundSpeed += SOUND_SPEED_STEP;
+      this.soundSpeed += step;
     } else if (keyDown('x' || 'X')) {
-      this.soundSpeed -= SOUND_SPEED_STEP;
+      this.soundSpeed -= step;
+    } else if (keyDown('s' || 'S')) {
+      this.soundSpeed = INITIAL_SOUND_SPEED;
     }
+
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
+
+    if (this.soundSpeed !== oldSoundSpeed) {
+      player.energy -= SOUND_SPEED_ENERGY_COST;
+    }
+
     this.updateSoundSpeed(this.soundSpeed);
   }
 
@@ -229,6 +246,19 @@ class AudioManager {
     this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.amp(this.volume, this.volumeRampTime);
     });
+
+    updateBackgroundBrightness(map(this.volume, VOLUME_MIN, VOLUME_MAX, 0, 100));
+
+    let volumeScaleFactor = this.volume / INITIAL_VOLUME;
+    let sizeScaleFactor;
+    if (volumeScaleFactor >= 1) {
+      sizeScaleFactor = volumeScaleFactor;
+    } else {
+      sizeScaleFactor = map(volumeScaleFactor, 0, 1, 0.25, 1);
+    }
+
+    player.sprite.width = DEFAULT_PLAYER_WIDTH * sizeScaleFactor;
+    player.sprite.height = DEFAULT_PLAYER_HEIGHT * sizeScaleFactor;
   }
 
   updateSoundSpeed(newSpeed) {
@@ -237,6 +267,30 @@ class AudioManager {
     this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.rate(newSpeed);
     });
+
+    const RED_ANCHOR = hue(ColorScheme.RED);
+    const YELLOW_ANCHOR = hue(ColorScheme.YELLOW);
+    const BLUE_ANCHOR = hue(ColorScheme.BLUE);
+    const GREEN_ANCHOR = hue(ColorScheme.GREEN);
+
+    let saturationChange = 0;
+    let hueChange = 0;
+
+    if (this.soundSpeed <= 0.4) {
+      hueChange = map(this.soundSpeed, SOUND_SPEED_MIN, 0.4, 300, RED_ANCHOR);
+    } else if (this.soundSpeed <= 0.75) {
+      hueChange = map(this.soundSpeed, 0.4, 0.75, 0, YELLOW_ANCHOR);
+    } else if (this.soundSpeed < 1) {
+      hueChange = YELLOW_ANCHOR;
+      saturationChange = map(this.soundSpeed, 0.75, 1, 0, -100);
+    } else if (this.soundSpeed <= 2) {
+      hueChange = BLUE_ANCHOR;
+      saturationChange = map(this.soundSpeed, 1, 2, -100, 0);
+    } else if (this.soundSpeed <= SOUND_SPEED_MAX) {
+      hueChange = map(this.soundSpeed, 2, 4, BLUE_ANCHOR, GREEN_ANCHOR);
+    }
+
+    updateBackgroundHue(hueChange, saturationChange);
   }
 
   updateReverb(newReverb) {
@@ -254,11 +308,11 @@ class AudioManager {
   }
 
   handlePausing() {
-    this.levelSounds[this.currentSound].pause();
+    this.getCurrentSound().pause();
   }
 
   handleUnpausing() {
-    this.levelSounds[this.currentSound].play();;
+    this.getCurrentSound().play();;
   }
 
   toggleSound(soundIndex) {
@@ -280,7 +334,7 @@ class AudioManager {
   }
 
   isSoundAlmostOver() {
-    let sound = this.levelSounds[this.currentSound];
+    let sound = this.getCurrentSound();
     const numberOfBeats = sound.soundInfo.length;
     const songDuration = sound.duration();
     const lengthOfBeat = songDuration / numberOfBeats;
@@ -291,17 +345,17 @@ class AudioManager {
     return (this.currentSound === this.levelSounds.length - 1);
   }
 
-  getDurationOfFourBeats() {
-    let sound = this.levelSounds[this.currentSound];
+  getDurationOfBeat() {
+    let sound = this.getCurrentSound();
     const numberOfBeats = sound.soundInfo.length;
     const songDuration = sound.duration();
     const lengthOfBeat = songDuration / numberOfBeats;
-    return lengthOfBeat * 4;
+    return lengthOfBeat;
   }
 
   unloopCurrentSound() {
     // Turn looping off
-    let sound = this.levelSounds[this.currentSound];
+    let sound = this.getCurrentSound();
     if (sound.isLooping()) {
       sound.setLoop(false);
     }
@@ -309,20 +363,22 @@ class AudioManager {
   }
 
   tryToPlayNextSound() {
-    if (!this.levelSounds[this.currentSound].isPlaying() && !isPaused) {
+    if (!this.getCurrentSound().isPlaying() && !isPaused) {
       if (this.isFinalSound()) {
         this.waitingToChange = false;
         incrementLevel();
       } else {
         this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
         this.toggleSound(this.currentSound);
+        player.updatePlayerColor(backgroundColor);
+        platformManager.updatePlatformColor(backgroundColor);
         this.waitingToChange = false;
       }
     }
   }
 
   stopSounds() {
-    let sound = this.levelSounds[this.currentSound];
+    let sound = this.getCurrentSound();
     sound.amp(0, this.volumeRampTime);
     sound.stop();
   }

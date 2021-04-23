@@ -54,15 +54,8 @@ function setup() {
 
   ColorScheme.initializeColorScheme();
 
-  let canvasWidth = windowWidth;
-  let canvasHeight = windowHeight;
-  canvasWidth = constrain(canvasWidth, MIN_WIDTH, MAX_WIDTH);
-  canvasHeight = max(canvasHeight, MIN_HEIGHT);
-
-  canvas = createCanvas(canvasWidth, canvasHeight);
+  canvas = createCanvas(windowWidth, windowHeight);
   canvas.style('display', 'block');
-
-  centerCanvas();
 
   levelManager = new LevelManager();
 
@@ -130,6 +123,14 @@ function draw() {
           platformManager.managePlatforms();
           fluidManager.manageFluids();
           jukeboxManager.manageJukeboxes();
+          let newEnergy = player.energy + 0.05;
+          player.energy = min(newEnergy, currentLevel.maxEnergy);
+          player.updatePlayerColor(color(
+            hue(player.color),
+            saturation(player.color),
+            brightness(player.color),
+            map(player.energy, 0, currentLevel.maxEnergy, 0, 100)
+          ));
           handleFalling();
         }
       }
@@ -138,6 +139,12 @@ function draw() {
       //animationController.drawForegroundSoundAnimations();
       jukeboxManager.drawJukeboxes();
       platformManager.drawPlatforms();
+
+      push();
+      fill(ColorScheme.getComplementaryColor(player.color));
+      rect(player.sprite.position.x - player.sprite.width / 2, player.sprite.position.y - player.sprite.height / 2, player.sprite.width, map(player.energy, 0, currentLevel.maxEnergy, player.sprite.height, 0));
+      pop();
+
       drawSprite(player.sprite);
     }
   }
@@ -185,7 +192,7 @@ function handleCollisionsAndJumping() {
 
 
 function handleFalling() {
-  if (player.sprite.position.y > height) {
+  if (player.sprite.position.y > height || player.energy < 0) {
     player.handleFalling();
     audioManager.handleFalling();
     platformManager.handleFalling();
@@ -200,6 +207,7 @@ function revivingLoop() {
     player.sprite.setSpeed(0, 270);
     if (keyDown(' ')) {
       player.isReviving = false;
+      player.sprite.shapeColor = player.color;
       audioManager.handleRevived();
       platformManager.handleRevived();
       fluidManager.handleRevived();
@@ -255,6 +263,34 @@ function handlePausing() {
     fluidManager.handlePausing();
     jukeboxManager.handlePausing();
   }
+}
+
+
+function updateBackgroundBrightness(newBrightness) {
+  let currentBgColor = backgroundColor;
+  let currentHue = hue(currentBgColor);
+  let currentSat = saturation(currentBgColor);
+  backgroundColor = color(currentHue, currentSat, newBrightness);
+}
+
+
+function updateBackgroundHue(hueChange, saturationChange) {
+  let currentBgColor = backgroundColor;
+  let currentHue = hue(currentLevel.initialBackgroundColor);
+  let currentBrightness = brightness(currentBgColor);
+  let newHue = currentHue + hueChange;
+  if (newHue < 0) {
+    newHue = 360 - newHue;
+  } else {
+    newHue = newHue % 360;
+  }
+  let saturation = (audioManager.soundSpeed === INITIAL_SOUND_SPEED ? 0 : 100);
+
+  if (audioManager.soundSpeed !== INITIAL_SOUND_SPEED) {
+    saturation += saturationChange;
+  }
+
+  backgroundColor = color(newHue, saturation, currentBrightness);
 }
 
 
@@ -337,5 +373,5 @@ function mousePressed() {
 
 
 function windowResized() {
-  centerCanvas();
+  resizeCanvas(windowWidth, windowHeight);
 }

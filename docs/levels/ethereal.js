@@ -16,13 +16,14 @@ class Ethereal {
       ColorScheme.WHITE
     ];
     this.defaultJukeboxAnimationColor = ColorScheme.WHITE;
+    this.maxEnergy = 300;
     this.genre = 'Ethereal';
   }
 
   handleFluidEnter(_, fluid) {
     switch (fluid.animation.color) {
       case ColorScheme.ETHEREAL_LOWEST_REVERB:
-        audioManager.updateReverb(0);
+        audioManager.updateReverb(0.1);
         break;
       case ColorScheme.ETHEREAL_HIGHER_REVERB:
         audioManager.updateReverb(0.75);

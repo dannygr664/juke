@@ -82,6 +82,7 @@ class UIManager {
     }
 
     push();
+    textAlign(CENTER, CENTER);
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
     text('Play', TEXT_X, ITEM1_Y);
@@ -209,7 +210,7 @@ class UIManager {
       fillColor.setAlpha(10);
     }
     fill(fillColor);
-    rect(width / 2 - 100, 5, map(audioManager.levelSounds[audioManager.currentSound].currentTime(), 0, audioManager.levelSounds[audioManager.currentSound].duration(), 0, 200), 20);
+    rect(width / 2 - 100, 5, map(audioManager.getCurrentSound().currentTime(), 0, audioManager.getCurrentSound().duration(), 0, 200), 20);
     fillColor.setAlpha(100);
     pop();
   }
@@ -225,7 +226,7 @@ class UIManager {
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
     fill(levelManager.getCurrentLevel().playerColor);
     if (currentLevelNumber > 1) {
-      text('Q/Z', 75 + rectWidth, 5);
+      text('Q/A/Z', 75 + rectWidth, 5);
     }
     pop();
   }
@@ -241,7 +242,7 @@ class UIManager {
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
     fill(levelManager.getCurrentLevel().playerColor);
     if (currentLevelNumber > 2) {
-      text('W/X', 75 + rectWidth, 35);
+      text('W/S/X', 75 + rectWidth, 35);
     }
     pop();
   }

@@ -1,5 +1,5 @@
 const DEFAULT_BASE_PLATFORM_SPEED = 0.5;
-const DEFAULT_PLATFORM_HEIGHT = 5;
+const DEFAULT_PLATFORM_HEIGHT = 20;
 const DEFAULT_PLATFORM_SPACING = 200;
 
 const PLATFORMER_MODE = 0;
@@ -17,37 +17,44 @@ class PlatformManager {
     this.platformWidth = width / 4;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
     this.platformSpacing = width / 7;
+    this.beatTimer = 0;
+    this.platformColor = levelManager.getCurrentLevel().platformColor;
 
     startingPlatformWidth = width / 1.5;
 
-    this.initializePlatforms();
+    this.createInitialPlatform();
   }
 
   enableMIDIMode() {
     this.mode = MIDI_MODE;
-    for (let i = 0; i < this.platforms.size(); i++) {
-      let toRemove = this.platforms.get(i);
-      this.platforms.remove(toRemove);
-      toRemove.remove();
-    }
-    this.platforms.clear();
-    this.initializeMIDIPlatforms(25);
   }
 
-  initializePlatforms() {
-    const DEFAULT_NUMBER_OF_PLATFORMS = width / this.platformSpacing;
+  createInitialPlatform() {
+    let platform = createSprite(
+      width - this.platformWidth / 2,
+      height / 2 - this.platformHeight / 2,
+      startingPlatformWidth,
+      this.platformHeight
+    );
+    platform.shapeColor = this.platformColor;
+    platform.setSpeed(this.baseSpeed, 180);
+    platform.setDefaultCollider();
+    this.platforms.add(platform);
+    return platform;
+  }
 
-    for (let i = 0; i < DEFAULT_NUMBER_OF_PLATFORMS; i++) {
-      let platform = createSprite(
-        width / 2 + i * this.platformSpacing,
-        random(this.platformYMin, this.platformYMax),
-        this.plaformWidth,
-        this.platformHeight
-      );
-      platform.shapeColor = levelManager.getCurrentLevel().platformColor;
-      platform.setSpeed(this.baseSpeed, 180);
-      this.platforms.add(platform);
-    }
+  createPlatformAtHeight(yPos) {
+    let platform = createSprite(
+      width + this.platformWidth / 2,
+      yPos,
+      this.plaformWidth,
+      this.platformHeight
+    );
+    platform.shapeColor = this.platformColor;
+    platform.setSpeed(this.baseSpeed, 180);
+    platform.setDefaultCollider();
+    this.platforms.add(platform);
+    return platform;
   }
 
   initializeMIDIPlatforms(numberOfPlatforms) {
@@ -58,39 +65,69 @@ class PlatformManager {
         this.plaformWidth,
         this.platformHeight
       );
-      platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+      platform.shapeColor = this.platformColor;
       platform.setSpeed(this.baseSpeed, 0);
       this.platforms.add(platform);
     }
   }
 
   managePlatforms() {
+    if (this.mode === PLATFORMER_MODE) {
+      let oldBeatTimer = this.beatTimer;
+      this.beatTimer = audioManager.getCurrentSound().currentTime()
+        % audioManager.getDurationOfBeat();
+      if (oldBeatTimer > this.beatTimer) {
+        let newPlatform = this.spawnPlatform();
+        this.updatePlatformSpeed(newPlatform);
+      }
+    }
+
     for (let i = 0; i < this.platforms.size(); i++) {
       if (this.platforms.get(i).position.x < -this.platforms.get(i).width / 2) {
-        if (this.mode === PLATFORMER_MODE) {
-          this.spawnPlatform(this.platforms.get(i));
-          this.triggerPlatform(this.platforms.get(i));
-        } else if (this.mode === MIDI_MODE) {
-          this.platforms.get(i).setSpeed(0, 180);
-        }
+        this.platforms.get(i).remove();
+      } else {
+        //this.updatePlatformWidth(this.platforms.get(i));
+        this.updatePlatformSpeed(this.platforms.get(i));
       }
-      this.baseSpeed = this.calculatePlatformSpeed();
-      this.platforms.get(i).setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
     }
   }
 
   calculatePlatformSpeed() {
-    let durationOfFourBeats = audioManager.getDurationOfFourBeats();
+    let durationOfFourBeats = audioManager.getDurationOfBeat() * 4;
     return durationOfFourBeats * 1.5;
   }
 
-  spawnPlatform(platform) {
-    platform.position.x = width + this.platformWidth / 2;
-    platform.shapeColor = levelManager.getCurrentLevel().platformColor;
+  spawnPlatform() {
+    let sound = audioManager.getCurrentSound();
+    let spectrum = sound.fft.analyze();
+    // let peakAmplitudeValue = 0;
+    // let peakFrequencyIndex = 0;
+    let spectralCentroid = sound.fft.getCentroid();
+    let nyquistFrequency = 22050;
+    let meanFrequencyIndex = spectralCentroid / (nyquistFrequency / spectrum.length);
+    // for (let i = 0; i < spectrum.length; i++) {
+    //   if (spectrum[i] > peakAmplitudeValue) {
+    //     peakFrequencyIndex = i;
+    //   }
+    // }
+
+    let yPos = map(meanFrequencyIndex, 0, spectrum.length, height, 0);//map(peakFrequencyIndex, 0, spectrum.length, height, 0);
+
+    let platform = this.createPlatformAtHeight(yPos);
+
+    return platform;
   }
 
-  triggerPlatform(platform) {
-    platform.setSpeed(this.baseSpeed, 180);
+  updatePlatformWidth(platform) {
+    if (platform.width !== startingPlatformWidth) {
+      let rms = audioManager.getCurrentSound().amplitudeAnalyzer.getLevel();
+      platform.width = map(rms, 0, 0.05, 7 * this.platformWidth / 8, this.platformWidth);
+    }
+  }
+
+  updatePlatformSpeed(platform) {
+    this.baseSpeed = this.calculatePlatformSpeed();
+    platform.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
   }
 
   drawPlatforms() {
@@ -124,14 +161,19 @@ class PlatformManager {
 
   resumePlatforms() {
     for (let i = 0; i < this.platforms.size(); i++) {
-      this.platforms[i].shapeColor = levelManager.getCurrentLevel().platformColor;
+      this.platforms[i].shapeColor = this.platformColor;
       this.platforms[i].setSpeed(this.baseSpeed, 180);
     }
   }
 
   changeLevel() {
+    this.updatePlatformColor(levelManager.getCurrentLevel().platformColor);
+  }
+
+  updatePlatformColor(newColor) {
+    this.platformColor = newColor;
     for (let i = 0; i < this.platforms.size(); i++) {
-      this.platforms[i].shapeColor = levelManager.getCurrentLevel().platformColor;
+      this.platforms[i].shapeColor = this.platformColor;
     }
   }
 }

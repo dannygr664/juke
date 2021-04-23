@@ -45,6 +45,7 @@ class FluidManager {
 
       fluid.shapeColor = ColorScheme.CLEAR;
       fluid.setSpeed(this.baseSpeed, 180);
+      fluid.setDefaultCollider();
       this.fluids.add(fluid);
     }
   }

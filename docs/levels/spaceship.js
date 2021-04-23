@@ -16,6 +16,7 @@ class Spaceship {
       ColorScheme.BLACK
     ];
     this.defaultJukeboxAnimationColor = ColorScheme.BLACK;
+    this.maxEnergy = 1200;
     this.genre = 'Spaceship';
   }
 

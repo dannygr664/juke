@@ -119,7 +119,7 @@ class AnimationController {
       noiseAnim.x2 = x2;
       noiseAnim.color = color;
       noiseAnim.updateAgentPositions();
-      noiseAnim.draw(rms);
+      noiseAnim.draw();
     } else if (sound.animation === 1) {
       boxesAnim.x1 = x1;
       boxesAnim.x2 = x2;

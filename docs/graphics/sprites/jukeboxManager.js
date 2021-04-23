@@ -28,6 +28,7 @@ class JukeboxManager {
       );
       jukebox.shapeColor = ColorScheme.CLEAR;
       jukebox.setSpeed(0, 180);
+      jukebox.setDefaultCollider();
       this.jukeboxes.add(jukebox);
     }
 
@@ -51,7 +52,7 @@ class JukeboxManager {
   }
 
   calculateJukeboxSweepSpeed() {
-    let durationOfFourBeats = audioManager.getDurationOfFourBeats();
+    let durationOfFourBeats = audioManager.getDurationOfBeat() * 4;
     return durationOfFourBeats * 1.5;
   }
 
