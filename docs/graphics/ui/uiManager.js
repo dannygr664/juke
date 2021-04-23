@@ -247,7 +247,15 @@ class UIManager {
     if (audioManager.soundSpeed > 0.75 && audioManager.soundSpeed < 2) {
       soundSpeedFillSaturation = saturation(backgroundColor);
     }
-    let soundSpeedFillColor = color(hue(backgroundColor), soundSpeedFillSaturation, 100, 100);
+
+    let soundSpeedFillBrightness = 100;
+    if (audioManager.volume >= 0.5) {
+      soundSpeedFillBrightness = 45;
+    } else if (audioManager.volume === 0) {
+      soundSpeedFillBrightness = 0;
+    }
+
+    let soundSpeedFillColor = color(hue(backgroundColor), soundSpeedFillSaturation, soundSpeedFillBrightness, 100);
     fill(soundSpeedFillColor);
     let rectWidth = map(audioManager.soundSpeed, 0.01, 4, 0, 200);
     rect(70, 35, rectWidth, 20);
