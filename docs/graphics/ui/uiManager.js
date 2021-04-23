@@ -196,11 +196,11 @@ class UIManager {
 
   drawSongProgressMeter() {
     push();
-    stroke(levelManager.getCurrentLevel().playerColor);
+    let fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    stroke(fillColor);
     fill(ColorScheme.CLEAR);
     rect(width / 2 - 100, 5, 200, 20);
     noStroke();
-    let fillColor = levelManager.getCurrentLevel().playerColor;
     fillColor.setAlpha(50);
     fill(fillColor);
     //text('Song Progress', width / 2, 5);
@@ -217,43 +217,60 @@ class UIManager {
 
   drawVolumeMeter() {
     push();
+    let fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
     noStroke();
-    fill(ColorScheme.BLACK);
+    fill(fillColor);
     text('Volume', 0, 5);
     //fill(0, 0, map(audioManager.volume, 0, 1, 100, 0));
     let rectWidth = map(audioManager.volume, 0, 1, 0, 200);
     rect(70, 5, rectWidth, 20);
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
-    //fill(levelManager.getCurrentLevel().playerColor);
+    stroke(fillColor);
+    fill(ColorScheme.CLEAR);
+    rect(70, 5, 200, 20);
+    noStroke();
+    fill(fillColor);
     if (currentLevelNumber > 1) {
-      text('Q/A/Z', 75 + rectWidth, 5);
+      text('Q/A/Z', 75 + 200, 5);
     }
     pop();
   }
 
   drawSoundSpeedMeter() {
     push();
+    let fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
     noStroke();
-    fill(levelManager.getCurrentLevel().playerColor);
+    fill(fillColor);
     text('Speed', 0, 35);
+
     fill(ColorScheme.GREEN);
     let rectWidth = map(audioManager.soundSpeed, 0.01, 4, 0, 200);
     rect(70, 35, rectWidth, 20);
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
-    fill(levelManager.getCurrentLevel().playerColor);
+    stroke(fillColor);
+    fill(ColorScheme.CLEAR);
+    rect(70, 35, 200, 20);
+    noStroke();
+    fill(fillColor);
     if (currentLevelNumber > 2) {
-      text('W/S/X', 75 + rectWidth, 35);
+      text('W/S/X', 75 + 200, 35);
     }
     pop();
   }
 
   drawReverbMeter() {
     push();
+    let fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
     noStroke();
-    fill(levelManager.getCurrentLevel().playerColor);
+    fill(fillColor);
     text('Reverb', 0, 65);
     fill(ColorScheme.BLUE);
     rect(70, 65, map(audioManager.reverbLevel, 0, 1, 0, 200), 20);
+    stroke(fillColor);
+    fill(ColorScheme.CLEAR);
+    rect(70, 65, 200, 20);
+    noStroke();
+    fill(fillColor);
     pop();
   }
 }
