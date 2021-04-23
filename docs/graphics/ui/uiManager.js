@@ -218,13 +218,13 @@ class UIManager {
   drawVolumeMeter() {
     push();
     noStroke();
-    fill(levelManager.getCurrentLevel().playerColor);
+    fill(ColorScheme.BLACK);
     text('Volume', 0, 5);
-    fill(ColorScheme.RED);
+    //fill(0, 0, map(audioManager.volume, 0, 1, 100, 0));
     let rectWidth = map(audioManager.volume, 0, 1, 0, 200);
     rect(70, 5, rectWidth, 20);
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
-    fill(levelManager.getCurrentLevel().playerColor);
+    //fill(levelManager.getCurrentLevel().playerColor);
     if (currentLevelNumber > 1) {
       text('Q/A/Z', 75 + rectWidth, 5);
     }
