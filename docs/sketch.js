@@ -147,23 +147,9 @@ function draw() {
       jukeboxManager.drawJukeboxes();
       platformManager.drawPlatforms();
 
-      push();
-      fill(ColorScheme.getComplementaryColor(player.color));
-      rect(player.sprite.position.x - player.sprite.width / 2, player.sprite.position.y - player.sprite.height / 2, player.sprite.width, map(player.energy, 0, currentLevel.maxEnergy, player.sprite.height, 0));
-      pop();
+      player.drawEnergyMeter();
 
-      push();
-      if (player.isReviving) {
-        stroke(ColorScheme.WHITE);
-        strokeWeight(10);
-      } else {
-        stroke(player.strokeColor);
-        strokeWeight(map(audioManager.reverbLevel, REVERB_MIN, REVERB_MAX, 4, 10));
-      }
-
-      fill(ColorScheme.CLEAR);
-      rect(player.sprite.position.x - player.sprite.width / 2, player.sprite.position.y - player.sprite.height / 2, player.sprite.width, player.sprite.height);
-      pop();
+      player.drawStroke();
 
       drawSprite(player.sprite);
     }
