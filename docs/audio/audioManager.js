@@ -380,6 +380,11 @@ class AudioManager {
     return (sound.currentTime() > songDuration - (lengthOfBeat * 4));
   }
 
+  isSoundOneMeasureOrLess() {
+    return this.getCurrentSound().soundInfo.length <=
+      this.getCurrentSound().soundInfo.timeSignatureLower;
+  }
+
   isFinalSound() {
     return (this.currentSound === this.levelSounds.length - 1);
   }

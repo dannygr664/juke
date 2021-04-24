@@ -41,8 +41,9 @@ class JukeboxManager {
       let jukebox = this.jukeboxes[i];
       animationController.handleJukeboxFadeout(jukebox);
 
-      if (jukebox.position.x < -jukebox.width / 2 && !audioManager.isSoundAlmostOver()) {
-
+      if (jukebox.position.x < -jukebox.width / 2
+        && (!audioManager.isSoundAlmostOver()
+          || audioManager.isSoundOneMeasureOrLess())) {
         this.spawnJukebox(jukebox);
       }
       if (audioManager.isSoundAlmostOver() && !this.didPlayerFall && this.baseSpeed === 0) {
