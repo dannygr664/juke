@@ -147,8 +147,14 @@ function draw() {
       pop();
 
       push();
-      stroke(player.strokeColor);
-      strokeWeight(map(audioManager.reverbLevel, REVERB_MIN, REVERB_MAX, 4, 10));
+      if (player.isReviving) {
+        stroke(ColorScheme.WHITE);
+        strokeWeight(10);
+      } else {
+        stroke(player.strokeColor);
+        strokeWeight(map(audioManager.reverbLevel, REVERB_MIN, REVERB_MAX, 4, 10));
+      }
+
       fill(ColorScheme.CLEAR);
       rect(player.sprite.position.x - player.sprite.width / 2, player.sprite.position.y - player.sprite.height / 2, player.sprite.width, player.sprite.height);
       pop();
