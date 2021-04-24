@@ -38,7 +38,7 @@ class JukeboxManager {
   manageJukeboxes() {
     for (let i = 0; i < this.jukeboxes.length; i++) {
       let jukebox = this.jukeboxes[i];
-      if (jukebox.position.x < -jukebox.width / 2) {
+      if (jukebox.position.x < -jukebox.width / 2 && !audioManager.isSoundAlmostOver()) {
         this.spawnJukebox(jukebox);
       }
       if (audioManager.isSoundAlmostOver() && !this.didPlayerFall && this.baseSpeed === 0) {
