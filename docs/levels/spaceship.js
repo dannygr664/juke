@@ -45,7 +45,7 @@ class Spaceship {
     }
   }
 
-  handleFluidExit() {
+  handleFluidExit(_, fluid) {
     audioManager.updateVolume(INITIAL_VOLUME);
     player.sprite.width = DEFAULT_PLAYER_WIDTH;
     player.sprite.height = DEFAULT_PLAYER_HEIGHT;

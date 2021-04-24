@@ -23,6 +23,9 @@ let platformManager;
 let fluidManager;
 let jukeboxManager;
 
+let leftBoundingRectangle;
+let rightBoundingRectangle;
+
 const MIN_WIDTH = 800;
 const MAX_WIDTH = 900;
 const MIN_HEIGHT = 500;
@@ -33,6 +36,7 @@ function preload() {
   animationController = new AnimationController();
 
   audioManager.loadSounds();
+  gameTitleFont = loadFont('graphics/fonts/Zapfino.ttf');
   titleFont = loadFont('graphics/fonts/HelveticaNeue-UltraLight.ttf');
   itemFont = loadFont('graphics/fonts/HelveticaNeue-Thin.ttf');
 }
@@ -66,6 +70,8 @@ function setup() {
   audioManager.loadReverb();
 
   uiManager = new UIManager();
+
+  createBoundingRectangles();
 }
 
 
@@ -113,11 +119,12 @@ function draw() {
         player.speed = player.baseSpeed * audioManager.soundSpeed;
         player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
 
+        handleBorderCollisions();
+
         if (player.isReviving) {
           revivingLoop();
         } else {
           handleControls();
-
           handleCollisionsAndJumping();
 
           platformManager.managePlatforms();
@@ -140,16 +147,23 @@ function draw() {
       jukeboxManager.drawJukeboxes();
       platformManager.drawPlatforms();
 
-      push();
-      fill(ColorScheme.getComplementaryColor(player.color));
-      rect(player.sprite.position.x - player.sprite.width / 2, player.sprite.position.y - player.sprite.height / 2, player.sprite.width, map(player.energy, 0, currentLevel.maxEnergy, player.sprite.height, 0));
-      pop();
+      player.drawEnergyMeter();
+
+      player.drawStroke();
 
       drawSprite(player.sprite);
     }
   }
 
   uiManager.drawUI();
+}
+
+
+function createBoundingRectangles() {
+  leftBoundingRectangle = createSprite(-20, -height * 2, 40, height * 8);
+  leftBoundingRectangle.setDefaultCollider();
+  rightBoundingRectangle = createSprite(width + 20, -height * 2, 40, height * 8);
+  rightBoundingRectangle.setDefaultCollider();
 }
 
 
@@ -163,6 +177,12 @@ function handleControls() {
       player.sprite.setSpeed(0, 0);
     }
   }
+}
+
+
+function handleBorderCollisions() {
+  player.sprite.collide(leftBoundingRectangle);
+  player.sprite.collide(rightBoundingRectangle);
 }
 
 
@@ -354,7 +374,7 @@ function keyPressed() {
         }
         isPaused = !isPaused;
       } else if (isPaused) {
-        if (key === 'q' || key === 'Q') {
+        if (keyCode === DELETE || keyCode === BACKSPACE) {
           audioManager.stopSounds();
           isPaused = !isPaused;
           changeLevel(0);

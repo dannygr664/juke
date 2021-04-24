@@ -27,10 +27,10 @@ class ColorScheme {
 
     // Assign color schemes for each level
     this.SPACESHIP_BACKGROUND_COLOR = this.WHITE;
-    this.SPACESHIP_LOWEST_VOLUME = this.ORANGE_LOW_SAT;
-    this.SPACESHIP_LOWER_VOLUME = this.ORANGE_MED_SAT;
-    this.SPACESHIP_HIGHER_VOLUME = this.ORANGE_HIGH_SAT;
-    this.SPACESHIP_HIGHEST_VOLUME = this.ORANGE_FULL_SAT;
+    this.SPACESHIP_LOWEST_VOLUME = this.BLACK;
+    this.SPACESHIP_LOWER_VOLUME = color(hue(this.BLACK), 0, 25);
+    this.SPACESHIP_HIGHER_VOLUME = color(hue(this.BLACK), 0, 75);
+    this.SPACESHIP_HIGHEST_VOLUME = this.WHITE;
 
     this.LOFI_LOWEST_SPEED = this.RED;
     this.LOFI_LOWER_SPEED = this.YELLOW;

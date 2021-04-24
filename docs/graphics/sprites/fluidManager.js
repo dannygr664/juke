@@ -14,12 +14,12 @@ class FluidManager {
     fluidXInitial = width;
     this.fluidWidthMin = width / 1.5;
     this.fluidWidthMax = width;
-    this.fluidHeightMin = height / 1.5;
+    this.fluidHeightMin = height;
     this.fluidHeightMax = height;
-    this.fluidYMin = height / 2 - height / 8;
-    this.fluidYMax = height / 2;
+    this.fluidYMin = 0;
+    this.fluidYMax = 0;
     this.fluidSpacingMin = width / 8;
-    this.fluidSpacingMax = width;
+    this.fluidSpacingMax = width / 8;
 
     for (let i = 0; i < NUMBER_OF_FLUIDS; i++) {
       let fluid = createSprite(
@@ -30,14 +30,14 @@ class FluidManager {
             this.fluidSpacingMax
           )
           ),
-        random(this.fluidYMin, this.fluidYMax),
+        height / 2,
         random(this.fluidWidthMin, this.fluidWidthMax),
-        random(this.fluidHeightMin, this.fluidHeightMax)
+        height
       );
 
       fluid.animation = animationController.createFluidAnimation(
-        fluid.position.x - fluid.width / 2,
-        fluid.position.y - fluid.height / 2,
+        fluid.position.x, //- fluid.width / 2,
+        fluid.position.y, // - fluid.height / 2,
         fluid.width,
         fluid.height,
         this.currentAnimationColor
@@ -65,12 +65,13 @@ class FluidManager {
     this.currentAnimationColor = random(this.fluidAnimationColors);
     animationController.setFluidAnimationColor(fluid.animation, this.currentAnimationColor);
     fluid.width = random(this.fluidWidthMin, this.fluidWidthMax);
-    fluid.height = random(this.fluidHeightMin, this.fluidHeightMax);
+    fluid.height = height
     fluid.position.x = width + fluid.width / 2 + random(
       this.fluidSpacingMin,
       this.fluidSpacingMax
     );
-    fluid.position.y = random(this.fluidYMin, this.fluidYMax);
+
+    fluid.position.y = height / 2;
   }
 
   drawFluids() {
@@ -117,9 +118,7 @@ class FluidManager {
     this.currentAnimationColor = random(this.fluidAnimationColors);
     for (let i = 0; i < this.fluids.length; i++) {
       let fluid = this.fluids[i];
-      if (fluid.position.x < width + fluid.width / 2) {
-        this.spawnFluid(fluid);
-      }
+      this.spawnFluid(fluid);
       fluid.setSpeed(this.baseSpeed, 180);
     }
   }

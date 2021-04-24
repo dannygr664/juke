@@ -1,5 +1,5 @@
 const DEFAULT_BASE_PLATFORM_SPEED = 0.5;
-const DEFAULT_PLATFORM_HEIGHT = 20;
+const DEFAULT_PLATFORM_HEIGHT = 18;
 const DEFAULT_PLATFORM_SPACING = 200;
 
 const PLATFORMER_MODE = 0;
@@ -21,8 +21,6 @@ class PlatformManager {
     this.platformColor = levelManager.getCurrentLevel().platformColor;
 
     startingPlatformWidth = width / 1.5;
-
-    this.createInitialPlatform();
   }
 
   enableMIDIMode() {
@@ -167,7 +165,9 @@ class PlatformManager {
   }
 
   changeLevel() {
+    this.platforms.removeSprites();
     this.updatePlatformColor(levelManager.getCurrentLevel().platformColor);
+    this.createInitialPlatform();
   }
 
   updatePlatformColor(newColor) {

@@ -29,6 +29,7 @@ class Player {
     this.gravityForce = DEFAULT_GRAVITY_FORCE;
     this.gravitySpeed = 0;
     this.color = levelManager.getCurrentLevel().playerColor;
+    this.strokeColor = ColorScheme.CLEAR;
     this.energy = levelManager.getCurrentLevel().maxEnergy;
     this.sprite.shapeColor = this.color
     this.sprite.position.x = PLAYER_X_INITIAL;
@@ -66,12 +67,38 @@ class Player {
     this.sprite.setSpeed(this.jumpSpeed, 270);
   }
 
+  drawStroke() {
+    push();
+    if (this.isReviving) {
+      stroke(ColorScheme.WHITE);
+      strokeWeight(10);
+    } else {
+      stroke(this.strokeColor);
+      strokeWeight(map(audioManager.reverbLevel, REVERB_MIN, REVERB_MAX, 4, 10));
+    }
+
+    fill(ColorScheme.CLEAR);
+    rect(this.sprite.position.x - this.sprite.width / 2, this.sprite.position.y - this.sprite.height / 2, this.sprite.width, this.sprite.height);
+    pop();
+  }
+
   changeLevel() {
     this.resetPlayer();
+  }
+
+  drawEnergyMeter() {
+    push();
+    fill(ColorScheme.getComplementaryColor(this.color));
+    rect(this.sprite.position.x - this.sprite.width / 2, this.sprite.position.y - this.sprite.height / 2, this.sprite.width, map(this.energy, 0, levelManager.getCurrentLevel().maxEnergy, this.sprite.height, 0));
+    pop();
   }
 
   updatePlayerColor(newColor) {
     this.color = newColor;
     this.sprite.shapeColor = this.color;
+  }
+
+  updatePlayerStrokeColor(newColor) {
+    this.strokeColor = newColor;
   }
 }

@@ -107,9 +107,7 @@ class JukeboxManager {
     animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     for (let i = 0; i < this.jukeboxes.length; i++) {
       let jukebox = this.jukeboxes[i];
-      if (jukebox.position.x < width + jukebox.width / 2) {
-        this.spawnJukebox(jukebox);
-      }
+      this.spawnJukebox(jukebox);
     }
     this.didPlayerFall = false;
   }
