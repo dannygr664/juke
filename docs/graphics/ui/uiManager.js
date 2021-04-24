@@ -62,9 +62,9 @@ class UIManager {
     const TEXT_X = width / 2;
     const CURSOR_X = width / 5;
 
-    const ITEM1_Y = height / 2;
-    const ITEM2_Y = 5 * height / 8;
-    const ITEM3_Y = 3 * height / 4;
+    const ITEM1_Y = 9 * height / 16;
+    const ITEM2_Y = 11 * height / 16;
+    const ITEM3_Y = 13 * height / 16;
 
     let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
     let rms = sound.amplitudeAnalyzer.getLevel();
