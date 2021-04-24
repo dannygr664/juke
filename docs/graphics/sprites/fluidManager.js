@@ -118,9 +118,7 @@ class FluidManager {
     this.currentAnimationColor = random(this.fluidAnimationColors);
     for (let i = 0; i < this.fluids.length; i++) {
       let fluid = this.fluids[i];
-      if (fluid.position.x < width + fluid.width / 2) {
-        this.spawnFluid(fluid);
-      }
+      this.spawnFluid(fluid);
       fluid.setSpeed(this.baseSpeed, 180);
     }
   }

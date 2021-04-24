@@ -21,8 +21,6 @@ class PlatformManager {
     this.platformColor = levelManager.getCurrentLevel().platformColor;
 
     startingPlatformWidth = width / 1.5;
-
-    this.createInitialPlatform();
   }
 
   enableMIDIMode() {
@@ -167,7 +165,9 @@ class PlatformManager {
   }
 
   changeLevel() {
+    this.platforms.removeSprites();
     this.updatePlatformColor(levelManager.getCurrentLevel().platformColor);
+    this.createInitialPlatform();
   }
 
   updatePlatformColor(newColor) {
