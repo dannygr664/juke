@@ -169,9 +169,9 @@ class UIManager {
     textFont('HelveticaNeue-Thin');
     textSize(50);
     fill(levelManager.getCurrentLevel().playerColor);
-    text('PAUSED', TEXT_X, width / 2);
+    text('PAUSED', TEXT_X, height / 2);
     textSize(30);
-    text('[Press Q to return to Main Menu]', TEXT_X, 5 * width / 8);
+    text('[Press Q to return to Main Menu]', TEXT_X, 5 * height / 8);
   }
 
   drawGameUI() {
