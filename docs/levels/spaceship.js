@@ -52,6 +52,7 @@ class Spaceship {
   }
 
   handleJukeboxEnter(_, jukebox) {
+    jukebox.passed = true;
     audioManager.unloopCurrentSound();
   }
 }
