@@ -109,29 +109,33 @@ class UIManager {
   }
 
   drawHowToPlayScreen() {
-    const SUBTITLE_TEXT_SIZE = height / 15;
-    const ITEM_TEXT_SIZE = height / 35;
-    const TEXT_X = width / 2;
-    const BACK_TEXT_X = width / 7;
-    const BACK_TEXT_Y = height / 20;
+    // const SUBTITLE_TEXT_SIZE = height / 15;
+    // const ITEM_TEXT_SIZE = height / 35;
+    // const TEXT_X = width / 2;
+    // const BACK_TEXT_X = width / 7;
+    // const BACK_TEXT_Y = height / 20;
 
-    const ITEM1_Y = height / 4;
-    const ITEM2_Y = 3 * height / 8;
-    const ITEM3_Y = height / 2;
-    const ITEM4_Y = 5 * height / 8;
-    const ITEM5_Y = 3 * height / 4;
-    push();
-    textFont('HelveticaNeue-Thin');
-    textSize(ITEM_TEXT_SIZE);
-    text('[ESC] to return', BACK_TEXT_X, BACK_TEXT_Y);
-    textSize(SUBTITLE_TEXT_SIZE);
-    text('HOW TO PLAY', TEXT_X, ITEM1_Y);
-    textSize(ITEM_TEXT_SIZE);
-    text('ARROW KEYS to move, SPACE BAR to jump/revive, ESC to pause.', TEXT_X, ITEM2_Y);
-    text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
-    text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
-    text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
-    pop();
+    // const ITEM1_Y = height / 4;
+    // const ITEM2_Y = 3 * height / 8;
+    // const ITEM3_Y = height / 2;
+    // const ITEM4_Y = 5 * height / 8;
+    // const ITEM5_Y = 3 * height / 4;
+    // push();
+    // textFont('HelveticaNeue-Thin');
+    // textSize(ITEM_TEXT_SIZE);
+    // text('[ESC] to return', BACK_TEXT_X, BACK_TEXT_Y);
+    // textSize(SUBTITLE_TEXT_SIZE);
+    // text('HOW TO PLAY', TEXT_X, ITEM1_Y);
+    // textSize(ITEM_TEXT_SIZE);
+    // text('ARROW KEYS to move, SPACE BAR to jump/revive, ESC to pause.', TEXT_X, ITEM2_Y);
+    // text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
+    // text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
+    // text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
+    // pop();
+
+    platformManager.drawPlatforms();
+    drawSprite(player.sprite);
+    this.drawGameUI();
   }
 
   drawCreditsScreen() {

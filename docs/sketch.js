@@ -347,6 +347,8 @@ function keyPressed() {
               changeLevel(1);
               break;
             case 'How To Play':
+              player.changeLevel();
+              platformManager.changeLevel();
               currentLevel.currentScreen = 1;
               break;
             case 'Credits':

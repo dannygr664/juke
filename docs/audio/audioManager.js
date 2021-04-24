@@ -420,8 +420,10 @@ class AudioManager {
       } else {
         this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
         this.toggleSound(this.currentSound);
-        player.updatePlayerColor(backgroundColor);
-        platformManager.updatePlatformColor(backgroundColor);
+        if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+          player.updatePlayerColor(backgroundColor);
+          platformManager.updatePlatformColor(backgroundColor);
+        }
         this.waitingToChange = false;
       }
     }
