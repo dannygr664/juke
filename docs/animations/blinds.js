@@ -15,24 +15,35 @@ class Blinds {
 
   draw(rms) {
     push();
-    fill(this.color);
+    strokeWeight(5);
     let colorScaleFactor;
     switch (this.color) {
       case ColorScheme.SPACESHIP_HIGHEST_VOLUME:
         colorScaleFactor = 1;
+        stroke(ColorScheme.SPACESHIP_LOWEST_VOLUME);
         break;
       case ColorScheme.SPACESHIP_HIGHER_VOLUME:
         colorScaleFactor = 0.6;
+        stroke(ColorScheme.SPACESHIP_LOWER_VOLUME);
         break;
       case ColorScheme.SPACESHIP_LOWER_VOLUME:
         colorScaleFactor = 0.25;
+        stroke(ColorScheme.SPACESHIP_HIGHER_VOLUME);
         break;
       case ColorScheme.SPACESHIP_LOWEST_VOLUME:
         colorScaleFactor = 0.1;
+        stroke(ColorScheme.SPACESHIP_HIGHEST_VOLUME);
         break;
       default:
         colorScaleFactor = 1;
+        stroke(ColorScheme.SPACESHIP_LOWEST_VOLUME);
     }
+
+    if (audioManager.volume === INITIAL_VOLUME) {
+      noStroke();
+    }
+
+    fill(this.color);
     let rectSizeX = (this.x2 - this.x1) / tileCount * colorScaleFactor;
     let rectSizeY = (this.y2 - this.y1) / tileCount * colorScaleFactor;
 

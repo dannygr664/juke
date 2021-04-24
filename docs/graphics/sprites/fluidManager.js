@@ -36,8 +36,8 @@ class FluidManager {
       );
 
       fluid.animation = animationController.createFluidAnimation(
-        fluid.position.x - fluid.width / 2,
-        fluid.position.y - fluid.height / 2,
+        fluid.position.x, //- fluid.width / 2,
+        fluid.position.y, // - fluid.height / 2,
         fluid.width,
         fluid.height,
         this.currentAnimationColor
@@ -70,6 +70,7 @@ class FluidManager {
       this.fluidSpacingMin,
       this.fluidSpacingMax
     );
+
     fluid.position.y = height / 2;
   }
 

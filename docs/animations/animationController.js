@@ -2,6 +2,7 @@ const FOREGROUND_ANIMATIONS = [0, 3, 4];
 
 let noiseAnim;
 let boxesAnim;
+let wipeAnim;
 let linesAnim;
 let blindsAnim;
 
@@ -21,6 +22,13 @@ class AnimationController {
       ColorScheme.BLACK_INACTIVE
     );
     boxesAnim = new Boxes(
+      0,
+      width,
+      0,
+      height,
+      ColorScheme.BLACK_INACTIVE
+    );
+    wipeAnim = new Wipe(
       0,
       width,
       0,
@@ -121,10 +129,10 @@ class AnimationController {
       noiseAnim.updateAgentPositions();
       noiseAnim.draw();
     } else if (sound.animation === 1) {
-      boxesAnim.x1 = x1;
-      boxesAnim.x2 = x2;
-      boxesAnim.color = color;
-      boxesAnim.draw(rms);
+      wipeAnim.x1 = x1;
+      wipeAnim.x2 = x2;
+      wipeAnim.color = color;
+      wipeAnim.draw();
     } else if (sound.animation === 2) {
       blindsAnim.x1 = x1;
       blindsAnim.x2 = x2;

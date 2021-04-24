@@ -392,6 +392,12 @@ class AudioManager {
     return lengthOfBeat;
   }
 
+  getDurationOfMeasure() {
+    let durationOfBeat = this.getDurationOfBeat();
+    let numberOfBeatsPerMeasure = this.getCurrentSound().soundInfo.timeSignatureUpper;
+    return durationOfBeat * numberOfBeatsPerMeasure;
+  }
+
   unloopCurrentSound() {
     // Turn looping off
     let sound = this.getCurrentSound();
