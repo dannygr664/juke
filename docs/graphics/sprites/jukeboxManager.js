@@ -29,6 +29,7 @@ class JukeboxManager {
       jukebox.shapeColor = ColorScheme.CLEAR;
       jukebox.setSpeed(0, 180);
       jukebox.setDefaultCollider();
+      jukebox.passed = false;
       this.jukeboxes.add(jukebox);
     }
 
@@ -38,7 +39,11 @@ class JukeboxManager {
   manageJukeboxes() {
     for (let i = 0; i < this.jukeboxes.length; i++) {
       let jukebox = this.jukeboxes[i];
+      animationController.handleJukeboxFadeout(jukebox);
+
       if (jukebox.position.x < -jukebox.width / 2 && !audioManager.isSoundAlmostOver()) {
+        jukebox.passed = false;
+        animationController.resetJukeboxFadeTimer();
         this.spawnJukebox(jukebox);
       }
       if (audioManager.isSoundAlmostOver() && !this.didPlayerFall && this.baseSpeed === 0) {

@@ -72,6 +72,17 @@ class AnimationController {
     moireAnim.color = color;
   }
 
+  handleJukeboxFadeout(jukebox) {
+    if (jukebox.passed && moireAnim.fadeTimer > 0) {
+      console.log(moireAnim.fadeTimer);
+      moireAnim.fadeTimer--;
+    }
+  }
+
+  resetJukeboxFadeTimer() {
+    moireAnim.resetFadeTimer();
+  }
+
   createFluidAnimation(xPosition, yPosition, width, height, color) {
     let fluidAnim = new Blinds(
       xPosition,
