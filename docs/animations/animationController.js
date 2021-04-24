@@ -75,7 +75,7 @@ class AnimationController {
   handleJukeboxFadeout(jukebox) {
     if (jukebox.passed && moireAnim.fadeTimer > 0) {
       console.log(moireAnim.fadeTimer);
-      moireAnim.fadeTimer--;
+      moireAnim.fadeTimer -= audioManager.soundSpeed;
     }
   }
 
