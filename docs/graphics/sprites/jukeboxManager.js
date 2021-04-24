@@ -42,8 +42,7 @@ class JukeboxManager {
       animationController.handleJukeboxFadeout(jukebox);
 
       if (jukebox.position.x < -jukebox.width / 2 && !audioManager.isSoundAlmostOver()) {
-        jukebox.passed = false;
-        animationController.resetJukeboxFadeTimer();
+
         this.spawnJukebox(jukebox);
       }
       if (audioManager.isSoundAlmostOver() && !this.didPlayerFall && this.baseSpeed === 0) {
@@ -63,6 +62,8 @@ class JukeboxManager {
 
   spawnJukebox(jukebox) {
     jukebox.position.x = width + jukebox.width / 2;
+    jukebox.passed = false;
+    animationController.resetJukeboxFadeTimer();
     this.currentAnimationColor = random(this.jukeboxAnimationColors);
     animationController.setJukeboxAnimationColor(this.currentAnimationColor);
     this.baseSpeed = 0;
