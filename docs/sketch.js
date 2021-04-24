@@ -23,6 +23,9 @@ let platformManager;
 let fluidManager;
 let jukeboxManager;
 
+let leftBoundingRectangle;
+let rightBoundingRectangle;
+
 const MIN_WIDTH = 800;
 const MAX_WIDTH = 900;
 const MIN_HEIGHT = 500;
@@ -67,6 +70,8 @@ function setup() {
   audioManager.loadReverb();
 
   uiManager = new UIManager();
+
+  createBoundingRectangles();
 }
 
 
@@ -114,11 +119,12 @@ function draw() {
         player.speed = player.baseSpeed * audioManager.soundSpeed;
         player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
 
+        handleBorderCollisions();
+
         if (player.isReviving) {
           revivingLoop();
         } else {
           handleControls();
-
           handleCollisionsAndJumping();
 
           platformManager.managePlatforms();
@@ -167,6 +173,14 @@ function draw() {
 }
 
 
+function createBoundingRectangles() {
+  leftBoundingRectangle = createSprite(-20, -height * 2, 40, height * 8);
+  leftBoundingRectangle.setDefaultCollider();
+  rightBoundingRectangle = createSprite(width + 20, -height * 2, 40, height * 8);
+  rightBoundingRectangle.setDefaultCollider();
+}
+
+
 function handleControls() {
   if (currentLevel.genre !== TITLE_GENRE && !isPaused) {
     if (keyIsDown(RIGHT_ARROW)) {
@@ -177,6 +191,12 @@ function handleControls() {
       player.sprite.setSpeed(0, 0);
     }
   }
+}
+
+
+function handleBorderCollisions() {
+  player.sprite.collide(leftBoundingRectangle);
+  player.sprite.collide(rightBoundingRectangle);
 }
 
 
