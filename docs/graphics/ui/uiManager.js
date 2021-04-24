@@ -171,7 +171,7 @@ class UIManager {
     fill(levelManager.getCurrentLevel().playerColor);
     text('PAUSED', TEXT_X, height / 2);
     textSize(30);
-    text('[Press Q to return to Main Menu]', TEXT_X, 5 * height / 8);
+    text('[Press DEL to return to Main Menu]', TEXT_X, 5 * height / 8);
   }
 
   drawGameUI() {

@@ -374,7 +374,7 @@ function keyPressed() {
         }
         isPaused = !isPaused;
       } else if (isPaused) {
-        if (key === 'q' || key === 'Q') {
+        if (keyCode === DELETE || keyCode === BACKSPACE) {
           audioManager.stopSounds();
           isPaused = !isPaused;
           changeLevel(0);
