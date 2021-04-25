@@ -29,7 +29,7 @@ class PlatformManager {
 
   createInitialPlatform() {
     let platform = createSprite(
-      2 * width / 3,
+      width / 2,
       height / 2 - this.platformHeight / 2,
       startingPlatformWidth,
       this.platformHeight
@@ -162,7 +162,9 @@ class PlatformManager {
   resumePlatforms() {
     for (let i = 0; i < this.platforms.size(); i++) {
       this.platforms[i].shapeColor = this.platformColor;
-      this.platforms[i].setSpeed(this.baseSpeed, 180);
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        this.platforms[i].setSpeed(this.baseSpeed, 180);
+      }
     }
   }
 

@@ -108,7 +108,7 @@ class AnimationController {
       case 'Spaceship':
         return 2;
       default:
-        return 0;
+        return 2;
     }
   }
 

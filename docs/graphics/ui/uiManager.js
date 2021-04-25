@@ -16,6 +16,8 @@ class UIManager {
     for (let i = 0; i < this.titlePoints.length; i++) {
       this.titlePoints[i].platformWidth = random(5, 15);
     }
+    this.numHelpPages = 1;
+    this.currentHelpPage = 1;
   }
 
   drawUI() {
@@ -26,9 +28,6 @@ class UIManager {
         this.drawMainMenu();
       }
     } else {
-      if (isPaused) {
-        this.drawPauseMenu();
-      }
       this.drawGameUI();
     }
   }
@@ -109,32 +108,55 @@ class UIManager {
   }
 
   drawHowToPlayScreen() {
-    // const SUBTITLE_TEXT_SIZE = height / 15;
-    // const ITEM_TEXT_SIZE = height / 35;
-    // const TEXT_X = width / 2;
-    // const BACK_TEXT_X = width / 7;
-    // const BACK_TEXT_Y = height / 20;
+    const SUBTITLE_TEXT_SIZE = height / 15;
+    const HEADING_TEXT_SIZE = height / 20;
+    const ITEM_TEXT_SIZE = height / 30;
+    const CONTROLS_X = 20 * width / 64;
+    const GOAL_X = width / 2;
 
-    // const ITEM1_Y = height / 4;
-    // const ITEM2_Y = 3 * height / 8;
-    // const ITEM3_Y = height / 2;
-    // const ITEM4_Y = 5 * height / 8;
-    // const ITEM5_Y = 3 * height / 4;
-    // push();
-    // textFont('HelveticaNeue-Thin');
-    // textSize(ITEM_TEXT_SIZE);
-    // text('[ESC] to return', BACK_TEXT_X, BACK_TEXT_Y);
-    // textSize(SUBTITLE_TEXT_SIZE);
-    // text('HOW TO PLAY', TEXT_X, ITEM1_Y);
-    // textSize(ITEM_TEXT_SIZE);
-    // text('ARROW KEYS to move, SPACE BAR to jump/revive, ESC to pause.', TEXT_X, ITEM2_Y);
-    // text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
-    // text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
-    // text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
-    // pop();
+    const AUDIO_PARAM_LABEL_X = 20
+    const AUDIO_PARAM_LABEL_Y = 40;
 
-    platformManager.drawPlatforms();
-    drawSprite(player.sprite);
+    const SONG_PROGRESS_LABEL_X = width / 2;
+    const SONG_PROGRESS_LABEL_Y = 40;
+
+    const SUBTITLE_Y = height / 4;
+    const SUBITEM1_Y = 5 * height / 16
+    const CONTROLS_Y = 20 * height / 32;
+    const CONTROL1_Y = 22 * height / 32;
+    const CONTROL2_Y = 24 * height / 32;
+    const CONTROL3_Y = 26 * height / 32;
+    const PAGE_INDEX_Y = 28 * height / 32;
+    if (!isPaused) {
+      push();
+      textFont('HelveticaNeue-Thin');
+      textSize(SUBTITLE_TEXT_SIZE);
+      text('GOAL', GOAL_X, SUBTITLE_Y);
+      textSize(ITEM_TEXT_SIZE);
+      text('Reach end of section without falling to progress.', GOAL_X, SUBITEM1_Y);
+      textAlign(LEFT, TOP);
+      textSize(ITEM_TEXT_SIZE);
+      text('AUDIO PARAMS', AUDIO_PARAM_LABEL_X, AUDIO_PARAM_LABEL_Y);
+
+      textAlign(CENTER, TOP);
+      text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
+
+      textAlign(CENTER, CENTER);
+      textSize(HEADING_TEXT_SIZE);
+      text('CONTROLS', CONTROLS_X, CONTROLS_Y);
+      textSize(ITEM_TEXT_SIZE);
+      text('ARROW KEYS — Move left/right', CONTROLS_X, CONTROL1_Y);
+      text('SPACE BAR — Jump/Revive', CONTROLS_X, CONTROL2_Y);
+      text('ESC — Pause', CONTROLS_X, CONTROL3_Y);
+      // text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
+      // text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
+      // text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
+      //text(`${this.currentHelpPage} / ${this.numHelpPages}`, CONTROLS_X, PAGE_INDEX_Y);
+      pop();
+    }
+
+    // platformManager.drawPlatforms();
+    // drawSprite(player.sprite);
     this.drawGameUI();
   }
 
@@ -175,10 +197,14 @@ class UIManager {
     fill(levelManager.getCurrentLevel().playerColor);
     text('PAUSED', TEXT_X, height / 2);
     textSize(30);
-    text('[Press DEL to return to Main Menu]', TEXT_X, 5 * height / 8);
+    text('[ESC — Resume]', TEXT_X, 9 * height / 16);
+    text('[DEL — Return to Main Menu]', TEXT_X, 5 * height / 8);
   }
 
   drawGameUI() {
+    if (isPaused) {
+      this.drawPauseMenu();
+    }
     push();
     textAlign(LEFT, TOP)
     textFont('HelveticaNeue-Thin');
