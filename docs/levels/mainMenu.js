@@ -7,6 +7,9 @@ class MainMenu {
     this.menuItems = ['Play', 'How To Play', 'Credits'];
     this.currentItemSelected = 0;
     this.screenItems = ['Main', 'How To Play', 'Credits'];
+    this.item1Y = 9 * height / 16;
+    this.item2Y = 11 * height / 16;
+    this.item3Y = 13 * height / 16;
     this.currentScreen = 0;
 
     this.initialDrawMode = 0;

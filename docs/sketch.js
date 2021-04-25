@@ -408,6 +408,36 @@ function keyPressed() {
 function mousePressed() {
   if (!isAwake) {
     wakeUp();
+  } else if (currentLevel.genre === TITLE_GENRE && currentLevel.currentScreen === 0) {
+    currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
+    switch (currentSelection) {
+      case 'Play':
+        changeLevel(1);
+        break;
+      case 'How To Play':
+        player.changeLevel();
+        platformManager.changeLevel();
+        currentLevel.currentScreen = 1;
+        break;
+      case 'Credits':
+        currentLevel.currentScreen = 2;
+        break;
+    }
+  }
+}
+
+function mouseMoved() {
+  const DISTANCE_BETWEEN_ITEMS = currentLevel.item2Y - currentLevel.item1Y;
+  if (currentLevel.genre === TITLE_GENRE && currentLevel.currentScreen === 0) {
+    // Main Menu
+    if (mouseY <= currentLevel.item1Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      currentLevel.currentItemSelected =
+        0;
+    } else if (mouseY <= currentLevel.item2Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      currentLevel.currentItemSelected = 1;
+    } else {
+      currentLevel.currentItemSelected = 2;
+    }
   }
 }
 
