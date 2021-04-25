@@ -23,7 +23,7 @@ class UIManager {
   drawUI() {
     if (levelManager.getCurrentLevel().genre === TITLE_GENRE) {
       if (!isAwake) {
-        this.drawClickToStart();
+        this.drawPrestartScreen();
       } else {
         this.drawMainMenu();
       }
@@ -32,14 +32,14 @@ class UIManager {
     }
   }
 
-  drawClickToStart() {
+  drawPrestartScreen() {
     push();
     const TEXT_SIZE = height / 15;
     fill(ColorScheme.BLACK);
     textAlign(CENTER, CENTER);
     textFont('HelveticaNeue-Thin');
     textSize(TEXT_SIZE);
-    text('Click to start', width / 2, height / 2);
+    text('Click/Press any key to start', width / 2, height / 2);
     pop();
   }
 

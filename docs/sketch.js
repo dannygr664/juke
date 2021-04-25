@@ -399,6 +399,8 @@ function keyPressed() {
         }
       }
     }
+  } else if (isLoaded && !isAwake) {
+    wakeUp();
   }
 }
 
