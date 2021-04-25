@@ -29,13 +29,15 @@ class PlatformManager {
 
   createInitialPlatform() {
     let platform = createSprite(
-      width - this.platformWidth / 2,
+      width / 2,
       height / 2 - this.platformHeight / 2,
       startingPlatformWidth,
       this.platformHeight
     );
     platform.shapeColor = this.platformColor;
-    platform.setSpeed(this.baseSpeed, 180);
+    if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+      platform.setSpeed(this.baseSpeed, 180);
+    }
     platform.setDefaultCollider();
     this.platforms.add(platform);
     return platform;
@@ -160,7 +162,9 @@ class PlatformManager {
   resumePlatforms() {
     for (let i = 0; i < this.platforms.size(); i++) {
       this.platforms[i].shapeColor = this.platformColor;
-      this.platforms[i].setSpeed(this.baseSpeed, 180);
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        this.platforms[i].setSpeed(this.baseSpeed, 180);
+      }
     }
   }
 

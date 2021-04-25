@@ -385,6 +385,18 @@ class AudioManager {
       this.getCurrentSound().soundInfo.timeSignatureLower;
   }
 
+  isFirstSound() {
+    return (this.currentSound === 0);
+  }
+
+  isPenultimateSound() {
+    if (this.levelSounds.length < 2) {
+      return false;
+    } else {
+      return (this.currentSound === this.levelSounds.length - 2);
+    }
+  }
+
   isFinalSound() {
     return (this.currentSound === this.levelSounds.length - 1);
   }
@@ -418,7 +430,11 @@ class AudioManager {
         this.waitingToChange = false;
         incrementLevel();
       } else {
-        this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
+        if (this.isPenultimateSound() && levelManager.getCurrentLevel().genre === TITLE_GENRE) {
+          this.currentSound = 1;
+        } else {
+          this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
+        }
         this.toggleSound(this.currentSound);
         player.updatePlayerColor(backgroundColor);
         platformManager.updatePlatformColor(backgroundColor);

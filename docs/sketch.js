@@ -114,7 +114,7 @@ function draw() {
       audioManager.update();
     }
 
-    if (currentLevel.genre !== TITLE_GENRE) {
+    if (currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === 1) {
       if (!isPaused) {
         player.speed = player.baseSpeed * audioManager.soundSpeed;
         player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
@@ -127,9 +127,13 @@ function draw() {
           handleControls();
           handleCollisionsAndJumping();
 
-          platformManager.managePlatforms();
-          fluidManager.manageFluids();
+          if (currentLevel.genre !== TITLE_GENRE) {
+            platformManager.managePlatforms();
+            fluidManager.manageFluids();
+          }
+
           jukeboxManager.manageJukeboxes();
+
           let newEnergy = player.energy + 0.05;
           player.energy = min(newEnergy, currentLevel.maxEnergy);
           player.updatePlayerColor(color(
@@ -168,7 +172,7 @@ function createBoundingRectangles() {
 
 
 function handleControls() {
-  if (currentLevel.genre !== TITLE_GENRE && !isPaused) {
+  if ((currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === 1) && !isPaused) {
     if (keyIsDown(RIGHT_ARROW)) {
       player.sprite.setSpeed(player.speed, 0);
     } else if (keyIsDown(LEFT_ARROW)) {
@@ -270,6 +274,7 @@ function changeLevel(level) {
   audioManager.startSounds(currentLevel.genre);
 
   if (currentLevel.genre === TITLE_GENRE) {
+    currentLevel.currentScreen = 0;
     audioManager.unloopCurrentSound();
   }
 }
@@ -347,6 +352,8 @@ function keyPressed() {
               changeLevel(1);
               break;
             case 'How To Play':
+              player.changeLevel();
+              platformManager.changeLevel();
               currentLevel.currentScreen = 1;
               break;
             case 'Credits':
@@ -357,7 +364,18 @@ function keyPressed() {
         // How To Play
       } else if (currentLevel.currentScreen === 1) {
         if (keyCode === ESCAPE) {
-          currentLevel.currentScreen = 0;
+          if (isPaused) {
+            handleUnpausing();
+          } else {
+            handlePausing();
+          }
+          isPaused = !isPaused;
+        } else if (isPaused) {
+          if (keyCode === DELETE || keyCode === BACKSPACE) {
+            audioManager.stopSounds();
+            isPaused = !isPaused;
+            changeLevel(0);
+          }
         }
         // Credits
       } else if (currentLevel.currentScreen === 2) {
@@ -381,6 +399,8 @@ function keyPressed() {
         }
       }
     }
+  } else if (isLoaded && !isAwake) {
+    wakeUp();
   }
 }
 
@@ -388,6 +408,36 @@ function keyPressed() {
 function mousePressed() {
   if (!isAwake) {
     wakeUp();
+  } else if (currentLevel.genre === TITLE_GENRE && currentLevel.currentScreen === 0) {
+    currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
+    switch (currentSelection) {
+      case 'Play':
+        changeLevel(1);
+        break;
+      case 'How To Play':
+        player.changeLevel();
+        platformManager.changeLevel();
+        currentLevel.currentScreen = 1;
+        break;
+      case 'Credits':
+        currentLevel.currentScreen = 2;
+        break;
+    }
+  }
+}
+
+function mouseMoved() {
+  const DISTANCE_BETWEEN_ITEMS = currentLevel.item2Y - currentLevel.item1Y;
+  if (currentLevel.genre === TITLE_GENRE && currentLevel.currentScreen === 0) {
+    // Main Menu
+    if (mouseY <= currentLevel.item1Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      currentLevel.currentItemSelected =
+        0;
+    } else if (mouseY <= currentLevel.item2Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      currentLevel.currentItemSelected = 1;
+    } else {
+      currentLevel.currentItemSelected = 2;
+    }
   }
 }
 

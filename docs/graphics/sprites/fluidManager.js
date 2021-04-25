@@ -13,7 +13,7 @@ class FluidManager {
 
     fluidXInitial = width;
     this.fluidWidthMin = width / 1.5;
-    this.fluidWidthMax = width;
+    this.fluidWidthMax = width / 1.5;
     this.fluidHeightMin = height;
     this.fluidHeightMax = height;
     this.fluidYMin = 0;
@@ -44,7 +44,9 @@ class FluidManager {
       );
 
       fluid.shapeColor = ColorScheme.CLEAR;
-      fluid.setSpeed(this.baseSpeed, 180);
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        fluid.setSpeed(this.baseSpeed, 180);
+      }
       fluid.setDefaultCollider();
       this.fluids.add(fluid);
     }
@@ -66,10 +68,14 @@ class FluidManager {
     animationController.setFluidAnimationColor(fluid.animation, this.currentAnimationColor);
     fluid.width = random(this.fluidWidthMin, this.fluidWidthMax);
     fluid.height = height
-    fluid.position.x = width + fluid.width / 2 + random(
-      this.fluidSpacingMin,
-      this.fluidSpacingMax
-    );
+    if (levelManager.getCurrentLevel().genre === TITLE_GENRE) {
+      fluid.position.x = fluidXInitial;
+    } else {
+      fluid.position.x = width + fluid.width / 2 + random(
+        this.fluidSpacingMin,
+        this.fluidSpacingMax
+      );
+    }
 
     fluid.position.y = height / 2;
   }
@@ -94,7 +100,9 @@ class FluidManager {
 
   handleRevived() {
     for (let i = 0; i < this.fluids.length; i++) {
-      this.fluids[i].setSpeed(this.baseSpeed, 180);
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        this.fluids[i].setSpeed(this.baseSpeed, 180);
+      }
       animationController.setFluidAnimationColor(this.fluids[i].animation, this.currentAnimationColor);
     }
   }
@@ -108,7 +116,9 @@ class FluidManager {
 
   handleUnpausing() {
     for (let i = 0; i < this.fluids.length; i++) {
-      this.fluids[i].setSpeed(this.baseSpeed, 180);
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        this.fluids[i].setSpeed(this.baseSpeed, 180);
+      }
       animationController.setFluidAnimationColor(this.fluids[i].animation, this.currentAnimationColor);
     }
   }
@@ -119,7 +129,9 @@ class FluidManager {
     for (let i = 0; i < this.fluids.length; i++) {
       let fluid = this.fluids[i];
       this.spawnFluid(fluid);
-      fluid.setSpeed(this.baseSpeed, 180);
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        fluid.setSpeed(this.baseSpeed, 180);
+      }
     }
   }
 }

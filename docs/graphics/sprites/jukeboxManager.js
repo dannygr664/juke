@@ -50,8 +50,11 @@ class JukeboxManager {
         if (audioManager.isFinalSound()) {
           animationController.setJukeboxAnimationColor(ColorScheme.ETHEREAL_GOLD);
         }
-        this.baseSpeed = this.calculateJukeboxSweepSpeed();
-        jukebox.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
+        if ((levelManager.getCurrentLevel().genre !== TITLE_GENRE)
+          || (!audioManager.isFirstSound())) {
+          this.baseSpeed = this.calculateJukeboxSweepSpeed();
+          jukebox.setSpeed(this.baseSpeed * audioManager.soundSpeed, 180);
+        }
       }
     }
   }
