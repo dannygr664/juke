@@ -61,9 +61,11 @@ class UIManager {
     const TEXT_X = width / 2;
     const CURSOR_X = width / 5;
 
+    const UP_ARROW_Y = 15 * height / 32;
     const ITEM1_Y = 9 * height / 16;
     const ITEM2_Y = 11 * height / 16;
     const ITEM3_Y = 13 * height / 16;
+    const DOWN_ARROW_Y = 29 * height / 32;
 
     let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
     let rms = sound.amplitudeAnalyzer.getLevel();
@@ -84,9 +86,11 @@ class UIManager {
     textAlign(CENTER, CENTER);
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
+    this.drawUpArrow(TEXT_X, UP_ARROW_Y);
     text('Play', TEXT_X, ITEM1_Y);
     text('How To Play', TEXT_X, ITEM2_Y);
     text('Credits', TEXT_X, ITEM3_Y);
+    this.drawDownArrow(TEXT_X, DOWN_ARROW_Y);
 
     let currentItemSelected = levelManager.getCurrentLevel().currentItemSelected;
     let cursorY = -height;
@@ -104,6 +108,22 @@ class UIManager {
       CURSOR_WIDTH,
       CURSOR_HEIGHT
     );
+    pop();
+  }
+
+  drawUpArrow(x, y) {
+    push();
+    stroke(ColorScheme.BLACK);
+    line(x - width / 50, y + height / 50, x, y);
+    line(x + width / 50, y + height / 50, x, y);
+    pop();
+  }
+
+  drawDownArrow(x, y) {
+    push();
+    stroke(ColorScheme.BLACK);
+    line(x - width / 50, y - height / 50, x, y);
+    line(x + width / 50, y - height / 50, x, y);
     pop();
   }
 
