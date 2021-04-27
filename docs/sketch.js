@@ -32,6 +32,7 @@ const MIN_HEIGHT = 500;
 
 function preload() {
   isLoaded = false;
+  isAwake = false;
   audioManager = new AudioManager();
   animationController = new AnimationController();
 
@@ -49,8 +50,6 @@ function setup() {
   };
 
   isLoaded = true;
-
-  isAwake = false;
 
   isPaused = false;
 
