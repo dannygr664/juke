@@ -92,8 +92,8 @@ function wakeUp() {
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
 
-  MIDIManager.initialize();
-  MIDIManager.connectToMIDIDevice();
+  // MIDIManager.initialize();
+  // MIDIManager.connectToMIDIDevice();
 
   audioManager.assignSoundAnimations();
   audioManager.assignSoundCues();
