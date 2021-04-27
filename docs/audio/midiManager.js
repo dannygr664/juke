@@ -21,7 +21,7 @@ class MIDIManager {
 
           for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
             if (platformManager.mode !== MIDI_MODE) {
-              platformManager.enableMIDIMode();
+              //platformManager.enableMIDIMode();
             }
             // each time there is a midi message call the onMIDIMessage function
             input.value.onmidimessage = MIDIManager.onMIDIMessage;
