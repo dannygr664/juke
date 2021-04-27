@@ -92,8 +92,8 @@ function wakeUp() {
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
 
-  MIDIManager.initialize();
-  MIDIManager.connectToMIDIDevice();
+  // MIDIManager.initialize();
+  // MIDIManager.connectToMIDIDevice();
 
   audioManager.assignSoundAnimations();
   audioManager.assignSoundCues();
@@ -427,16 +427,18 @@ function mousePressed() {
 }
 
 function mouseMoved() {
-  const DISTANCE_BETWEEN_ITEMS = currentLevel.item2Y - currentLevel.item1Y;
-  if (currentLevel.genre === TITLE_GENRE && currentLevel.currentScreen === 0) {
-    // Main Menu
-    if (mouseY <= currentLevel.item1Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
-      currentLevel.currentItemSelected =
-        0;
-    } else if (mouseY <= currentLevel.item2Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
-      currentLevel.currentItemSelected = 1;
-    } else {
-      currentLevel.currentItemSelected = 2;
+  if (isAwake) {
+    const DISTANCE_BETWEEN_ITEMS = currentLevel.item2Y - currentLevel.item1Y;
+    if (currentLevel.genre === TITLE_GENRE && currentLevel.currentScreen === 0) {
+      // Main Menu
+      if (mouseY <= currentLevel.item1Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+        currentLevel.currentItemSelected =
+          0;
+      } else if (mouseY <= currentLevel.item2Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+        currentLevel.currentItemSelected = 1;
+      } else {
+        currentLevel.currentItemSelected = 2;
+      }
     }
   }
 }
