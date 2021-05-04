@@ -4,9 +4,11 @@ class MainMenu {
     fill(0);
     noStroke();
     this.genre = 'City';
-    this.menuItems = ['Play', 'How To Play', 'Credits'];
+    this.screenToMenuItems = {
+      0: ['Play', 'How To Play', 'Credits'],
+      3: ['Single Player', 'Multiplayer']
+    };
     this.currentItemSelected = 0;
-    this.screenItems = ['Main', 'How To Play', 'Credits'];
     this.item1Y = 9 * height / 16;
     this.item2Y = 11 * height / 16;
     this.item3Y = 13 * height / 16;

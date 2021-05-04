@@ -323,32 +323,48 @@ function keyPressed() {
   if (isLoaded && isAwake) {
     if (currentLevel.genre === TITLE_GENRE) {
       // Main Menu
-      if (currentLevel.currentScreen === 0) {
+      if (currentLevel.currentScreen === 0 || currentLevel.currentScreen === 3) {
+        let menuItems = currentLevel.screenToMenuItems[currentLevel.currentScreen];
         if (keyCode === DOWN_ARROW) {
           currentLevel.currentItemSelected =
-            (currentLevel.currentItemSelected + 1) % currentLevel.menuItems.length;
+            (currentLevel.currentItemSelected + 1) % menuItems.length;
         } else if (keyCode === UP_ARROW) {
           if (currentLevel.currentItemSelected === 0) {
-            currentLevel.currentItemSelected = currentLevel.menuItems.length - 1;
+            currentLevel.currentItemSelected = menuItems.length - 1;
           } else {
             currentLevel.currentItemSelected =
-              (currentLevel.currentItemSelected - 1) % currentLevel.menuItems.length;
+              (currentLevel.currentItemSelected - 1) % menuItems.length;
           }
         } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
-          currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
-          switch (currentSelection) {
-            case 'Play':
-              changeLevel(1);
-              break;
-            case 'How To Play':
-              player.changeLevel();
-              platformManager.changeLevel();
-              currentLevel.currentScreen = 1;
-              break;
-            case 'Credits':
-              currentLevel.currentScreen = 2;
-              break;
+          currentSelection = menuItems[currentLevel.currentItemSelected];
+
+          if (currentLevel.currentScreen === 0) {
+            switch (currentSelection) {
+              case 'Play':
+                currentLevel.currentScreen = 3;
+                break;
+              case 'How To Play':
+                player.changeLevel();
+                platformManager.changeLevel();
+                currentLevel.currentScreen = 1;
+                break;
+              case 'Credits':
+                currentLevel.currentScreen = 2;
+                break;
+            }
+          } else if (currentLevel.currentScreen === 3) {
+            switch (currentSelection) {
+              case 'Single Player':
+                changeLevel(1);
+                break;
+              case 'Multiplayer':
+                changeLevel(1);
+                break;
+            }
           }
+        } else if (keyCode === ESCAPE && currentLevel.currentScreen === 3) {
+          currentLevel.currentScreen = 0;
+          currentLevel.currentItemSelected = 0;
         }
         // How To Play
       } else if (currentLevel.currentScreen === 1) {
@@ -366,10 +382,11 @@ function keyPressed() {
             changeLevel(0);
           }
         }
-        // Credits
+        // Credits or Mode Selection screen
       } else if (currentLevel.currentScreen === 2) {
         if (keyCode === ESCAPE) {
           currentLevel.currentScreen = 0;
+          currentLevel.currentItemSelected = 0;
         }
       }
     } else {
@@ -397,36 +414,53 @@ function keyPressed() {
 function mousePressed() {
   if (!isAwake) {
     wakeUp();
-  } else if (currentLevel.genre === TITLE_GENRE && currentLevel.currentScreen === 0) {
-    currentSelection = currentLevel.menuItems[currentLevel.currentItemSelected];
-    switch (currentSelection) {
-      case 'Play':
-        changeLevel(1);
-        break;
-      case 'How To Play':
-        player.changeLevel();
-        platformManager.changeLevel();
-        currentLevel.currentScreen = 1;
-        break;
-      case 'Credits':
-        currentLevel.currentScreen = 2;
-        break;
+  } else if (currentLevel.genre === TITLE_GENRE && (currentLevel.currentScreen === 0 || currentLevel.currentScreen === 3)) {
+    currentSelection = (currentLevel.screenToMenuItems[currentLevel.currentScreen])[currentLevel.currentItemSelected];
+    if (currentLevel.currentScreen === 0) {
+      switch (currentSelection) {
+        case 'Play':
+          currentLevel.currentScreen = 3;
+          break;
+        case 'How To Play':
+          player.changeLevel();
+          platformManager.changeLevel();
+          currentLevel.currentScreen = 1;
+          break;
+        case 'Credits':
+          currentLevel.currentScreen = 2;
+          break;
+      }
+    } else if (currentLevel.currentScreen === 3) {
+      switch (currentSelection) {
+        case 'Single Player':
+          changeLevel(1);
+          break;
+        case 'Multiplayer':
+          changeLevel(1);
+          break;
+      }
     }
   }
 }
 
 function mouseMoved() {
-  if (isAwake) {
+  if (isAwake && currentLevel.genre === TITLE_GENRE) {
     const DISTANCE_BETWEEN_ITEMS = currentLevel.item2Y - currentLevel.item1Y;
-    if (currentLevel.genre === TITLE_GENRE && currentLevel.currentScreen === 0) {
+    if (currentLevel.currentScreen === 0) {
       // Main Menu
       if (mouseY <= currentLevel.item1Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
-        currentLevel.currentItemSelected =
-          0;
+        currentLevel.currentItemSelected = 0;
       } else if (mouseY <= currentLevel.item2Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
         currentLevel.currentItemSelected = 1;
       } else {
         currentLevel.currentItemSelected = 2;
+      }
+    } else if (currentLevel.currentScreen === 3) {
+      // Mode selection menu
+      if (mouseY <= currentLevel.item1Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+        currentLevel.currentItemSelected = 0;
+      } else {
+        currentLevel.currentItemSelected = 1;
       }
     }
   }

@@ -53,6 +53,8 @@ class UIManager {
       this.drawHowToPlayScreen();
     } else if (currentScreen === 2) {
       this.drawCreditsScreen();
+    } else if (currentScreen === 3) {
+      this.drawModeSelectionScreen();
     }
   }
 
@@ -204,6 +206,57 @@ class UIManager {
     text('"Cypher 5" by Calvin McCormack', TEXT_X, ITEM4_Y);
     text('"It\'s Too Late" by Guillermo Montalvan and Daniel Greenberg', TEXT_X, ITEM5_Y);
     text('"Ethereal" by Angel Rose (ft. Mateo Falgas)', TEXT_X, ITEM6_Y);
+    pop();
+  }
+
+  drawModeSelectionScreen() {
+    const ITEM_TEXT_SIZE = height / 15;
+    const TEXT_X = width / 2;
+    const CURSOR_X = width / 5;
+
+    const UP_ARROW_Y = 15 * height / 32;
+    const DOWN_ARROW_Y = 29 * height / 32;
+
+    let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
+    let rms = sound.amplitudeAnalyzer.getLevel();
+
+    for (let i = 0; i < this.titlePoints.length; i++) {
+      push();
+      stroke(0);
+      strokeWeight(1);
+      let point = this.titlePoints[i];
+      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+        point.platformWidth = random(5, 15);
+      }
+      line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
+      pop();
+    }
+
+    let currentLevel = levelManager.getCurrentLevel();
+
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(ITEM_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    this.drawUpArrow(TEXT_X, UP_ARROW_Y);
+    text('Single Player', TEXT_X, currentLevel.item1Y);
+    text('Multiplayer', TEXT_X, currentLevel.item2Y);
+    this.drawDownArrow(TEXT_X, currentLevel.item3Y);
+
+    let currentItemSelected = currentLevel.currentItemSelected;
+    let cursorY = -height;
+    if (currentItemSelected === 0) {
+      cursorY = currentLevel.item1Y;
+    } else if (currentItemSelected === 1) {
+      cursorY = currentLevel.item2Y;
+    }
+
+    rect(
+      CURSOR_X - CURSOR_WIDTH / 2,
+      cursorY - CURSOR_HEIGHT / 2,
+      CURSOR_WIDTH,
+      CURSOR_HEIGHT
+    );
     pop();
   }
 
