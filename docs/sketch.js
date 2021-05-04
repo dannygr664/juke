@@ -1,12 +1,5 @@
 /// <reference path="TSDef/p5.global-mode.d.ts" />
 
-/**
- * CONTROLS:
- * - Left/Right arrow key to move
- * - Space to jump
- * - 1 to cycle through parts
- */
-
 let TITLE_GENRE = 'City';
 
 let audioFilePaths = [];
