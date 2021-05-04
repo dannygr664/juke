@@ -99,8 +99,6 @@ function wakeUp() {
 function draw() {
   background(backgroundColor);
 
-  //animationController.drawBackgroundSoundAnimations();
-
   if (isAwake) {
     if (!isPaused) {
       audioManager.update();
@@ -139,7 +137,6 @@ function draw() {
       }
 
       fluidManager.drawFluids();
-      //animationController.drawForegroundSoundAnimations();
       jukeboxManager.drawJukeboxes();
       platformManager.drawPlatforms();
 
