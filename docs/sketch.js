@@ -181,6 +181,9 @@ function handleBorderCollisions() {
 
 function handleCollisionsAndJumping() {
   if (player.sprite.collide(platformManager.platforms)) {
+    if (player.sprite.getSpeed() === 0) {
+      player.sprite.setSpeed(platformManager.baseSpeed * audioManager.soundSpeed, 180);
+    }
     player.gravitySpeed = 0;
     if (keyDown(' ')) {
       player.jump();
