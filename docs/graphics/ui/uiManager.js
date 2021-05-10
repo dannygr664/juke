@@ -359,7 +359,7 @@ class UIManager {
 
     let soundSpeedFillColor = color(hue(backgroundColor), soundSpeedFillSaturation, soundSpeedFillBrightness, 100);
     fill(soundSpeedFillColor);
-    let rectWidth = map(audioManager.soundSpeed, 0.01, 4, 0, 200);
+    let rectWidth = map(audioManager.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX, 0, 200);
     rect(70, 35, rectWidth, 20);
     let currentLevelNumber = levelManager.getCurrentLevelNumber();
     stroke(fillColor);
