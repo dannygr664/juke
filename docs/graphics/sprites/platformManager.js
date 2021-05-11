@@ -35,9 +35,12 @@ class PlatformManager {
       this.platformHeight
     );
     platform.shapeColor = this.platformColor;
-    if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
-      platform.setSpeed(this.baseSpeed, 180);
+    if (levelManager.getCurrentLevel().genre === TITLE_GENRE) {
+      this.baseSpeed = 0;
+    } else {
+      this.baseSpeed = DEFAULT_BASE_PLATFORM_SPEED;
     }
+    platform.setSpeed(this.baseSpeed, 180);
     platform.setDefaultCollider();
     this.platforms.add(platform);
     return platform;
