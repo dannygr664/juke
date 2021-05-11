@@ -28,7 +28,8 @@ class AudioManager {
   constructor() {
     soundFormats('wav', 'mp3');
     this.getAudioFilePaths();
-    this.sounds = [];
+    this.sounds = {};
+    this.numberOfSoundsLoaded = 0;
     this.levelSounds = [];
     this.waitingToChange = false;
   }
@@ -101,10 +102,21 @@ class AudioManager {
   loadSounds() {
     let audioFilePaths = this.audioFilePaths;
     for (let i = 0; i < audioFilePaths.length; i++) {
-      let sound = loadSound(audioFilePaths[i]);
-      sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePaths[i]);
-      this.sounds.push(sound);
+      this.loadSoundFromPathIndex(i);
     }
+  }
+
+  loadSoundFromPathIndex(i) {
+    let audioFilePath = this.audioFilePaths[i];
+    loadSound(audioFilePath, (sound) => {
+      sound.soundInfo = AudioFilePathParser.parseFilePath(audioFilePath);
+      this.sounds[i] = sound;
+      this.numberOfSoundsLoaded++;
+      if (Object.keys(this.sounds).length === this.audioFilePaths.length) {
+        this.sounds = Object.values(this.sounds);
+        isLoaded = true;
+      }
+    });
   }
 
   assignSoundAnimations() {
@@ -126,6 +138,11 @@ class AudioManager {
     if (!player.isReviving) {
       jukeboxManager.didPlayerFall = false;
     }
+  }
+
+  setupAudio() {
+    this.loadFilter();
+    this.loadReverb();
   }
 
   loadFilter() {

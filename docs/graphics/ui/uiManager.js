@@ -22,7 +22,9 @@ class UIManager {
 
   drawUI() {
     if (levelManager.getCurrentLevel().genre === TITLE_GENRE) {
-      if (!isAwake) {
+      if (!isLoaded) {
+        this.drawLoadingScreen();
+      } else if (!isAwake) {
         this.drawPrestartScreen();
       } else {
         this.drawMainMenu();
@@ -30,6 +32,41 @@ class UIManager {
     } else {
       this.drawGameUI();
     }
+  }
+
+  drawLoadingScreen() {
+    push();
+    // const TEXT_SIZE = height / 15;
+    // fill(ColorScheme.BLACK);
+    // textAlign(CENTER, CENTER);
+    // textFont('HelveticaNeue-Thin');
+    // textSize(TEXT_SIZE);
+    //text('LOADING...', width / 2, height / 2);
+
+    stroke(ColorScheme.BLACK);
+    fill(ColorScheme.CLEAR);
+    rect(width / 2 - (width / 8), height / 2 - (height / 80), width / 4, height / 40);
+    noStroke();
+    fill(ColorScheme.BLACK);
+    rect(width / 2 - (width / 8), height / 2 - (height / 80), (audioManager.numberOfSoundsLoaded / audioManager.audioFilePaths.length) * (width / 4), height / 40);
+
+    // let threshold = floor(this.titleBounds.w * (audioManager.numberOfSoundsLoaded / audioManager.audioFilePaths.length));
+
+    // for (let i = 0; i < this.titlePoints.length; i++) {
+    //   push();
+    //   stroke(0);
+    //   strokeWeight(1);
+    //   let point = this.titlePoints[i];
+    //   if (point.x < threshold) {
+    //     point.platformWidth = 15;
+    //   } else {
+    //     point.platformWidth = 5;
+    //   }
+    //   line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
+    //   pop();
+    // }
+
+    pop();
   }
 
   drawPrestartScreen() {

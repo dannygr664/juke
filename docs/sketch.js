@@ -29,7 +29,6 @@ function preload() {
   audioManager = new AudioManager();
   animationController = new AnimationController();
 
-  audioManager.loadSounds();
   gameTitleFont = loadFont('graphics/fonts/Zapfino.ttf');
   titleFont = loadFont('graphics/fonts/HelveticaNeue-UltraLight.ttf');
   itemFont = loadFont('graphics/fonts/HelveticaNeue-Thin.ttf');
@@ -42,7 +41,9 @@ function setup() {
     return !(e.keyCode == 32);
   };
 
-  isLoaded = true;
+  isLoaded = false;
+
+  audioManager.loadSounds();
 
   isPaused = false;
 
