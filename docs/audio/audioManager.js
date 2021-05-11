@@ -462,7 +462,9 @@ class AudioManager {
 
   stopSounds() {
     let sound = this.getCurrentSound();
-    sound.amp(0, this.volumeRampTime);
-    sound.stop();
+    if (sound.isPlaying()) {
+      sound.amp(0, this.volumeRampTime);
+      sound.stop();
+    }
   }
 }
