@@ -448,36 +448,39 @@ function keyPressed() {
 
 
 function mousePressed() {
-  if (!isAwake) {
-    wakeUp();
-  } else if (currentLevel.genre === TITLE_GENRE && (currentLevel.currentScreen === 0 || currentLevel.currentScreen === 3)) {
-    currentSelection = (currentLevel.screenToMenuItems[currentLevel.currentScreen])[currentLevel.currentItemSelected];
-    if (currentLevel.currentScreen === 0) {
-      switch (currentSelection) {
-        case 'Play':
-          currentLevel.currentScreen = 3;
-          break;
-        case 'How To Play':
-          player.changeLevel();
-          platformManager.changeLevel();
-          currentLevel.currentScreen = 1;
-          break;
-        case 'Credits':
-          currentLevel.currentScreen = 2;
-          break;
-      }
-    } else if (currentLevel.currentScreen === 3) {
-      switch (currentSelection) {
-        case 'Single Player':
-          changeLevel(1);
-          break;
-        case 'Multiplayer':
-          changeLevel(1);
-          break;
+  if (isLoaded) {
+    if (!isAwake) {
+      wakeUp();
+    } else if (currentLevel.genre === TITLE_GENRE && (currentLevel.currentScreen === 0 || currentLevel.currentScreen === 3)) {
+      currentSelection = (currentLevel.screenToMenuItems[currentLevel.currentScreen])[currentLevel.currentItemSelected];
+      if (currentLevel.currentScreen === 0) {
+        switch (currentSelection) {
+          case 'Play':
+            currentLevel.currentScreen = 3;
+            break;
+          case 'How To Play':
+            player.changeLevel();
+            platformManager.changeLevel();
+            currentLevel.currentScreen = 1;
+            break;
+          case 'Credits':
+            currentLevel.currentScreen = 2;
+            break;
+        }
+      } else if (currentLevel.currentScreen === 3) {
+        switch (currentSelection) {
+          case 'Single Player':
+            changeLevel(1);
+            break;
+          case 'Multiplayer':
+            startMultiplayerMode();
+            break;
+        }
       }
     }
   }
 }
+
 
 function mouseMoved() {
   if (isAwake && currentLevel.genre === TITLE_GENRE) {
