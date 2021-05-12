@@ -29,6 +29,11 @@ class Player {
     this.gravityForce = DEFAULT_GRAVITY_FORCE;
     this.gravitySpeed = 0;
     this.color = levelManager.getCurrentLevel().playerColor;
+    this.oldColor = this.color;
+    this.newColor = this.color;
+    this.playerColorFadeTimer = 0;
+    this.playerColorFadeTime = 0;
+    this.inFluid = false;
     this.strokeColor = ColorScheme.CLEAR;
     this.energy = levelManager.getCurrentLevel().maxEnergy;
     this.sprite.shapeColor = this.color
@@ -93,9 +98,24 @@ class Player {
     pop();
   }
 
-  updatePlayerColor(newColor) {
-    this.color = newColor;
-    this.sprite.shapeColor = this.color;
+  triggerUpdatePlayerColor(newColor, playerColorFadeTime) {
+    if (playerColorFadeTime > 0) {
+      this.newColor = newColor;
+      this.playerColorFadeTime = playerColorFadeTime;
+      this.playerColorFadeTimer = playerColorFadeTime;
+    } else {
+      this.sprite.shapeColor = newColor;
+    }
+  }
+
+  updatePlayerColor() {
+    if (this.playerColorFadeTimer > 0) {
+      this.color = lerpColor(this.newColor, this.oldColor, map(this.playerColorFadeTimer, 0, this.playerColorFadeTime, 0, 1));
+      this.sprite.shapeColor = this.color;
+      this.playerColorFadeTimer--;
+    } else if (this.newColor !== this.oldColor) {
+      this.oldColor = this.newColor;
+    }
   }
 
   updatePlayerStrokeColor(newColor) {

@@ -19,6 +19,10 @@ class PlatformManager {
     this.platformSpacing = width / 7;
     this.beatTimer = 0;
     this.platformColor = levelManager.getCurrentLevel().platformColor;
+    this.oldPlatformColor = this.platformColor;
+    this.newPlatformColor = this.platformColor;
+    this.platformColorFadeTime = 0;
+    this.platformColorFadeTimer = 0;
 
     startingPlatformWidth = width / 1.5;
   }
@@ -173,14 +177,32 @@ class PlatformManager {
 
   changeLevel() {
     this.platforms.removeSprites();
-    this.updatePlatformColor(levelManager.getCurrentLevel().platformColor);
+    this.triggerUpdatePlatformColor(levelManager.getCurrentLevel().platformColor, 0);
     this.createInitialPlatform();
   }
 
-  updatePlatformColor(newColor) {
-    this.platformColor = newColor;
-    for (let i = 0; i < this.platforms.size(); i++) {
-      this.platforms[i].shapeColor = this.platformColor;
+  triggerUpdatePlatformColor(newColor, platformColorFadeTime) {
+    if (platformColorFadeTime > 0) {
+      this.newPlatformColor = newColor;
+      this.platformColorFadeTimer = platformColorFadeTime;
+      this.platformColorFadeTime = platformColorFadeTime;
+    } else {
+      this.platformColor = newColor;
+      for (let i = 0; i < this.platforms.size(); i++) {
+        this.platforms[i].shapeColor = newColor;
+      }
+    }
+  }
+
+  updatePlatformColor() {
+    if (this.platformColorFadeTimer > 0) {
+      this.platformColor = lerpColor(this.newPlatformColor, this.oldPlatformColor, map(this.platformColorFadeTimer, 0, this.platformColorFadeTime, 0, 1));
+      for (let i = 0; i < this.platforms.size(); i++) {
+        this.platforms[i].shapeColor = this.platformColor;
+      }
+      this.platformColorFadeTimer--;
+    } else if (this.newPlatformColor !== this.oldPlatformColor) {
+      this.oldPlatformColor = this.newPlatformColor;
     }
   }
 }

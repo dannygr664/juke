@@ -58,6 +58,10 @@ function setup() {
 
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
+  oldBackgroundColor = backgroundColor;
+  newBackgroundColor = backgroundColor;
+  backgroundColorFadeTimer = 0;
+  backgroundColorFadeTime = 0;
 
   audioManager.loadFilter();
   audioManager.loadReverb();
@@ -98,6 +102,14 @@ function wakeUp() {
 
 
 function draw() {
+  if (backgroundColorFadeTimer > 0) {
+    backgroundColor = lerpColor(newBackgroundColor, oldBackgroundColor, map(backgroundColorFadeTimer, 0, backgroundColorFadeTime, 0, 1));
+    backgroundColorFadeTimer--;
+  } else if (newBackgroundColor !== oldBackgroundColor) {
+    oldBackgroundColor = newBackgroundColor;
+    backgroundColor = newBackgroundColor;
+  }
+
   background(backgroundColor);
 
   if (isAwake) {
@@ -127,15 +139,18 @@ function draw() {
 
           let newEnergy = player.energy + 0.05;
           player.energy = min(newEnergy, currentLevel.maxEnergy);
-          player.updatePlayerColor(color(
+          player.triggerUpdatePlayerColor(color(
             hue(player.color),
             saturation(player.color),
             brightness(player.color),
             map(player.energy, 0, currentLevel.maxEnergy, 0, 100)
-          ));
+          ), 0);
           handleFalling();
         }
       }
+
+      player.updatePlayerColor();
+      platformManager.updatePlatformColor();
 
       fluidManager.drawFluids();
       jukeboxManager.drawJukeboxes();
@@ -193,8 +208,15 @@ function handleCollisionsAndJumping() {
 
   let currentLevel = levelManager.getCurrentLevel();
 
-  if (!player.sprite.overlap(fluidManager.fluids, currentLevel.handleFluidEnter)) {
-    currentLevel.handleFluidExit();
+  if (!player.inFluid) {
+    if (player.sprite.overlap(fluidManager.fluids, currentLevel.handleFluidEnter)) {
+      player.inFluid = true;
+    }
+  } else if (!player.sprite.overlap(fluidManager.fluids)) {
+    if (player.inFluid) {
+      currentLevel.handleFluidExit();
+      player.inFluid = false;
+    }
   }
 
   player.sprite.overlap(jukeboxManager.jukeboxes, currentLevel.handleJukeboxEnter);
@@ -284,16 +306,21 @@ function handlePausing() {
 }
 
 
-function updateBackgroundBrightness(newBrightness) {
-  let currentBgColor = backgroundColor;
+function updateBackgroundBrightness(newBrightness, fadeTime) {
+  let currentBgColor = oldBackgroundColor;
   let currentHue = hue(currentBgColor);
   let currentSat = saturation(currentBgColor);
-  backgroundColor = color(currentHue, currentSat, newBrightness);
+  newBackgroundColor = color(currentHue, currentSat, newBrightness);
+
+  if (fadeTime > 0) {
+    backgroundColorFadeTime = fadeTime;
+    backgroundColorFadeTimer = fadeTime;
+  }
 }
 
 
-function updateBackgroundHue(hueChange, saturationChange) {
-  let currentBgColor = backgroundColor;
+function updateBackgroundHue(hueChange, saturationChange, fadeTime) {
+  let currentBgColor = oldBackgroundColor;
   let currentHue = hue(currentLevel.initialBackgroundColor);
   let currentBrightness = brightness(currentBgColor);
   let newHue = currentHue + hueChange;
@@ -308,7 +335,12 @@ function updateBackgroundHue(hueChange, saturationChange) {
     saturation += saturationChange;
   }
 
-  backgroundColor = color(newHue, saturation, currentBrightness);
+  newBackgroundColor = color(newHue, saturation, currentBrightness);
+
+  if (fadeTime > 0) {
+    backgroundColorFadeTime = fadeTime;
+    backgroundColorFadeTimer = fadeTime;
+  }
 }
 
 

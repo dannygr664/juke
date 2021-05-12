@@ -234,7 +234,7 @@ class AudioManager {
       player.energy -= VOLUME_ENERGY_COST;
     }
 
-    this.updateVolume(this.volume);
+    this.updateVolume(this.volume, 0);
   }
 
   handleSoundSpeedControls() {
@@ -254,17 +254,17 @@ class AudioManager {
       player.energy -= SOUND_SPEED_ENERGY_COST;
     }
 
-    this.updateSoundSpeed(this.soundSpeed);
+    this.updateSoundSpeed(this.soundSpeed, 0);
   }
 
-  updateVolume(newVolume) {
+  updateVolume(newVolume, colorFadeTime) {
     this.volume = newVolume;
     this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
     this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.amp(this.volume, this.volumeRampTime);
     });
 
-    updateBackgroundBrightness(map(this.volume, VOLUME_MIN, VOLUME_MAX, 0, 100));
+    updateBackgroundBrightness(map(this.volume, VOLUME_MIN, VOLUME_MAX, 0, 100), colorFadeTime);
 
     let volumeScaleFactor = this.volume / INITIAL_VOLUME;
     let sizeScaleFactor;
@@ -278,7 +278,7 @@ class AudioManager {
     player.sprite.height = DEFAULT_PLAYER_HEIGHT * sizeScaleFactor;
   }
 
-  updateSoundSpeed(newSpeed) {
+  updateSoundSpeed(newSpeed, colorFadeTime) {
     this.soundSpeed = newSpeed;
     this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
     this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
@@ -307,7 +307,7 @@ class AudioManager {
       hueChange = map(this.soundSpeed, 2, 4, BLUE_ANCHOR, GREEN_ANCHOR);
     }
 
-    updateBackgroundHue(hueChange, saturationChange);
+    updateBackgroundHue(hueChange, saturationChange, colorFadeTime);
   }
 
   updateReverb(newReverb) {
@@ -453,8 +453,8 @@ class AudioManager {
           this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
         }
         this.toggleSound(this.currentSound);
-        player.updatePlayerColor(backgroundColor);
-        platformManager.updatePlatformColor(backgroundColor);
+        player.triggerUpdatePlayerColor(backgroundColor, 60);
+        platformManager.triggerUpdatePlatformColor(backgroundColor, 60);
         this.waitingToChange = false;
       }
     }
