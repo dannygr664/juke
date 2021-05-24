@@ -5,7 +5,6 @@ let TITLE_GENRE = 'City';
 let audioFilePaths = [];
 let sounds = [];
 let audioManager;
-let midiManager;
 
 let animationController;
 let uiManager;
@@ -88,9 +87,6 @@ function wakeUp() {
   platformManager = new PlatformManager();
   fluidManager = new FluidManager();
   jukeboxManager = new JukeboxManager();
-
-  // MIDIManager.initialize();
-  // MIDIManager.connectToMIDIDevice();
 
   audioManager.assignSoundAnimations();
   audioManager.assignSoundCues();
@@ -394,7 +390,7 @@ function keyPressed() {
                 changeLevel(1);
                 break;
               case 'Multiplayer':
-                changeLevel(1);
+                startMultiplayerMode();
                 break;
             }
           }
@@ -479,6 +475,13 @@ function mousePressed() {
       }
     }
   }
+}
+
+
+function startMultiplayerMode() {
+  MIDIManager.initialize();
+  MIDIManager.connectToMIDIDevice();
+  changeLevel(1);
 }
 
 
