@@ -283,6 +283,7 @@ function changeLevel(level) {
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
+  audioManager.updateVolume(INITIAL_VOLUME, 0);
 
   if (currentLevel.genre === TITLE_GENRE) {
     currentLevel.currentScreen = 0;
@@ -307,6 +308,8 @@ function updateBackgroundBrightness(newBrightness, fadeTime) {
   let currentHue = hue(currentBgColor);
   let currentSat = saturation(currentBgColor);
   newBackgroundColor = color(currentHue, currentSat, newBrightness);
+
+  console.log(newBrightness);
 
   if (fadeTime > 0) {
     backgroundColorFadeTime = fadeTime;
