@@ -9,9 +9,6 @@ class MainMenu {
       3: ['Single Player', 'Multiplayer']
     };
     this.currentItemSelected = 0;
-    this.item1Y = 9 * height / 16;
-    this.item2Y = 11 * height / 16;
-    this.item3Y = 13 * height / 16;
     this.currentScreen = 0;
 
     this.initialDrawMode = 0;
@@ -25,6 +22,10 @@ class MainMenu {
     ];
     this.defaultJukeboxAnimationColor = ColorScheme.BLACK;
     this.maxEnergy = 1200;
+  }
+
+  getYPosOfItem(i) {
+    return ((((i - 1) * 2) + 9) * height / 16);
   }
 
   handleFluidEnter(_, fluid) {

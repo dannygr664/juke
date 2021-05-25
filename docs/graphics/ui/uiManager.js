@@ -92,6 +92,8 @@ class UIManager {
       this.drawCreditsScreen();
     } else if (currentScreen === 3) {
       this.drawModeSelectionScreen();
+    } else if (currentScreen === 4) {
+      this.drawMIDIControllerSelectionScreen(midiManager.controllers);
     }
   }
 
@@ -125,19 +127,19 @@ class UIManager {
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
     this.drawUpArrow(TEXT_X, UP_ARROW_Y);
-    text('Play', TEXT_X, currentLevel.item1Y);
-    text('How To Play', TEXT_X, currentLevel.item2Y);
-    text('Credits', TEXT_X, currentLevel.item3Y);
+    text('Play', TEXT_X, currentLevel.getYPosOfItem(1));
+    text('How To Play', TEXT_X, currentLevel.getYPosOfItem(2));
+    text('Credits', TEXT_X, currentLevel.getYPosOfItem(3));
     this.drawDownArrow(TEXT_X, DOWN_ARROW_Y);
 
     let currentItemSelected = currentLevel.currentItemSelected;
     let cursorY = -height;
     if (currentItemSelected === 0) {
-      cursorY = currentLevel.item1Y;
+      cursorY = currentLevel.getYPosOfItem(1);
     } else if (currentItemSelected === 1) {
-      cursorY = currentLevel.item2Y;
+      cursorY = currentLevel.getYPosOfItem(2);
     } else if (currentItemSelected === 2) {
-      cursorY = currentLevel.item3Y;
+      cursorY = currentLevel.getYPosOfItem(3);
     }
 
     rect(
@@ -276,16 +278,16 @@ class UIManager {
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
     this.drawUpArrow(TEXT_X, UP_ARROW_Y);
-    text('Single Player', TEXT_X, currentLevel.item1Y);
-    text('Multiplayer', TEXT_X, currentLevel.item2Y);
-    this.drawDownArrow(TEXT_X, currentLevel.item3Y);
+    text('Single Player', TEXT_X, currentLevel.getYPosOfItem(1));
+    text('Multiplayer', TEXT_X, currentLevel.getYPosOfItem(2));
+    this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem(3));
 
     let currentItemSelected = currentLevel.currentItemSelected;
     let cursorY = -height;
     if (currentItemSelected === 0) {
-      cursorY = currentLevel.item1Y;
+      cursorY = currentLevel.getYPosOfItem(1);
     } else if (currentItemSelected === 1) {
-      cursorY = currentLevel.item2Y;
+      cursorY = currentLevel.getYPosOfItem(2);
     }
 
     rect(
@@ -294,6 +296,62 @@ class UIManager {
       CURSOR_WIDTH,
       CURSOR_HEIGHT
     );
+    pop();
+  }
+
+  drawMIDIControllerSelectionScreen(controllers) {
+    const ITEM_TEXT_SIZE = height / 15;
+    const CONTROLLER_TEXT_SIZE = height / 30;
+    const TEXT_X = width / 2;
+    const CURSOR_X = width / 5;
+
+    const DOWN_ARROW_Y = 29 * height / 32;
+
+    let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
+    let rms = sound.amplitudeAnalyzer.getLevel();
+
+    for (let i = 0; i < this.titlePoints.length; i++) {
+      push();
+      stroke(0);
+      strokeWeight(1);
+      let point = this.titlePoints[i];
+      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+        point.platformWidth = random(5, 15);
+      }
+      line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
+      pop();
+    }
+
+    let currentLevel = levelManager.getCurrentLevel();
+
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(ITEM_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+
+    if (controllers.length === 0) {
+      textSize(CONTROLLER_TEXT_SIZE);
+      text('Please connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
+    } else {
+      text('Please select a controller.', TEXT_X, currentLevel.getYPosOfItem(0.5));
+      this.drawUpArrow(TEXT_X, currentLevel.getYPosOfItem(1));
+      textSize(CONTROLLER_TEXT_SIZE);
+      for (let i = 0; i < controllers.length; i++) {
+        text(controllers[i], TEXT_X, currentLevel.getYPosOfItem((i * 0.5) + 1.5));
+      }
+      this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem((controllers.length * 0.5) + 1.5));
+
+      let currentItemSelected = currentLevel.currentItemSelected;
+      let cursorY = currentLevel.getYPosOfItem((currentItemSelected * 0.5) + 1.5);
+
+      rect(
+        CURSOR_X - CURSOR_WIDTH / 2,
+        cursorY - CURSOR_HEIGHT / 2,
+        CURSOR_WIDTH,
+        CURSOR_HEIGHT
+      );
+    }
+
     pop();
   }
 

@@ -5,6 +5,7 @@ let TITLE_GENRE = 'City';
 let audioFilePaths = [];
 let sounds = [];
 let audioManager;
+let midiManager;
 
 let animationController;
 let uiManager;
@@ -26,6 +27,7 @@ function preload() {
   isLoaded = false;
   isAwake = false;
   audioManager = new AudioManager();
+  midiManager = new MIDIManager();
   animationController = new AnimationController();
 
   gameTitleFont = loadFont('graphics/fonts/Zapfino.ttf');
@@ -283,7 +285,9 @@ function changeLevel(level) {
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
-  audioManager.updateVolume(INITIAL_VOLUME, 0);
+  if (currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === 1) {
+    audioManager.updateVolume(INITIAL_VOLUME, 0);
+  }
 
   if (currentLevel.genre === TITLE_GENRE) {
     currentLevel.currentScreen = 0;
@@ -308,8 +312,6 @@ function updateBackgroundBrightness(newBrightness, fadeTime) {
   let currentHue = hue(currentBgColor);
   let currentSat = saturation(currentBgColor);
   newBackgroundColor = color(currentHue, currentSat, newBrightness);
-
-  console.log(newBrightness);
 
   if (fadeTime > 0) {
     backgroundColorFadeTime = fadeTime;
@@ -393,7 +395,7 @@ function keyPressed() {
                 changeLevel(1);
                 break;
               case 'Multiplayer':
-                startMultiplayerMode();
+                changeToControllerSelectionScreen();
                 break;
             }
           }
@@ -401,6 +403,31 @@ function keyPressed() {
           currentLevel.currentScreen = 0;
           currentLevel.currentItemSelected = 0;
         }
+
+        // MIDI Controller Selection screen
+      } else if (currentLevel.currentScreen === 4) {
+        let menuItems = midiManager.controllers;
+        if (menuItems.length > 0) {
+          if (keyCode === DOWN_ARROW) {
+            currentLevel.currentItemSelected =
+              (currentLevel.currentItemSelected + 1) % menuItems.length;
+          } else if (keyCode === UP_ARROW) {
+            if (currentLevel.currentItemSelected === 0) {
+              currentLevel.currentItemSelected = menuItems.length - 1;
+            } else {
+              currentLevel.currentItemSelected =
+                (currentLevel.currentItemSelected - 1) % menuItems.length;
+            }
+          } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
+            startMultiplayerMode(menuItems[currentLevel.currentItemSelected]);
+          }
+        }
+
+        if (keyCode === ESCAPE) {
+          currentLevel.currentScreen = 3;
+          currentLevel.currentItemSelected = 0;
+        }
+
         // How To Play
       } else if (currentLevel.currentScreen === 1) {
         if (keyCode === ESCAPE) {
@@ -472,41 +499,69 @@ function mousePressed() {
             changeLevel(1);
             break;
           case 'Multiplayer':
-            startMultiplayerMode();
+            changeToControllerSelectionScreen();
             break;
         }
       }
+    } else if (currentLevel.currentScreen === 4 && midiManager.controllers.length > 0) {
+      startMultiplayerMode(midiManager.controllers[currentLevel.currentItemSelected]);
     }
   }
 }
 
 
-function startMultiplayerMode() {
-  MIDIManager.initialize();
-  MIDIManager.connectToMIDIDevice();
+function changeToControllerSelectionScreen() {
+  currentLevel.currentScreen = 4;
+  currentLevel.currentItemSelected = 0;
+  midiManager.getAvailableMIDIDevices();
+}
+
+
+function startMultiplayerMode(controller) {
+  if (platformManager.mode !== MIDI_MODE) {
+    platformManager.enableMIDIMode();
+  }
+  midiManager.setInputController(controller);
+  midiManager.initializeOscillator();
   changeLevel(1);
 }
 
 
 function mouseMoved() {
   if (isAwake && currentLevel.genre === TITLE_GENRE) {
-    const DISTANCE_BETWEEN_ITEMS = currentLevel.item2Y - currentLevel.item1Y;
     if (currentLevel.currentScreen === 0) {
       // Main Menu
-      if (mouseY <= currentLevel.item1Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      const DISTANCE_BETWEEN_ITEMS = currentLevel.getYPosOfItem(2) - currentLevel.getYPosOfItem(1);
+      if (mouseY <= currentLevel.getYPosOfItem(1) + (DISTANCE_BETWEEN_ITEMS / 2)) {
         currentLevel.currentItemSelected = 0;
-      } else if (mouseY <= currentLevel.item2Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      } else if (mouseY <= currentLevel.getYPosOfItem(2) + (DISTANCE_BETWEEN_ITEMS / 2)) {
         currentLevel.currentItemSelected = 1;
       } else {
         currentLevel.currentItemSelected = 2;
       }
     } else if (currentLevel.currentScreen === 3) {
       // Mode selection menu
-      if (mouseY <= currentLevel.item1Y + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      const DISTANCE_BETWEEN_ITEMS = currentLevel.getYPosOfItem(2) - currentLevel.getYPosOfItem(1);
+      if (mouseY <= currentLevel.getYPosOfItem(1) + (DISTANCE_BETWEEN_ITEMS / 2)) {
         currentLevel.currentItemSelected = 0;
       } else {
         currentLevel.currentItemSelected = 1;
       }
+    } else if (currentLevel.currentScreen === 4) {
+      // Controller selection menu
+      const DISTANCE_BETWEEN_ITEMS = currentLevel.getYPosOfItem(2) - currentLevel.getYPosOfItem(1.5);
+      let isLastItemSelected = true;
+      for (let i = 0; i < midiManager.controllers.length; i++) {
+        if (mouseY <= currentLevel.getYPosOfItem((i * 0.5) + 1.5) + (DISTANCE_BETWEEN_ITEMS / 2)) {
+          currentLevel.currentItemSelected = i;
+          isLastItemSelected = false;
+          break;
+        }
+      }
+      if (isLastItemSelected) {
+        currentLevel.currentItemSelected = midiManager.controllers.length - 1;
+      }
+
     }
   }
 }
