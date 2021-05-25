@@ -64,20 +64,6 @@ class PlatformManager {
     return platform;
   }
 
-  initializeMIDIPlatforms(numberOfPlatforms) {
-    for (let i = 0; i < numberOfPlatforms; i++) {
-      let platform = createSprite(
-        -this.platformWidth / 2,
-        (i + 0.5) * height / numberOfPlatforms,
-        this.plaformWidth,
-        this.platformHeight
-      );
-      platform.shapeColor = this.platformColor;
-      platform.setSpeed(this.baseSpeed, 0);
-      this.platforms.add(platform);
-    }
-  }
-
   managePlatforms() {
     if (this.mode === PLATFORMER_MODE) {
       let oldBeatTimer = this.beatTimer;
