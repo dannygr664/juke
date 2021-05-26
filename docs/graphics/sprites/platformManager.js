@@ -14,7 +14,7 @@ class PlatformManager {
     this.platforms = new Group();
     this.platformYMin = height / 4;
     this.platformYMax = height;
-    this.platformWidth = width / 8;
+    this.platformWidth = 100;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
     this.platformSpacing = width / 7;
     this.beatTimer = 0;
