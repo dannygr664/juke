@@ -75,11 +75,7 @@ class MIDIManager {
               if (eventType === NOTE_ON && velocity > 0) {
                 this.spawningPlatforms[note] = platformManager.createPlatformAtHeight(map(note, NOTE_MIN, NOTE_MAX, height, 0));
 
-                if (this.osc.started) {
-                  this.playNote(this.osc2, frequency);
-                } else {
-                  this.playNote(this.osc, frequency);
-                }
+                this.synth.noteAttack(frequency, velocity);
               }
             }
 
@@ -88,11 +84,7 @@ class MIDIManager {
               platformManager.terminateMIDIPlatform(platform);
               this.spawningPlatforms[note] = null;
 
-              if (this.osc.started) {
-                this.stopNote(this.osc);
-              } else if (this.osc2.started) {
-                this.stopNote(this.osc2);
-              }
+              this.synth.noteRelease(frequency);
             }
           }
         } else {
@@ -102,21 +94,7 @@ class MIDIManager {
     }
   }
 
-  initializeOscillator() {
-    this.osc = new p5.Oscillator('sine');
-    this.osc2 = new p5.Oscillator('sine');
-    this.osc.amp(0.5, 0.1);
-    this.osc2.amp(0.5, 0.1);
-  }
-
-  playNote(osc, frequency) {
-    osc.freq(frequency, 0.1);
-    osc.start();
-  }
-
-  stopNote(osc) {
-    if (osc.started) {
-      osc.stop();
-    }
+  initializeSynth() {
+    this.synth = new p5.PolySynth();
   }
 }

@@ -525,7 +525,7 @@ function startMultiplayerMode(controller) {
     platformManager.enableMIDIMode();
   }
   midiManager.setInputController(controller);
-  midiManager.initializeOscillator();
+  midiManager.initializeSynth();
   changeLevel(1);
 }
 
