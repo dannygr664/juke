@@ -279,6 +279,9 @@ function changeLevel(level) {
   currentLevel = levelManager.getCurrentLevel();
   backgroundColor = currentLevel.initialBackgroundColor;
   player.changeLevel();
+  if (level === 0 && platformManager.mode === MIDI_MODE) {
+    platformManager.disableMIDIMode();
+  }
   platformManager.changeLevel();
   fluidManager.changeLevel();
   jukeboxManager.changeLevel();

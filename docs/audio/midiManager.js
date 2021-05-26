@@ -9,6 +9,7 @@ class MIDIManager {
   constructor() {
     this.controllers = [];
     this.midiAccess = null;
+    this.spawningPlatforms = {};
   }
 
   getMIDIAccess() {
@@ -63,22 +64,35 @@ class MIDIManager {
       for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
         // each time there is a midi message call the onMIDIMessage function
         if (input.value.name === controller) {
+          console.log(`Setting input controller to ${controller}`);
           input.value.onmidimessage = (message) => {
             let eventType = message.data[0];
             let note = message.data[1];
-            let frequency = this.midiNoteToFrequency(note);
+            let frequency = midiToFreq(note);
             let velocity = message.data[2];
 
             if (!isPaused) {
               if (eventType === NOTE_ON && velocity > 0) {
-                platformManager.createPlatformAtHeight(map(note, NOTE_MIN, NOTE_MAX, height, 0));
+                this.spawningPlatforms[note] = platformManager.createPlatformAtHeight(map(note, NOTE_MIN, NOTE_MAX, height, 0));
 
-                this.playNote(frequency);
+                if (this.osc.started) {
+                  this.playNote(this.osc2, frequency);
+                } else {
+                  this.playNote(this.osc, frequency);
+                }
               }
             }
 
             if (eventType === NOTE_OFF || velocity === 0) {
-              this.stopNote(frequency);
+              let platform = this.spawningPlatforms[note];
+              platformManager.terminateMIDIPlatform(platform);
+              this.spawningPlatforms[note] = null;
+
+              if (this.osc.started) {
+                this.stopNote(this.osc);
+              } else if (this.osc2.started) {
+                this.stopNote(this.osc2);
+              }
             }
           }
         } else {
@@ -88,21 +102,21 @@ class MIDIManager {
     }
   }
 
-  midiNoteToFrequency(note) {
-    return Math.pow(2, ((note - 69) / 12)) * 440;
-  }
-
   initializeOscillator() {
     this.osc = new p5.Oscillator('sine');
+    this.osc2 = new p5.Oscillator('sine');
     this.osc.amp(0.5, 0.1);
+    this.osc2.amp(0.5, 0.1);
   }
 
-  playNote(frequency) {
-    this.osc.freq(frequency, 0.1);
-    this.osc.start();
+  playNote(osc, frequency) {
+    osc.freq(frequency, 0.1);
+    osc.start();
   }
 
-  stopNote(frequency) {
-    this.osc.stop();
+  stopNote(osc) {
+    if (osc.started) {
+      osc.stop();
+    }
   }
 }

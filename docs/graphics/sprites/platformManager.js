@@ -14,7 +14,7 @@ class PlatformManager {
     this.platforms = new Group();
     this.platformYMin = height / 4;
     this.platformYMax = height;
-    this.platformWidth = width / 4;
+    this.platformWidth = width / 8;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
     this.platformSpacing = width / 7;
     this.beatTimer = 0;
@@ -29,6 +29,12 @@ class PlatformManager {
 
   enableMIDIMode() {
     this.mode = MIDI_MODE;
+    this.platformWidth = width * 2;
+  }
+
+  disableMIDIMode() {
+    this.mode = PLATFORMER_MODE;
+    this.platformWidth = width / 8;
   }
 
   createInitialPlatform() {
@@ -54,7 +60,7 @@ class PlatformManager {
     let platform = createSprite(
       width + this.platformWidth / 2,
       yPos,
-      this.plaformWidth,
+      this.platformWidth,
       this.platformHeight
     );
     platform.shapeColor = this.platformColor;
@@ -62,6 +68,27 @@ class PlatformManager {
     platform.setDefaultCollider();
     this.platforms.add(platform);
     return platform;
+  }
+
+  terminateMIDIPlatform(platform) {
+    if (platform) {
+      let platformIndex = this.platforms.indexOf(platform);
+
+      let newPlatformWidth = width - (platform.position.x - platform.width / 2);
+
+      let newPlatform = createSprite(
+        (width + (width - newPlatformWidth)) / 2,
+        platform.position.y,
+        newPlatformWidth,
+        this.platformHeight
+      );
+      this.platforms.get(platformIndex).remove();
+
+      newPlatform.shapeColor = this.platformColor;
+      newPlatform.setSpeed(this.baseSpeed, 180);
+      newPlatform.setDefaultCollider();
+      this.platforms.add(newPlatform);
+    }
   }
 
   managePlatforms() {
@@ -130,11 +157,15 @@ class PlatformManager {
   }
 
   handleFalling() {
-    this.pausePlatforms();
+    if (this.mode === PLATFORMER_MODE) {
+      this.pausePlatforms();
+    }
   }
 
   handleRevived() {
-    this.resumePlatforms();
+    if (this.mode === PLATFORMER_MODE) {
+      this.resumePlatforms();
+    }
   }
 
   handlePausing() {
