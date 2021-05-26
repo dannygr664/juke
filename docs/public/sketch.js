@@ -70,6 +70,8 @@ function setup() {
   uiManager = new UIManager();
 
   createBoundingRectangles();
+
+  socket = socket.io.connect('http://localhost:3000');
 }
 
 
