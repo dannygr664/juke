@@ -1,1 +1,32 @@
-{}
+{
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "juke",
+  "version": "1.0.0",
+  "description": "juke server",
+  "main": "server.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dannygr664/juke.git"
+  },
+  "keywords": [
+    "music",
+    "gaming",
+    "education",
+    "creation",
+    "platformer"
+  ],
+  "author": "Daniel Greenberg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dannygr664/juke/issues"
+  },
+  "homepage": "https://github.com/dannygr664/juke#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
