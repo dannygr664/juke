@@ -361,6 +361,23 @@ function handleUnpausing() {
 }
 
 
+function changeToControllerSelectionScreen() {
+  currentLevel.currentScreen = 4;
+  currentLevel.currentItemSelected = 0;
+  midiManager.getAvailableMIDIDevices();
+}
+
+
+function startMultiplayerMode(controller) {
+  if (platformManager.mode !== MIDI_MODE) {
+    platformManager.enableMIDIMode();
+  }
+  midiManager.setInputController(controller);
+  midiManager.initializeSynth();
+  changeLevel(1);
+}
+
+
 function keyPressed() {
   if (isLoaded && isAwake) {
     if (currentLevel.genre === TITLE_GENRE) {
@@ -512,23 +529,6 @@ function mousePressed() {
       startMultiplayerMode(midiManager.controllers[currentLevel.currentItemSelected]);
     }
   }
-}
-
-
-function changeToControllerSelectionScreen() {
-  currentLevel.currentScreen = 4;
-  currentLevel.currentItemSelected = 0;
-  midiManager.getAvailableMIDIDevices();
-}
-
-
-function startMultiplayerMode(controller) {
-  if (platformManager.mode !== MIDI_MODE) {
-    platformManager.enableMIDIMode();
-  }
-  midiManager.setInputController(controller);
-  midiManager.initializeSynth();
-  changeLevel(1);
 }
 
 
