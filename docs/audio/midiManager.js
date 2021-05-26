@@ -96,5 +96,6 @@ class MIDIManager {
 
   initializeSynth() {
     this.synth = new p5.PolySynth();
+    this.synth.setADSR(0.1, 0.1, 1, 0);
   }
 }
