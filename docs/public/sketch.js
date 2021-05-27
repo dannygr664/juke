@@ -1,5 +1,7 @@
 /// <reference path="TSDef/p5.global-mode.d.ts" />
 
+let socket;
+
 let TITLE_GENRE = 'City';
 
 let audioFilePaths = [];
@@ -11,6 +13,7 @@ let animationController;
 let uiManager;
 let levelManager;
 
+let playerRole;
 let player;
 let platformManager;
 let fluidManager;
@@ -23,9 +26,15 @@ const MIN_WIDTH = 800;
 const MAX_WIDTH = 900;
 const MIN_HEIGHT = 500;
 
+const GAMER = 0;
+const MUSICIAN = 1;
+
 function preload() {
   isLoaded = false;
   isAwake = false;
+  isMultiplayerMode = false;
+  controllerSelected = false;
+  playerRole = GAMER;
   audioManager = new AudioManager();
   midiManager = new MIDIManager();
   animationController = new AnimationController();
@@ -71,7 +80,8 @@ function setup() {
 
   createBoundingRectangles();
 
-  socket = socket.io.connect('http://localhost:3000');
+  socket = io();
+  socket.on('game start', startMultiplayerMode);
 }
 
 
@@ -117,7 +127,7 @@ function draw() {
       audioManager.update();
     }
 
-    if (currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === 1) {
+    if (currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === HOW_TO_PLAY_SCREEN) {
       if (!isPaused) {
         player.speed = player.baseSpeed * audioManager.soundSpeed;
         player.gravityForce = DEFAULT_GRAVITY_FORCE * map(audioManager.reverbLevel, 0, 1, 1, 0.4);
@@ -127,7 +137,7 @@ function draw() {
         if (player.isReviving) {
           revivingLoop();
         } else {
-          handleControls();
+          movementControls();
           handleCollisionsAndJumping();
 
           if (currentLevel.genre !== TITLE_GENRE) {
@@ -176,15 +186,20 @@ function createBoundingRectangles() {
 }
 
 
-function handleControls() {
-  if ((currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === 1) && !isPaused) {
-    if (keyIsDown(RIGHT_ARROW)) {
-      player.sprite.setSpeed(player.speed, 0);
-    } else if (keyIsDown(LEFT_ARROW)) {
-      player.sprite.setSpeed(player.speed, 180);
-    } else {
-      player.sprite.setSpeed(0, 0);
-    }
+function movementControls() {
+  if ((currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === HOW_TO_PLAY_SCREEN) && !isPaused && playerRole === GAMER) {
+    handleMovementControls(keyIsDown(RIGHT_ARROW), keyIsDown(LEFT_ARROW));
+  }
+}
+
+
+function handleMovementControls(isRightArrowDown, isLeftArrowDown) {
+  if (isRightArrowDown) {
+    player.sprite.setSpeed(player.speed, 0);
+  } else if (isLeftArrowDown) {
+    player.sprite.setSpeed(player.speed, 180);
+  } else {
+    player.sprite.setSpeed(0, 0);
   }
 }
 
@@ -201,7 +216,7 @@ function handleCollisionsAndJumping() {
       player.sprite.setSpeed(platformManager.baseSpeed * audioManager.soundSpeed, 180);
     }
     player.gravitySpeed = 0;
-    if (keyDown(' ')) {
+    if (playerRole === GAMER && keyDown(' ')) {
       player.jump();
     }
   }
@@ -244,17 +259,22 @@ function handleFalling() {
 function revivingLoop() {
   if (player.sprite.position.y < height / 6) {
     player.sprite.setSpeed(0, 270);
-    if (keyDown(' ')) {
-      player.isReviving = false;
-      player.sprite.shapeColor = player.color;
-      audioManager.handleRevived();
-      platformManager.handleRevived();
-      fluidManager.handleRevived();
-      jukeboxManager.handleRevived();
+    if (playerRole === GAMER && keyDown(' ')) {
+      handleRevived();
     } else {
-      handleControls();
+      movementControls();
     }
   }
+}
+
+
+function handleRevived() {
+  player.isReviving = false;
+  player.sprite.shapeColor = player.color;
+  audioManager.handleRevived();
+  platformManager.handleRevived();
+  fluidManager.handleRevived();
+  jukeboxManager.handleRevived();
 }
 
 
@@ -271,6 +291,7 @@ function incrementLevel() {
   audioManager.startSounds(currentLevel.genre);
 
   if (currentLevel.genre === TITLE_GENRE) {
+    isMultiplayerMode = false;
     audioManager.unloopCurrentSound();
   }
 }
@@ -290,12 +311,14 @@ function changeLevel(level) {
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
-  if (currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === 1) {
+  if (currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === HOW_TO_PLAY_SCREEN) {
     audioManager.updateVolume(INITIAL_VOLUME, 0);
   }
 
   if (currentLevel.genre === TITLE_GENRE) {
-    currentLevel.currentScreen = 0;
+    playerRole = GAMER;
+    isMultiplayerMode = false;
+    currentLevel.currentScreen = MAIN_MENU_SCREEN;
     audioManager.unloopCurrentSound();
   }
 }
@@ -362,18 +385,30 @@ function handleUnpausing() {
 
 
 function changeToControllerSelectionScreen() {
-  currentLevel.currentScreen = 4;
+  socket.emit('add player to room', playerRole);
+  currentLevel.currentScreen = CONTROLLER_SELECTION_SCREEN;
   currentLevel.currentItemSelected = 0;
-  midiManager.getAvailableMIDIDevices();
+  if (playerRole === MUSICIAN) {
+    midiManager.getAvailableMIDIDevices();
+  } else if (playerRole === GAMER) {
+    socket.emit('ready');
+  }
 }
 
 
-function startMultiplayerMode(controller) {
+function connectMIDIController(controller) {
+  midiManager.setInputController(controller);
+  midiManager.initializeSynth();
+}
+
+
+function startMultiplayerMode(gameSeed) {
+  randomSeed(0);
+  isMultiplayerMode = true;
   if (platformManager.mode !== MIDI_MODE) {
     platformManager.enableMIDIMode();
   }
-  midiManager.setInputController(controller);
-  midiManager.initializeSynth();
+
   changeLevel(1);
 }
 
@@ -381,113 +416,17 @@ function startMultiplayerMode(controller) {
 function keyPressed() {
   if (isLoaded && isAwake) {
     if (currentLevel.genre === TITLE_GENRE) {
-      // Main Menu
-      if (currentLevel.currentScreen === 0 || currentLevel.currentScreen === 3) {
-        let menuItems = currentLevel.screenToMenuItems[currentLevel.currentScreen];
-        if (keyCode === DOWN_ARROW) {
-          currentLevel.currentItemSelected =
-            (currentLevel.currentItemSelected + 1) % menuItems.length;
-        } else if (keyCode === UP_ARROW) {
-          if (currentLevel.currentItemSelected === 0) {
-            currentLevel.currentItemSelected = menuItems.length - 1;
-          } else {
-            currentLevel.currentItemSelected =
-              (currentLevel.currentItemSelected - 1) % menuItems.length;
-          }
-        } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
-          currentSelection = menuItems[currentLevel.currentItemSelected];
-
-          if (currentLevel.currentScreen === 0) {
-            switch (currentSelection) {
-              case 'Play':
-                currentLevel.currentScreen = 3;
-                break;
-              case 'How To Play':
-                player.changeLevel();
-                platformManager.changeLevel();
-                currentLevel.currentScreen = 1;
-                break;
-              case 'Credits':
-                currentLevel.currentScreen = 2;
-                break;
-            }
-          } else if (currentLevel.currentScreen === 3) {
-            switch (currentSelection) {
-              case 'Single Player':
-                changeLevel(1);
-                break;
-              case 'Multiplayer':
-                changeToControllerSelectionScreen();
-                break;
-            }
-          }
-        } else if (keyCode === ESCAPE && currentLevel.currentScreen === 3) {
-          currentLevel.currentScreen = 0;
-          currentLevel.currentItemSelected = 0;
-        }
-
-        // MIDI Controller Selection screen
-      } else if (currentLevel.currentScreen === 4) {
-        let menuItems = midiManager.controllers;
-        if (menuItems.length > 0) {
-          if (keyCode === DOWN_ARROW) {
-            currentLevel.currentItemSelected =
-              (currentLevel.currentItemSelected + 1) % menuItems.length;
-          } else if (keyCode === UP_ARROW) {
-            if (currentLevel.currentItemSelected === 0) {
-              currentLevel.currentItemSelected = menuItems.length - 1;
-            } else {
-              currentLevel.currentItemSelected =
-                (currentLevel.currentItemSelected - 1) % menuItems.length;
-            }
-          } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
-            startMultiplayerMode(menuItems[currentLevel.currentItemSelected]);
-          }
-        }
-
-        if (keyCode === ESCAPE) {
-          currentLevel.currentScreen = 3;
-          currentLevel.currentItemSelected = 0;
-        }
-
-        // How To Play
-      } else if (currentLevel.currentScreen === 1) {
-        if (keyCode === ESCAPE) {
-          if (isPaused) {
-            handleUnpausing();
-          } else {
-            handlePausing();
-          }
-          isPaused = !isPaused;
-        } else if (isPaused) {
-          if (keyCode === DELETE || keyCode === BACKSPACE) {
-            audioManager.stopSounds();
-            isPaused = !isPaused;
-            changeLevel(0);
-          }
-        }
-        // Credits or Mode Selection screen
-      } else if (currentLevel.currentScreen === 2) {
-        if (keyCode === ESCAPE) {
-          currentLevel.currentScreen = 0;
-          currentLevel.currentItemSelected = 0;
-        }
+      if (currentLevel.currentScreen === MAIN_MENU_SCREEN || currentLevel.currentScreen === MODE_SELECTION_SCREEN || currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
+        menuSelectionKeyPressed(key, keyCode);
+      } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN) {
+        controllerSelectionScreenKeyPressed(key, keyCode);
+      } else if (currentLevel.currentScreen === HOW_TO_PLAY_SCREEN) {
+        howToPlayScreenKeyPressed(key, keyCode);
+      } else if (currentLevel.currentScreen === CREDITS_SCREEN) {
+        creditsScreenKeyPressed(key, keyCode);
       }
     } else {
-      if (keyCode === ESCAPE) {
-        if (isPaused) {
-          handleUnpausing();
-        } else {
-          handlePausing();
-        }
-        isPaused = !isPaused;
-      } else if (isPaused) {
-        if (keyCode === DELETE || keyCode === BACKSPACE) {
-          audioManager.stopSounds();
-          isPaused = !isPaused;
-          changeLevel(0);
-        }
-      }
+      pauseOrQuitKeyPressed(key, keyCode);
     }
   } else if (isLoaded && !isAwake) {
     wakeUp();
@@ -495,69 +434,259 @@ function keyPressed() {
 }
 
 
-function mousePressed() {
-  if (isLoaded) {
-    if (!isAwake) {
-      wakeUp();
-    } else if (currentLevel.genre === TITLE_GENRE && (currentLevel.currentScreen === 0 || currentLevel.currentScreen === 3)) {
-      currentSelection = (currentLevel.screenToMenuItems[currentLevel.currentScreen])[currentLevel.currentItemSelected];
-      if (currentLevel.currentScreen === 0) {
-        switch (currentSelection) {
-          case 'Play':
-            currentLevel.currentScreen = 3;
-            break;
-          case 'How To Play':
-            player.changeLevel();
-            platformManager.changeLevel();
-            currentLevel.currentScreen = 1;
-            break;
-          case 'Credits':
-            currentLevel.currentScreen = 2;
-            break;
-        }
-      } else if (currentLevel.currentScreen === 3) {
-        switch (currentSelection) {
-          case 'Single Player':
-            changeLevel(1);
-            break;
-          case 'Multiplayer':
-            changeToControllerSelectionScreen();
-            break;
-        }
+function menuSelectionKeyPressed(key, keyCode) {
+  let menuItems = currentLevel.screenToMenuItems[currentLevel.currentScreen];
+  if (keyCode === DOWN_ARROW) {
+    currentLevel.currentItemSelected =
+      (currentLevel.currentItemSelected + 1) % menuItems.length;
+  } else if (keyCode === UP_ARROW) {
+    if (currentLevel.currentItemSelected === 0) {
+      currentLevel.currentItemSelected = menuItems.length - 1;
+    } else {
+      currentLevel.currentItemSelected =
+        (currentLevel.currentItemSelected - 1) % menuItems.length;
+    }
+  } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
+    currentSelection = menuItems[currentLevel.currentItemSelected];
+
+    if (currentLevel.currentScreen === MAIN_MENU_SCREEN) {
+      switch (currentSelection) {
+        case 'Play':
+          currentLevel.currentScreen = MODE_SELECTION_SCREEN;
+          break;
+        case 'How To Play':
+          player.changeLevel();
+          platformManager.changeLevel();
+          currentLevel.currentScreen = HOW_TO_PLAY_SCREEN;
+          break;
+        case 'Credits':
+          currentLevel.currentScreen = CREDITS_SCREEN;
+          break;
       }
-    } else if (currentLevel.currentScreen === 4 && midiManager.controllers.length > 0) {
-      startMultiplayerMode(midiManager.controllers[currentLevel.currentItemSelected]);
+    } else if (currentLevel.currentScreen === MODE_SELECTION_SCREEN) {
+      switch (currentSelection) {
+        case 'Single Player':
+          changeLevel(1);
+          break;
+        case 'Multiplayer':
+          currentLevel.currentScreen = ROLE_SELECTION_SCREEN;
+          break;
+      }
+    } else if (currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
+      switch (currentSelection) {
+        case 'Gamer':
+          playerRole = GAMER;
+          changeToControllerSelectionScreen();
+          break;
+        case 'Musician':
+          playerRole = MUSICIAN;
+          changeToControllerSelectionScreen();
+      }
+    }
+  } else if (keyCode === ESCAPE) {
+    if (currentLevel.currentScreen === MODE_SELECTION_SCREEN) {
+      currentLevel.currentScreen = MAIN_MENU_SCREEN;
+      currentLevel.currentItemSelected = 0;
+    } else if (currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
+      currentLevel.currentScreen = MODE_SELECTION_SCREEN;
+      currentLevel.currentItemSelected = 0;
     }
   }
 }
 
 
+function controllerSelectionScreenKeyPressed(key, keyCode) {
+  if (keyCode === ESCAPE) {
+    if (controllerSelected) {
+      socket.emit('not ready');
+      controllerSelected = false;
+    } else {
+      socket.emit('remove player from room');
+      currentLevel.currentScreen = ROLE_SELECTION_SCREEN;
+      currentLevel.currentItemSelected = 0;
+      playerRole = GAMER;
+    }
+  } else {
+    if (playerRole === MUSICIAN)
+      handleControllerSelectionScreenKeyPressed(key, keyCode);
+  }
+}
+
+
+function handleControllerSelectionScreenKeyPressed(key, keyCode) {
+  if (playerRole === MUSICIAN) {
+    let menuItems = midiManager.controllers;
+    if (menuItems.length > 0 && keyCode !== ESCAPE) {
+      if (keyCode === DOWN_ARROW) {
+        currentLevel.currentItemSelected =
+          (currentLevel.currentItemSelected + 1) % menuItems.length;
+      } else if (keyCode === UP_ARROW) {
+        if (currentLevel.currentItemSelected === 0) {
+          currentLevel.currentItemSelected = menuItems.length - 1;
+        } else {
+          currentLevel.currentItemSelected =
+            (currentLevel.currentItemSelected - 1) % menuItems.length;
+        }
+      } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
+        controllerSelected = true;
+        connectMIDIController(midiManager.controllers[currentLevel.currentItemSelected]);
+        socket.emit('ready');
+      }
+    }
+  }
+}
+
+
+function howToPlayScreenKeyPressed(key, keyCode) {
+  if (keyCode === ESCAPE) {
+    if (isPaused) {
+      handleUnpausing();
+    } else {
+      handlePausing();
+    }
+    isPaused = !isPaused;
+  } else if (isPaused) {
+    if (keyCode === DELETE || keyCode === BACKSPACE) {
+      audioManager.stopSounds();
+      isPaused = !isPaused;
+      changeLevel(0);
+    }
+  }
+}
+
+
+function creditsScreenKeyPressed(key, keyCode) {
+  if (keyCode === ESCAPE) {
+    currentLevel.currentScreen = MAIN_MENU_SCREEN;
+    currentLevel.currentItemSelected = 0;
+  }
+}
+
+
+function pauseOrQuitKeyPressed(key, keyCode) {
+  if (isMultiplayerMode) {
+    socket.emit('pause or quit', {
+      key: key,
+      keyCode: keyCode
+    });
+  }
+  handlePauseOrQuitKeyPressed(key, keyCode);
+}
+
+
+function handlePauseOrQuitKeyPressedMessage(data) {
+  if (isMultiplayerMode) {
+    handlePauseOrQuitKeyPressed(data.key, data.keyCode);
+  }
+}
+
+
+function handlePauseOrQuitKeyPressed(key, keyCode) {
+  if (keyCode === ESCAPE) {
+    if (isPaused) {
+      handleUnpausing();
+    } else {
+      handlePausing();
+    }
+    isPaused = !isPaused;
+  } else if (isPaused) {
+    if (keyCode === DELETE || keyCode === BACKSPACE) {
+      audioManager.stopSounds();
+      isPaused = !isPaused;
+      changeLevel(0);
+    }
+  }
+}
+
+
+function mousePressed() {
+  if (isLoaded) {
+    handleMousePressed();
+  }
+}
+
+
+function handleMousePressed() {
+  if (!isAwake) {
+    wakeUp();
+  } else if (currentLevel.genre === TITLE_GENRE && (
+    currentLevel.currentScreen === MAIN_MENU_SCREEN
+    || currentLevel.currentScreen === MODE_SELECTION_SCREEN
+    || currentLevel.currentScreen === ROLE_SELECTION_SCREEN
+  )) {
+    currentSelection = (currentLevel.screenToMenuItems[currentLevel.currentScreen])[currentLevel.currentItemSelected];
+    if (currentLevel.currentScreen === MAIN_MENU_SCREEN) {
+      switch (currentSelection) {
+        case 'Play':
+          currentLevel.currentScreen = MODE_SELECTION_SCREEN;
+          break;
+        case 'How To Play':
+          player.changeLevel();
+          platformManager.changeLevel();
+          currentLevel.currentScreen = HOW_TO_PLAY_SCREEN;
+          break;
+        case 'Credits':
+          currentLevel.currentScreen = CREDITS_SCREEN;
+          break;
+      }
+    } else if (currentLevel.currentScreen === MODE_SELECTION_SCREEN) {
+      switch (currentSelection) {
+        case 'Single Player':
+          changeLevel(1);
+          break;
+        case 'Multiplayer':
+          currentLevel.currentScreen = ROLE_SELECTION_SCREEN;
+          break;
+      }
+    } else if (currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
+      switch (currentSelection) {
+        case 'Gamer':
+          playerRole = GAMER;
+          changeToControllerSelectionScreen();
+          break;
+        case 'Musician':
+          playerRole = MUSICIAN;
+          changeToControllerSelectionScreen();
+      }
+    }
+  } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN && midiManager.controllers.length > 0) {
+    controllerSelected = true;
+    connectMIDIController(midiManager.controllers[currentLevel.currentItemSelected]);
+    socket.emit('ready');
+  }
+}
+
+
 function mouseMoved() {
-  if (isAwake && currentLevel.genre === TITLE_GENRE) {
-    if (currentLevel.currentScreen === 0) {
-      // Main Menu
+  if (isAwake) {
+    handleMouseMoved(mouseY);
+  }
+}
+
+
+function handleMouseMoved(yPos) {
+  if (currentLevel.genre === TITLE_GENRE) {
+    if (currentLevel.currentScreen === MAIN_MENU_SCREEN) {
       const DISTANCE_BETWEEN_ITEMS = currentLevel.getYPosOfItem(2) - currentLevel.getYPosOfItem(1);
-      if (mouseY <= currentLevel.getYPosOfItem(1) + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      if (yPos <= currentLevel.getYPosOfItem(1) + (DISTANCE_BETWEEN_ITEMS / 2)) {
         currentLevel.currentItemSelected = 0;
-      } else if (mouseY <= currentLevel.getYPosOfItem(2) + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      } else if (yPos <= currentLevel.getYPosOfItem(2) + (DISTANCE_BETWEEN_ITEMS / 2)) {
         currentLevel.currentItemSelected = 1;
       } else {
         currentLevel.currentItemSelected = 2;
       }
-    } else if (currentLevel.currentScreen === 3) {
-      // Mode selection menu
+    } else if (currentLevel.currentScreen === MODE_SELECTION_SCREEN || currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
       const DISTANCE_BETWEEN_ITEMS = currentLevel.getYPosOfItem(2) - currentLevel.getYPosOfItem(1);
-      if (mouseY <= currentLevel.getYPosOfItem(1) + (DISTANCE_BETWEEN_ITEMS / 2)) {
+      if (yPos <= currentLevel.getYPosOfItem(1) + (DISTANCE_BETWEEN_ITEMS / 2)) {
         currentLevel.currentItemSelected = 0;
       } else {
         currentLevel.currentItemSelected = 1;
       }
-    } else if (currentLevel.currentScreen === 4) {
-      // Controller selection menu
+    } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN) {
       const DISTANCE_BETWEEN_ITEMS = currentLevel.getYPosOfItem(2) - currentLevel.getYPosOfItem(1.5);
       let isLastItemSelected = true;
       for (let i = 0; i < midiManager.controllers.length; i++) {
-        if (mouseY <= currentLevel.getYPosOfItem((i * 0.5) + 1.5) + (DISTANCE_BETWEEN_ITEMS / 2)) {
+        if (yPos <= currentLevel.getYPosOfItem((i * 0.5) + 1.5) + (DISTANCE_BETWEEN_ITEMS / 2)) {
           currentLevel.currentItemSelected = i;
           isLastItemSelected = false;
           break;
@@ -566,7 +695,6 @@ function mouseMoved() {
       if (isLastItemSelected) {
         currentLevel.currentItemSelected = midiManager.controllers.length - 1;
       }
-
     }
   }
 }

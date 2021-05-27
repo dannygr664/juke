@@ -28,6 +28,7 @@ class UIManager {
         this.drawPrestartScreen();
       } else {
         this.drawMainMenu();
+        this.drawPlayerRole();
       }
     } else {
       this.drawGameUI();
@@ -36,12 +37,6 @@ class UIManager {
 
   drawLoadingScreen() {
     push();
-    // const TEXT_SIZE = height / 15;
-    // fill(ColorScheme.BLACK);
-    // textAlign(CENTER, CENTER);
-    // textFont('HelveticaNeue-Thin');
-    // textSize(TEXT_SIZE);
-    //text('LOADING...', width / 2, height / 2);
 
     stroke(ColorScheme.BLACK);
     fill(ColorScheme.CLEAR);
@@ -49,22 +44,6 @@ class UIManager {
     noStroke();
     fill(ColorScheme.BLACK);
     rect(width / 2 - (width / 8), height / 2 - (height / 80), (audioManager.numberOfSoundsLoaded / audioManager.audioFilePaths.length) * (width / 4), height / 40);
-
-    // let threshold = floor(this.titleBounds.w * (audioManager.numberOfSoundsLoaded / audioManager.audioFilePaths.length));
-
-    // for (let i = 0; i < this.titlePoints.length; i++) {
-    //   push();
-    //   stroke(0);
-    //   strokeWeight(1);
-    //   let point = this.titlePoints[i];
-    //   if (point.x < threshold) {
-    //     point.platformWidth = 15;
-    //   } else {
-    //     point.platformWidth = 5;
-    //   }
-    //   line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
-    //   pop();
-    // }
 
     pop();
   }
@@ -84,17 +63,48 @@ class UIManager {
     const TITLE_POINT_SIZE = 3;
 
     let currentScreen = levelManager.getCurrentLevel().currentScreen;
-    if (currentScreen === 0) {
+    if (currentScreen === MAIN_MENU_SCREEN) {
       this.drawMainMenuScreen();
-    } else if (currentScreen === 1) {
+    } else if (currentScreen === HOW_TO_PLAY_SCREEN) {
       this.drawHowToPlayScreen();
-    } else if (currentScreen === 2) {
+    } else if (currentScreen === CREDITS_SCREEN) {
+      this.drawESCToReturn();
       this.drawCreditsScreen();
-    } else if (currentScreen === 3) {
+    } else if (currentScreen === MODE_SELECTION_SCREEN) {
+      this.drawESCToReturn();
       this.drawModeSelectionScreen();
-    } else if (currentScreen === 4) {
+    } else if (currentScreen === ROLE_SELECTION_SCREEN) {
+      this.drawESCToReturn();
+      this.drawRoleSelectionScreen();
+    } else if (currentScreen === CONTROLLER_SELECTION_SCREEN) {
+      this.drawESCToReturn();
       this.drawMIDIControllerSelectionScreen(midiManager.controllers);
     }
+  }
+
+  drawPlayerRole() {
+    push();
+    textFont('HelveticaNeue-Thin');
+    const TEXT_SIZE = height / 20;
+    textSize(TEXT_SIZE);
+
+    const TEXT_X = width / 12;
+    const TEXT_Y = height * 0.95;
+    const playerRoleString = (playerRole === GAMER) ? 'GAMER' : 'MUSICIAN';
+    text(playerRoleString, TEXT_X, TEXT_Y);
+    pop();
+  }
+
+  drawESCToReturn() {
+    push();
+    const ITEM_TEXT_SIZE = height / 35;
+    textSize(ITEM_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+
+    const BACK_TEXT_X = width / 7;
+    const BACK_TEXT_Y = height / 20;
+    text('[ESC] to return', BACK_TEXT_X, BACK_TEXT_Y);
+    pop();
   }
 
   drawMainMenuScreen() {
@@ -224,8 +234,6 @@ class UIManager {
     const SUBTITLE_TEXT_SIZE = height / 15;
     const ITEM_TEXT_SIZE = height / 35;
     const TEXT_X = width / 2;
-    const BACK_TEXT_X = width / 7;
-    const BACK_TEXT_Y = height / 20;
 
     const ITEM1_Y = height / 4;
     const ITEM2_Y = 3 * height / 8;
@@ -235,8 +243,6 @@ class UIManager {
     const ITEM6_Y = 7 * height / 8;
     push();
     textFont('HelveticaNeue-Thin');
-    textSize(ITEM_TEXT_SIZE);
-    text('[ESC] to return', BACK_TEXT_X, BACK_TEXT_Y);
     textSize(SUBTITLE_TEXT_SIZE);
     text('CREDITS', TEXT_X, ITEM1_Y);
     textSize(ITEM_TEXT_SIZE);
@@ -299,6 +305,57 @@ class UIManager {
     pop();
   }
 
+  drawRoleSelectionScreen() {
+    const ITEM_TEXT_SIZE = height / 15;
+    const TEXT_X = width / 2;
+    const CURSOR_X = width / 5;
+
+    const UP_ARROW_Y = 15 * height / 32;
+    const DOWN_ARROW_Y = 29 * height / 32;
+
+    let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
+    let rms = sound.amplitudeAnalyzer.getLevel();
+
+    for (let i = 0; i < this.titlePoints.length; i++) {
+      push();
+      stroke(0);
+      strokeWeight(1);
+      let point = this.titlePoints[i];
+      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+        point.platformWidth = random(5, 15);
+      }
+      line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
+      pop();
+    }
+
+    let currentLevel = levelManager.getCurrentLevel();
+
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(ITEM_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    this.drawUpArrow(TEXT_X, UP_ARROW_Y);
+    text('Gamer', TEXT_X, currentLevel.getYPosOfItem(1));
+    text('Musician', TEXT_X, currentLevel.getYPosOfItem(2));
+    this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem(3));
+
+    let currentItemSelected = currentLevel.currentItemSelected;
+    let cursorY = -height;
+    if (currentItemSelected === 0) {
+      cursorY = currentLevel.getYPosOfItem(1);
+    } else if (currentItemSelected === 1) {
+      cursorY = currentLevel.getYPosOfItem(2);
+    }
+
+    rect(
+      CURSOR_X - CURSOR_WIDTH / 2,
+      cursorY - CURSOR_HEIGHT / 2,
+      CURSOR_WIDTH,
+      CURSOR_HEIGHT
+    );
+    pop();
+  }
+
   drawMIDIControllerSelectionScreen(controllers) {
     const ITEM_TEXT_SIZE = height / 15;
     const CONTROLLER_TEXT_SIZE = height / 30;
@@ -329,27 +386,35 @@ class UIManager {
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
 
-    if (controllers.length === 0) {
-      textSize(CONTROLLER_TEXT_SIZE);
-      text('Please connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
-    } else {
-      text('Please select a controller.', TEXT_X, currentLevel.getYPosOfItem(0.5));
-      this.drawUpArrow(TEXT_X, currentLevel.getYPosOfItem(1));
-      textSize(CONTROLLER_TEXT_SIZE);
-      for (let i = 0; i < controllers.length; i++) {
-        text(controllers[i], TEXT_X, currentLevel.getYPosOfItem((i * 0.5) + 1.5));
+    if (playerRole === MUSICIAN) {
+      if (controllerSelected) {
+        text('Waiting for GAMER to join...', TEXT_X, currentLevel.getYPosOfItem(1));
+      } else {
+        if (controllers.length === 0) {
+          textSize(CONTROLLER_TEXT_SIZE);
+          text('Please connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
+        } else {
+          text('Please select a controller.', TEXT_X, currentLevel.getYPosOfItem(0.5));
+          this.drawUpArrow(TEXT_X, currentLevel.getYPosOfItem(1));
+          textSize(CONTROLLER_TEXT_SIZE);
+          for (let i = 0; i < controllers.length; i++) {
+            text(controllers[i], TEXT_X, currentLevel.getYPosOfItem((i * 0.5) + 1.5));
+          }
+          this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem((controllers.length * 0.5) + 1.5));
+
+          let currentItemSelected = currentLevel.currentItemSelected;
+          let cursorY = currentLevel.getYPosOfItem((currentItemSelected * 0.5) + 1.5);
+
+          rect(
+            CURSOR_X - CURSOR_WIDTH / 2,
+            cursorY - CURSOR_HEIGHT / 2,
+            CURSOR_WIDTH,
+            CURSOR_HEIGHT
+          );
+        }
       }
-      this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem((controllers.length * 0.5) + 1.5));
-
-      let currentItemSelected = currentLevel.currentItemSelected;
-      let cursorY = currentLevel.getYPosOfItem((currentItemSelected * 0.5) + 1.5);
-
-      rect(
-        CURSOR_X - CURSOR_WIDTH / 2,
-        cursorY - CURSOR_HEIGHT / 2,
-        CURSOR_WIDTH,
-        CURSOR_HEIGHT
-      );
+    } else {
+      text('Waiting for MUSICIAN to join...', TEXT_X, currentLevel.getYPosOfItem(1));
     }
 
     pop();

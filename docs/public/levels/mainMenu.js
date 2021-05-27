@@ -1,15 +1,22 @@
+const MAIN_MENU_SCREEN = 0;
+const HOW_TO_PLAY_SCREEN = 1;
+const CREDITS_SCREEN = 2;
+const MODE_SELECTION_SCREEN = 3;
+const ROLE_SELECTION_SCREEN = 4;
+const CONTROLLER_SELECTION_SCREEN = 5;
+
 class MainMenu {
   constructor() {
     this.initialBackgroundColor = ColorScheme.WHITE;
     fill(0);
     noStroke();
     this.genre = 'City';
-    this.screenToMenuItems = {
-      0: ['Play', 'How To Play', 'Credits'],
-      3: ['Single Player', 'Multiplayer']
-    };
+    this.screenToMenuItems = [];
+    this.screenToMenuItems[MAIN_MENU_SCREEN] = ['Play', 'How To Play', 'Credits'];
+    this.screenToMenuItems[MODE_SELECTION_SCREEN] = ['Single Player', 'Multiplayer'];
+    this.screenToMenuItems[ROLE_SELECTION_SCREEN] = ['Gamer', 'Musician'];
     this.currentItemSelected = 0;
-    this.currentScreen = 0;
+    this.currentScreen = MAIN_MENU_SCREEN;
 
     this.initialDrawMode = 0;
     this.playerColor = ColorScheme.BLACK;

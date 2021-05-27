@@ -209,11 +209,14 @@ class AudioManager {
     if (this.waitingToChange) {
       this.tryToPlayNextSound();
     }
-    if (levelManager.getCurrentLevelNumber() > 1) {
-      this.handleVolumeControls();
-    }
-    if (levelManager.getCurrentLevelNumber() > 2) {
-      this.handleSoundSpeedControls();
+
+    if (playerRole === GAMER) {
+      if (levelManager.getCurrentLevelNumber() > 1) {
+        this.handleVolumeControls();
+      }
+      if (levelManager.getCurrentLevelNumber() > 2) {
+        this.handleSoundSpeedControls();
+      }
     }
   }
 
