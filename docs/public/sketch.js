@@ -29,12 +29,16 @@ const MIN_HEIGHT = 500;
 const GAMER = 0;
 const MUSICIAN = 1;
 
+const LOCAL = 0;
+const ONLINE = 1;
+
 function preload() {
   isLoaded = false;
   isAwake = false;
   isMultiplayerMode = false;
   controllerSelected = false;
   playerRole = GAMER;
+  networkMode = LOCAL;
   audioManager = new AudioManager();
   midiManager = new MIDIManager();
   animationController = new AnimationController();
@@ -361,12 +365,14 @@ function handleUnpausing() {
 
 
 function changeToControllerSelectionScreen() {
-  socket.emit('add player to room', playerRole);
+  if (networkMode === ONLINE) {
+    socket.emit('add player to room', playerRole);
+  }
   currentLevel.currentScreen = CONTROLLER_SELECTION_SCREEN;
   currentLevel.currentItemSelected = 0;
-  if (playerRole === MUSICIAN) {
+  if (playerRole === MUSICIAN || networkMode === LOCAL) {
     midiManager.getAvailableMIDIDevices();
-  } else if (playerRole === GAMER) {
+  } else if (playerRole === GAMER && networkMode === ONLINE) {
     socket.emit('ready');
   }
 }

@@ -73,6 +73,9 @@ class UIManager {
     } else if (currentScreen === MODE_SELECTION_SCREEN) {
       this.drawESCToReturn();
       this.drawModeSelectionScreen();
+    } else if (currentScreen === NETWORK_SELECTION_SCREEN) {
+      this.drawESCToReturn();
+      this.drawNetworkSelectionScreen();
     } else if (currentScreen === ROLE_SELECTION_SCREEN) {
       this.drawESCToReturn();
       this.drawRoleSelectionScreen();
@@ -305,6 +308,57 @@ class UIManager {
     pop();
   }
 
+  drawNetworkSelectionScreen() {
+    const ITEM_TEXT_SIZE = height / 15;
+    const TEXT_X = width / 2;
+    const CURSOR_X = width / 5;
+
+    const UP_ARROW_Y = 15 * height / 32;
+    const DOWN_ARROW_Y = 29 * height / 32;
+
+    let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
+    let rms = sound.amplitudeAnalyzer.getLevel();
+
+    for (let i = 0; i < this.titlePoints.length; i++) {
+      push();
+      stroke(0);
+      strokeWeight(1);
+      let point = this.titlePoints[i];
+      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+        point.platformWidth = random(5, 15);
+      }
+      line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
+      pop();
+    }
+
+    let currentLevel = levelManager.getCurrentLevel();
+
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(ITEM_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    this.drawUpArrow(TEXT_X, UP_ARROW_Y);
+    text('Local', TEXT_X, currentLevel.getYPosOfItem(1));
+    text('Online', TEXT_X, currentLevel.getYPosOfItem(2));
+    this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem(3));
+
+    let currentItemSelected = currentLevel.currentItemSelected;
+    let cursorY = -height;
+    if (currentItemSelected === 0) {
+      cursorY = currentLevel.getYPosOfItem(1);
+    } else if (currentItemSelected === 1) {
+      cursorY = currentLevel.getYPosOfItem(2);
+    }
+
+    rect(
+      CURSOR_X - CURSOR_WIDTH / 2,
+      cursorY - CURSOR_HEIGHT / 2,
+      CURSOR_WIDTH,
+      CURSOR_HEIGHT
+    );
+    pop();
+  }
+
   drawRoleSelectionScreen() {
     const ITEM_TEXT_SIZE = height / 15;
     const TEXT_X = width / 2;
@@ -386,7 +440,7 @@ class UIManager {
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
 
-    if (playerRole === MUSICIAN) {
+    if (playerRole === MUSICIAN || networkMode === LOCAL) {
       if (controllerSelected) {
         text('Waiting for GAMER to join...', TEXT_X, currentLevel.getYPosOfItem(1));
       } else {

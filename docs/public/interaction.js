@@ -75,7 +75,12 @@ function handleSoundSpeedControls() {
 function keyPressed() {
   if (isLoaded && isAwake) {
     if (currentLevel.genre === TITLE_GENRE) {
-      if (currentLevel.currentScreen === MAIN_MENU_SCREEN || currentLevel.currentScreen === MODE_SELECTION_SCREEN || currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
+      if (
+        currentLevel.currentScreen === MAIN_MENU_SCREEN
+        || currentLevel.currentScreen === MODE_SELECTION_SCREEN
+        || currentLevel.currentScreen === NETWORK_SELECTION_SCREEN
+        || currentLevel.currentScreen === ROLE_SELECTION_SCREEN
+      ) {
         menuSelectionKeyPressed(key, keyCode);
       } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN) {
         controllerSelectionScreenKeyPressed(key, keyCode);
@@ -128,6 +133,17 @@ function menuSelectionKeyPressed(key, keyCode) {
           changeLevel(1);
           break;
         case 'Multiplayer':
+          currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
+          break;
+      }
+    } else if (currentLevel.currentScreen === NETWORK_SELECTION_SCREEN) {
+      switch (currentSelection) {
+        case 'Local':
+          networkMode = LOCAL;
+          changeToControllerSelectionScreen();
+          break;
+        case 'Online':
+          networkMode = ONLINE;
           currentLevel.currentScreen = ROLE_SELECTION_SCREEN;
           break;
       }
@@ -146,8 +162,12 @@ function menuSelectionKeyPressed(key, keyCode) {
     if (currentLevel.currentScreen === MODE_SELECTION_SCREEN) {
       currentLevel.currentScreen = MAIN_MENU_SCREEN;
       currentLevel.currentItemSelected = 0;
-    } else if (currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
+    } else if (currentLevel.currentScreen === NETWORK_SELECTION_SCREEN) {
       currentLevel.currentScreen = MODE_SELECTION_SCREEN;
+      currentLevel.currentItemSelected = 0;
+    } else if (currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
+      networkMode = LOCAL;
+      currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;
     }
   }
@@ -157,23 +177,27 @@ function menuSelectionKeyPressed(key, keyCode) {
 function controllerSelectionScreenKeyPressed(key, keyCode) {
   if (keyCode === ESCAPE) {
     if (controllerSelected) {
-      socket.emit('not ready');
+      if (networkMode === ONLINE) {
+        socket.emit('not ready');
+      }
       controllerSelected = false;
     } else {
-      socket.emit('remove player from room');
-      currentLevel.currentScreen = ROLE_SELECTION_SCREEN;
+      if (networkMode === ONLINE) {
+        socket.emit('remove player from room');
+      }
+      currentLevel.currentScreen = MODE_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;
       playerRole = GAMER;
     }
   } else {
-    if (playerRole === MUSICIAN)
+    if (playerRole === MUSICIAN || networkMode === LOCAL)
       handleControllerSelectionScreenKeyPressed(key, keyCode);
   }
 }
 
 
 function handleControllerSelectionScreenKeyPressed(key, keyCode) {
-  if (playerRole === MUSICIAN) {
+  if (playerRole === MUSICIAN || networkMode === LOCAL) {
     let menuItems = midiManager.controllers;
     if (menuItems.length > 0 && keyCode !== ESCAPE) {
       if (keyCode === DOWN_ARROW) {
@@ -189,7 +213,11 @@ function handleControllerSelectionScreenKeyPressed(key, keyCode) {
       } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
         controllerSelected = true;
         connectMIDIController(midiManager.controllers[currentLevel.currentItemSelected]);
-        socket.emit('ready');
+        if (networkMode === ONLINE) {
+          socket.emit('ready');
+        } else if (networkMode === LOCAL) {
+          startMultiplayerMode(midiManager.controllers[currentLevel.currentItemSelected]);
+        }
       }
     }
   }
@@ -223,7 +251,7 @@ function creditsScreenKeyPressed(key, keyCode) {
 
 
 function pauseOrQuitKeyPressed(key, keyCode) {
-  if (isMultiplayerMode) {
+  if (isMultiplayerMode && networkMode === ONLINE) {
     socket.emit('pause or quit', {
       key: key,
       keyCode: keyCode
@@ -297,6 +325,17 @@ function handleMousePressed() {
           currentLevel.currentScreen = ROLE_SELECTION_SCREEN;
           break;
       }
+    } else if (currentLevel.currentScreen === NETWORK_SELECTION_SCREEN) {
+      switch (currentSelection) {
+        case 'Local':
+          networkMode = LOCAL;
+          changeToControllerSelectionScreen();
+          break;
+        case 'Online':
+          networkMode = ONLINE;
+          currentLevel.currentScreen = ROLE_SELECTION_SCREEN;
+          break;
+      }
     } else if (currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
       switch (currentSelection) {
         case 'Gamer':
@@ -311,7 +350,9 @@ function handleMousePressed() {
   } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN && midiManager.controllers.length > 0) {
     controllerSelected = true;
     connectMIDIController(midiManager.controllers[currentLevel.currentItemSelected]);
-    socket.emit('ready');
+    if (networkMode === ONLINE) {
+      socket.emit('ready');
+    }
   }
 }
 

@@ -2,8 +2,9 @@ const MAIN_MENU_SCREEN = 0;
 const HOW_TO_PLAY_SCREEN = 1;
 const CREDITS_SCREEN = 2;
 const MODE_SELECTION_SCREEN = 3;
-const ROLE_SELECTION_SCREEN = 4;
-const CONTROLLER_SELECTION_SCREEN = 5;
+const NETWORK_SELECTION_SCREEN = 4
+const ROLE_SELECTION_SCREEN = 5;
+const CONTROLLER_SELECTION_SCREEN = 6;
 
 class MainMenu {
   constructor() {
@@ -14,6 +15,7 @@ class MainMenu {
     this.screenToMenuItems = [];
     this.screenToMenuItems[MAIN_MENU_SCREEN] = ['Play', 'How To Play', 'Credits'];
     this.screenToMenuItems[MODE_SELECTION_SCREEN] = ['Single Player', 'Multiplayer'];
+    this.screenToMenuItems[NETWORK_SELECTION_SCREEN] = ['Local', 'Online'];
     this.screenToMenuItems[ROLE_SELECTION_SCREEN] = ['Gamer', 'Musician'];
     this.currentItemSelected = 0;
     this.currentScreen = MAIN_MENU_SCREEN;
