@@ -212,49 +212,11 @@ class AudioManager {
 
     if (playerRole === GAMER) {
       if (levelManager.getCurrentLevelNumber() > 1) {
-        this.handleVolumeControls();
+        handleVolumeControls();
       }
       if (levelManager.getCurrentLevelNumber() > 2) {
-        this.handleSoundSpeedControls();
+        handleSoundSpeedControls();
       }
-    }
-  }
-
-  handleVolumeControls() {
-    let oldVolume = this.volume;
-
-    if (keyDown('q' || 'Q')) {
-      this.volume += VOLUME_STEP;
-    } else if (keyDown('z' || 'Z')) {
-      this.volume -= VOLUME_STEP;
-    } else if (keyDown('a' || 'A')) {
-      this.volume = INITIAL_VOLUME;
-    }
-
-    this.volume = constrain(this.volume, VOLUME_MIN, VOLUME_MAX);
-
-    if (this.volume !== oldVolume && !player.isReviving) {
-      player.energy -= VOLUME_ENERGY_COST;
-      this.updateVolume(this.volume, 0);
-    }
-  }
-
-  handleSoundSpeedControls() {
-    let oldSoundSpeed = this.soundSpeed;
-    let step = (audioManager.soundSpeed >= 1) ? SOUND_SPEED_STEP : (SOUND_SPEED_STEP / 2);
-    if (keyDown('w' || 'W')) {
-      this.soundSpeed += step;
-    } else if (keyDown('x' || 'X')) {
-      this.soundSpeed -= step;
-    } else if (keyDown('s' || 'S')) {
-      this.soundSpeed = INITIAL_SOUND_SPEED;
-    }
-
-    this.soundSpeed = constrain(this.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX);
-
-    if (this.soundSpeed !== oldSoundSpeed && !player.isReviving) {
-      player.energy -= SOUND_SPEED_ENERGY_COST;
-      this.updateSoundSpeed(this.soundSpeed, 0);
     }
   }
 
