@@ -416,8 +416,8 @@ class AudioManager {
           this.currentSound = (this.currentSound + 1) % (this.levelSounds.length);
         }
         this.toggleSound(this.currentSound);
-        player.triggerUpdatePlayerColor(backgroundColor, 60);
-        platformManager.triggerUpdatePlatformColor(backgroundColor, 60);
+        // player.triggerUpdatePlayerColor(backgroundColor, 60);
+        // platformManager.triggerUpdatePlatformColor(backgroundColor, 60);
         this.waitingToChange = false;
       }
     }
