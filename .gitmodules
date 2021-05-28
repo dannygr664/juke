@@ -1,0 +1,6 @@
+[submodule "audio_to_midi_melodia"]
+	path = audio_to_midi_melodia
+	url = https://github.com/dannygr664/audio_to_midi_melodia
+[submodule "docs/audio_to_midi_melodia"]
+	path = docs/audio_to_midi_melodia
+	url = https://github.com/dannygr664/audio_to_midi_melodia
