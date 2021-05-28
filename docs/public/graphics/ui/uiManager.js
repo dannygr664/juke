@@ -368,7 +368,9 @@ class UIManager {
     textFont('HelveticaNeue-Thin');
     this.drawUpArrow(TEXT_X, UP_ARROW_Y);
     text('Local', TEXT_X, currentLevel.getYPosOfItem(1));
-    text('Online', TEXT_X, currentLevel.getYPosOfItem(2));
+    textSize(height / 30);
+    text('Online [UNDER CONSTRUCTION]', TEXT_X, currentLevel.getYPosOfItem(2));
+    textSize(ITEM_TEXT_SIZE);
     this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem(3));
 
     let currentItemSelected = currentLevel.currentItemSelected;
