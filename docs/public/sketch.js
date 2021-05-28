@@ -399,6 +399,7 @@ function changeToControllerSelectionScreen() {
   if (networkMode === ONLINE) {
     socket.emit('add player to room', playerRole);
   }
+  controllerSelected = false;
   currentLevel.currentScreen = CONTROLLER_SELECTION_SCREEN;
   currentLevel.currentItemSelected = 0;
   if (playerRole === MUSICIAN || networkMode === LOCAL) {

@@ -234,7 +234,7 @@ function songSelectionScreenKeyPressed(key, keyCode) {
   if (keyCode === ESCAPE) {
     audioManager.stopSongSample();
     if (isMultiplayerMode) {
-      currentLevel.currentScreen = CONTROLLER_SELECTION_SCREEN;
+      changeToControllerSelectionScreen();
     } else {
       currentLevel.currentScreen = MODE_SELECTION_SCREEN;
     }
