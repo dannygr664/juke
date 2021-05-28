@@ -84,6 +84,8 @@ function keyPressed() {
         menuSelectionKeyPressed(key, keyCode);
       } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN) {
         controllerSelectionScreenKeyPressed(key, keyCode);
+      } else if (currentLevel.currentScreen === SONG_SELECTION_SCREEN) {
+        songSelectionScreenKeyPressed(key, keyCode);
       } else if (currentLevel.currentScreen === HOW_TO_PLAY_SCREEN) {
         howToPlayScreenKeyPressed(key, keyCode);
       } else if (currentLevel.currentScreen === CREDITS_SCREEN) {
@@ -121,6 +123,7 @@ function menuSelectionKeyPressed(key, keyCode) {
         case 'How To Play':
           player.changeLevel();
           platformManager.changeLevel();
+          audioManager.updateVolume(INITIAL_VOLUME, 0);
           currentLevel.currentScreen = HOW_TO_PLAY_SCREEN;
           break;
         case 'Credits':
@@ -130,9 +133,10 @@ function menuSelectionKeyPressed(key, keyCode) {
     } else if (currentLevel.currentScreen === MODE_SELECTION_SCREEN) {
       switch (currentSelection) {
         case 'Single Player':
-          changeLevel(1);
+          changeToSongSelectionScreen();
           break;
         case 'Multiplayer':
+          isMultiplayerMode = true;
           currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
           break;
       }
@@ -163,6 +167,7 @@ function menuSelectionKeyPressed(key, keyCode) {
       currentLevel.currentScreen = MAIN_MENU_SCREEN;
       currentLevel.currentItemSelected = 0;
     } else if (currentLevel.currentScreen === NETWORK_SELECTION_SCREEN) {
+      isMultiplayerMode = false;
       currentLevel.currentScreen = MODE_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;
     } else if (currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
@@ -177,6 +182,7 @@ function menuSelectionKeyPressed(key, keyCode) {
 function controllerSelectionScreenKeyPressed(key, keyCode) {
   if (keyCode === ESCAPE) {
     if (controllerSelected) {
+      disconnectMIDIControllers();
       if (networkMode === ONLINE) {
         socket.emit('not ready');
       }
@@ -185,7 +191,7 @@ function controllerSelectionScreenKeyPressed(key, keyCode) {
       if (networkMode === ONLINE) {
         socket.emit('remove player from room');
       }
-      currentLevel.currentScreen = MODE_SELECTION_SCREEN;
+      currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;
       playerRole = GAMER;
     }
@@ -216,8 +222,56 @@ function handleControllerSelectionScreenKeyPressed(key, keyCode) {
         if (networkMode === ONLINE) {
           socket.emit('ready');
         } else if (networkMode === LOCAL) {
-          startMultiplayerMode(midiManager.controllers[currentLevel.currentItemSelected]);
+          changeToSongSelectionScreen();
         }
+      }
+    }
+  }
+}
+
+
+function songSelectionScreenKeyPressed(key, keyCode) {
+  if (keyCode === ESCAPE) {
+    audioManager.stopSongSample();
+    if (isMultiplayerMode) {
+      currentLevel.currentScreen = CONTROLLER_SELECTION_SCREEN;
+    } else {
+      currentLevel.currentScreen = MODE_SELECTION_SCREEN;
+    }
+  } else {
+    handleSongSelectionScreenKeyPressed(key, keyCode);
+  }
+}
+
+
+function handleSongSelectionScreenKeyPressed(key, keyCode) {
+  let menuItems = audioManager.songs;
+  if (menuItems.length > 0 && keyCode !== ESCAPE) {
+    if (keyCode === DOWN_ARROW) {
+      audioManager.stopSongSample();
+      currentLevel.currentItemSelected =
+        (currentLevel.currentItemSelected + 1) % menuItems.length;
+      let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+      audioManager.playSongSample(genre);
+    } else if (keyCode === UP_ARROW) {
+      audioManager.stopSongSample();
+      if (currentLevel.currentItemSelected === 0) {
+        currentLevel.currentItemSelected = menuItems.length - 1;
+        let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+        audioManager.playSongSample(genre);
+      } else {
+        currentLevel.currentItemSelected =
+          (currentLevel.currentItemSelected - 1) % menuItems.length;
+        let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+        audioManager.playSongSample(genre);
+      }
+    } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
+      audioManager.stopSongSample();
+      let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+      if (isMultiplayerMode) {
+        startMultiplayerMode(genre);
+      } else {
+        startSinglePlayerMode(genre);
       }
     }
   }
@@ -236,7 +290,7 @@ function howToPlayScreenKeyPressed(key, keyCode) {
     if (keyCode === DELETE || keyCode === BACKSPACE) {
       audioManager.stopSounds();
       isPaused = !isPaused;
-      changeLevel(0);
+      changeLevel(TITLE_GENRE);
     }
   }
 }
@@ -278,9 +332,8 @@ function handlePauseOrQuitKeyPressed(key, keyCode) {
     isPaused = !isPaused;
   } else if (isPaused) {
     if (keyCode === DELETE || keyCode === BACKSPACE) {
-      audioManager.stopSounds();
       isPaused = !isPaused;
-      changeLevel(0);
+      returnToSongSelectionScreen(levelManager.getCurrentLevel().genre);
     }
   }
 }
@@ -299,6 +352,7 @@ function handleMousePressed() {
   } else if (currentLevel.genre === TITLE_GENRE && (
     currentLevel.currentScreen === MAIN_MENU_SCREEN
     || currentLevel.currentScreen === MODE_SELECTION_SCREEN
+    || currentLevel.currentScreen === NETWORK_SELECTION_SCREEN
     || currentLevel.currentScreen === ROLE_SELECTION_SCREEN
   )) {
     currentSelection = (currentLevel.screenToMenuItems[currentLevel.currentScreen])[currentLevel.currentItemSelected];
@@ -310,6 +364,7 @@ function handleMousePressed() {
         case 'How To Play':
           player.changeLevel();
           platformManager.changeLevel();
+          audioManager.updateVolume(INITIAL_VOLUME, 0);
           currentLevel.currentScreen = HOW_TO_PLAY_SCREEN;
           break;
         case 'Credits':
@@ -319,10 +374,11 @@ function handleMousePressed() {
     } else if (currentLevel.currentScreen === MODE_SELECTION_SCREEN) {
       switch (currentSelection) {
         case 'Single Player':
-          changeLevel(1);
+          changeToSongSelectionScreen();
           break;
         case 'Multiplayer':
-          currentLevel.currentScreen = ROLE_SELECTION_SCREEN;
+          isMultiplayerMode = true;
+          currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
           break;
       }
     } else if (currentLevel.currentScreen === NETWORK_SELECTION_SCREEN) {
@@ -347,11 +403,42 @@ function handleMousePressed() {
           changeToControllerSelectionScreen();
       }
     }
+  } else if (currentLevel.currentScreen === SONG_SELECTION_SCREEN) {
+    let menuItems = audioManager.songs;
+    if (mouseY > height * 0.75) {
+      currentLevel.currentItemSelected =
+        (currentLevel.currentItemSelected + 1) % menuItems.length;
+      audioManager.stopSongSample();
+      let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+      audioManager.playSongSample(genre);
+    } else if (mouseY < height * 0.25) {
+      audioManager.stopSongSample();
+      if (currentLevel.currentItemSelected === 0) {
+        currentLevel.currentItemSelected = menuItems.length - 1;
+        let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+        audioManager.playSongSample(genre);
+      } else {
+        currentLevel.currentItemSelected =
+          (currentLevel.currentItemSelected - 1) % menuItems.length;
+        let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+        audioManager.playSongSample(genre);
+      }
+    } else {
+      audioManager.stopSongSample();
+      let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+      if (isMultiplayerMode) {
+        startMultiplayerMode(genre);
+      } else {
+        startSinglePlayerMode(genre);
+      }
+    }
   } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN && midiManager.controllers.length > 0) {
     controllerSelected = true;
     connectMIDIController(midiManager.controllers[currentLevel.currentItemSelected]);
     if (networkMode === ONLINE) {
       socket.emit('ready');
+    } else if (networkMode === LOCAL) {
+      changeToSongSelectionScreen();
     }
   }
 }
@@ -375,7 +462,7 @@ function handleMouseMoved(yPos) {
       } else {
         currentLevel.currentItemSelected = 2;
       }
-    } else if (currentLevel.currentScreen === MODE_SELECTION_SCREEN || currentLevel.currentScreen === ROLE_SELECTION_SCREEN) {
+    } else if (currentLevel.currentScreen === MODE_SELECTION_SCREEN || currentLevel.currentScreen === ROLE_SELECTION_SCREEN || currentLevel.currentScreen === NETWORK_SELECTION_SCREEN) {
       const DISTANCE_BETWEEN_ITEMS = currentLevel.getYPosOfItem(2) - currentLevel.getYPosOfItem(1);
       if (yPos <= currentLevel.getYPosOfItem(1) + (DISTANCE_BETWEEN_ITEMS / 2)) {
         currentLevel.currentItemSelected = 0;

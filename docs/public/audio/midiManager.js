@@ -94,6 +94,18 @@ class MIDIManager {
     }
   }
 
+  disconnectInputControllers() {
+    if (this.midiAccess) {
+      // Get lists of available MIDI controllers
+      const inputs = this.midiAccess.inputs.values();
+
+      for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+        console.log('Disconnecting all MIDI controllers');
+        input.value.onmidimessage = undefined;
+      }
+    }
+  }
+
   initializeSynth() {
     this.synth = new p5.PolySynth();
     this.synth.setADSR(0.1, 0.1, 1, 0);

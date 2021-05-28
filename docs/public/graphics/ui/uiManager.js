@@ -28,7 +28,7 @@ class UIManager {
         this.drawPrestartScreen();
       } else {
         this.drawMainMenu();
-        this.drawPlayerRole();
+        //this.drawPlayerRole();
       }
     } else {
       this.drawGameUI();
@@ -73,6 +73,9 @@ class UIManager {
     } else if (currentScreen === MODE_SELECTION_SCREEN) {
       this.drawESCToReturn();
       this.drawModeSelectionScreen();
+    } else if (currentScreen === SONG_SELECTION_SCREEN) {
+      this.drawESCToReturn();
+      this.drawSongSelectionScreen();
     } else if (currentScreen === NETWORK_SELECTION_SCREEN) {
       this.drawESCToReturn();
       this.drawNetworkSelectionScreen();
@@ -188,7 +191,7 @@ class UIManager {
     const GOAL_X = width / 2;
 
     const AUDIO_PARAM_LABEL_X = 20
-    const AUDIO_PARAM_LABEL_Y = 40;
+    const AUDIO_PARAM_LABEL_Y = 95;
 
     const SONG_PROGRESS_LABEL_X = width / 2;
     const SONG_PROGRESS_LABEL_Y = 40;
@@ -305,6 +308,32 @@ class UIManager {
       CURSOR_WIDTH,
       CURSOR_HEIGHT
     );
+    pop();
+  }
+
+  drawSongSelectionScreen() {
+    const ITEM_TEXT_SIZE = height / 15;
+    const TEXT_X = width / 2;
+
+    const UP_ARROW_Y = height * 0.01;
+    const DOWN_ARROW_Y = height * 0.99;
+
+    // let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
+
+    let currentLevel = levelManager.getCurrentLevel();
+
+    let genre = audioManager.songs[currentLevel.currentItemSelected].soundInfo.genre;
+
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(ITEM_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    this.drawUpArrow(TEXT_X, UP_ARROW_Y);
+    text(genre, TEXT_X, height / 2);
+    this.drawDownArrow(TEXT_X, DOWN_ARROW_Y);
+
+    let currentItemSelected = currentLevel.currentItemSelected;
+
     pop();
   }
 
@@ -498,15 +527,9 @@ class UIManager {
 
     this.drawSongProgressMeter();
     this.drawVolumeMeter();
+    this.drawSoundSpeedMeter();
+    this.drawReverbMeter();
 
-    let currentLevelNumber = levelManager.getCurrentLevelNumber();
-    if (currentLevelNumber > 1) {
-      this.drawSoundSpeedMeter();
-    }
-
-    if (currentLevelNumber > 2) {
-      this.drawReverbMeter();
-    }
     pop();
   }
 
@@ -538,17 +561,14 @@ class UIManager {
     fill(fillColor);
     text('Volume', 0, 5);
     //fill(0, 0, map(audioManager.volume, 0, 1, 100, 0));
-    let rectWidth = map(audioManager.volume, 0, 1, 0, 200);
+    let rectWidth = map(audioManager.volume, 0, 1, 0, 160);
     rect(70, 5, rectWidth, 20);
-    let currentLevelNumber = levelManager.getCurrentLevelNumber();
     stroke(fillColor);
     fill(ColorScheme.CLEAR);
-    rect(70, 5, 200, 20);
+    rect(70, 5, 160, 20);
     noStroke();
     fill(fillColor);
-    if (currentLevelNumber > 1) {
-      text('Q/A/Z', 75 + 200, 5);
-    }
+    text('Q/A/Z', 75 + 160, 5);
     pop();
   }
 
@@ -573,17 +593,14 @@ class UIManager {
 
     let soundSpeedFillColor = color(hue(backgroundColor), soundSpeedFillSaturation, soundSpeedFillBrightness, 100);
     fill(soundSpeedFillColor);
-    let rectWidth = map(audioManager.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX, 0, 200);
+    let rectWidth = map(audioManager.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX, 0, 160);
     rect(70, 35, rectWidth, 20);
-    let currentLevelNumber = levelManager.getCurrentLevelNumber();
     stroke(fillColor);
     fill(ColorScheme.CLEAR);
-    rect(70, 35, 200, 20);
+    rect(70, 35, 160, 20);
     noStroke();
     fill(fillColor);
-    if (currentLevelNumber > 2) {
-      text('W/S/X', 75 + 200, 35);
-    }
+    text('W/S/X', 75 + 160, 35);
     pop();
   }
 
@@ -595,10 +612,10 @@ class UIManager {
     text('Reverb', 0, 65);
     let reverbFillColor = player.strokeColor;
     fill(reverbFillColor);
-    rect(70, 65, map(audioManager.reverbLevel, 0, 1, 0, 200), 20);
+    rect(70, 65, map(audioManager.reverbLevel, 0, 1, 0, 160), 20);
     stroke(fillColor);
     fill(ColorScheme.CLEAR);
-    rect(70, 65, 200, 20);
+    rect(70, 65, 160, 20);
     noStroke();
     fill(fillColor);
     pop();

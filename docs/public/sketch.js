@@ -109,7 +109,7 @@ function wakeUp() {
   audioManager.assignSoundAnimations();
   audioManager.assignSoundCues();
 
-  audioManager.unloopCurrentSound();
+  // audioManager.unloopCurrentSound();
 
   isAwake = true;
 }
@@ -149,7 +149,7 @@ function draw() {
             fluidManager.manageFluids();
           }
 
-          jukeboxManager.manageJukeboxes();
+          //jukeboxManager.manageJukeboxes();
 
           let newEnergy = player.energy + 0.05;
           player.energy = min(newEnergy, currentLevel.maxEnergy);
@@ -258,48 +258,69 @@ function handleRevived() {
 }
 
 
-function incrementLevel() {
-  levelManager.incrementLevel();
-  currentLevel = levelManager.getCurrentLevel();
-  backgroundColor = currentLevel.initialBackgroundColor;
-  player.changeLevel();
-  platformManager.changeLevel();
-  fluidManager.changeLevel();
-  jukeboxManager.changeLevel();
-  drawMode = currentLevel.initialDrawMode;
+// function incrementLevel() {
+//   levelManager.incrementLevel();
+//   currentLevel = levelManager.getCurrentLevel();
+//   backgroundColor = currentLevel.initialBackgroundColor;
+//   player.changeLevel();
+//   platformManager.changeLevel();
+//   fluidManager.changeLevel();
+//   jukeboxManager.changeLevel();
+//   drawMode = currentLevel.initialDrawMode;
 
-  audioManager.startSounds(currentLevel.genre);
+//   audioManager.startSounds(currentLevel.genre);
 
-  if (currentLevel.genre === TITLE_GENRE) {
-    isMultiplayerMode = false;
-    audioManager.unloopCurrentSound();
-  }
+//   if (currentLevel.genre === TITLE_GENRE) {
+//     isMultiplayerMode = false;
+//     // audioManager.unloopCurrentSound();
+//   }
+// }
+
+
+function returnToSongSelectionScreen(genre) {
+  audioManager.resetSoundProperties(genre);
+  audioManager.stopSounds();
+  let wasMultiplayerMode = isMultiplayerMode;
+  changeLevel(TITLE_GENRE);
+  isMultiplayerMode = wasMultiplayerMode;
+  currentLevel.currentScreen = SONG_SELECTION_SCREEN;
+  let songToSample =
+    audioManager.songs.filter(song => song.soundInfo.genre === genre)[0];
+  //audioManager.resetSongProperties(songToSample);
+  currentLevel.currentItemSelected =
+    audioManager.songs.indexOf(songToSample);
+
+  audioManager.playSongSample(genre);
 }
 
 
-function changeLevel(level) {
-  levelManager.changeLevel(level);
+function changeLevel(genre) {
+  levelManager.changeLevel(genre);
   currentLevel = levelManager.getCurrentLevel();
-  backgroundColor = currentLevel.initialBackgroundColor;
+  newBackgroundColor = currentLevel.initialBackgroundColor;
   player.changeLevel();
-  if (level === 0 && platformManager.mode === MIDI_MODE) {
-    platformManager.disableMIDIMode();
-  }
   platformManager.changeLevel();
   fluidManager.changeLevel();
   jukeboxManager.changeLevel();
   drawMode = currentLevel.initialDrawMode;
 
   audioManager.startSounds(currentLevel.genre);
-  if (currentLevel.genre !== TITLE_GENRE || currentLevel.currentScreen === HOW_TO_PLAY_SCREEN) {
-    audioManager.updateVolume(INITIAL_VOLUME, 0);
-  }
 
-  if (currentLevel.genre === TITLE_GENRE) {
+  if (currentLevel.genre !== TITLE_GENRE) {
+    audioManager.updateSoundSpeed(INITIAL_SOUND_SPEED, 0);
+    audioManager.updateVolume(INITIAL_VOLUME, 0);
+    audioManager.updateReverb(INITIAL_REVERB);
+    //audioManager.unloopCurrentSound();
+  } else {
+    if (platformManager.mode === MIDI_MODE) {
+      platformManager.disableMIDIMode();
+    }
     playerRole = GAMER;
     isMultiplayerMode = false;
+    currentLevel.currentItemSelected = 0;
     currentLevel.currentScreen = MAIN_MENU_SCREEN;
-    audioManager.unloopCurrentSound();
+    newBackgroundColor = ColorScheme.WHITE;
+
   }
 }
 
@@ -329,6 +350,7 @@ function updateBackgroundBrightness(newBrightness, fadeTime) {
 
 
 function updateBackgroundHue(hueChange, saturationChange, fadeTime) {
+  //console.log(hue(oldBackgroundColor), saturation(oldBackgroundColor), brightness(oldBackgroundColor));
   let currentBgColor = oldBackgroundColor;
   let currentHue = hue(currentLevel.initialBackgroundColor);
   let currentBrightness = brightness(currentBgColor);
@@ -364,6 +386,15 @@ function handleUnpausing() {
 }
 
 
+function changeToSongSelectionScreen() {
+  currentLevel.currentItemSelected = 0;
+  let menuItems = audioManager.songs;
+  let genre = menuItems[currentLevel.currentItemSelected].soundInfo.genre;
+  audioManager.playSongSample(genre);
+  currentLevel.currentScreen = SONG_SELECTION_SCREEN;
+}
+
+
 function changeToControllerSelectionScreen() {
   if (networkMode === ONLINE) {
     socket.emit('add player to room', playerRole);
@@ -384,12 +415,28 @@ function connectMIDIController(controller) {
 }
 
 
-function startMultiplayerMode(gameSeed) {
-  randomSeed(0);
-  isMultiplayerMode = true;
+function disconnectMIDIControllers() {
+  midiManager.disconnectInputControllers();
+}
+
+
+function startSinglePlayerMode(genre, gameSeed) {
+  if (!gameSeed) {
+    gameSeed = random(10000);
+  }
+  randomSeed(gameSeed);
+  changeLevel(genre);
+}
+
+
+function startMultiplayerMode(genre, gameSeed) {
+  if (!gameSeed) {
+    gameSeed = random(10000);
+  }
+  randomSeed(gameSeed);
   if (platformManager.mode !== MIDI_MODE) {
     platformManager.enableMIDIMode();
   }
 
-  changeLevel(1);
+  changeLevel(genre);
 }

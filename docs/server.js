@@ -11,6 +11,14 @@ const short = require('short-uuid');
 
 const Player = require('./Player');
 
+// const MIDIPlayer = require('midi-player-js');
+// const MidiPlayer = new MIDIPlayer.Player(function (event) {
+//   console.log(event);
+// });
+
+// MidiPlayer.loadFile('public/audio/mario.mid');
+// MidiPlayer.play();
+
 const GAMER = 0;
 const MUSICIAN = 1;
 const ROOM_MAX_CAPACITY = 2;
