@@ -50,7 +50,7 @@ class UIManager {
 
   drawPrestartScreen() {
     push();
-    const TEXT_SIZE = height / 15;
+    const TEXT_SIZE = height / 20;
     fill(ColorScheme.BLACK);
     textAlign(CENTER, CENTER);
     textFont('HelveticaNeue-Thin');
@@ -114,7 +114,7 @@ class UIManager {
   }
 
   drawMainMenuScreen() {
-    const ITEM_TEXT_SIZE = height / 15;
+    const ITEM_TEXT_SIZE = height / 20;
     const TEXT_X = width / 2;
     const CURSOR_X = width / 5;
 
@@ -184,7 +184,7 @@ class UIManager {
   }
 
   drawHowToPlayScreen() {
-    const SUBTITLE_TEXT_SIZE = height / 15;
+    const SUBTITLE_TEXT_SIZE = height / 20;
     const HEADING_TEXT_SIZE = height / 20;
     const ITEM_TEXT_SIZE = height / 30;
     const CONTROLS_X = 20 * width / 64;
@@ -237,7 +237,7 @@ class UIManager {
   }
 
   drawCreditsScreen() {
-    const SUBTITLE_TEXT_SIZE = height / 15;
+    const SUBTITLE_TEXT_SIZE = height / 20;
     const ITEM_TEXT_SIZE = height / 35;
     const TEXT_X = width / 2;
 
@@ -261,7 +261,7 @@ class UIManager {
   }
 
   drawModeSelectionScreen() {
-    const ITEM_TEXT_SIZE = height / 15;
+    const ITEM_TEXT_SIZE = height / 20;
     const TEXT_X = width / 2;
     const CURSOR_X = width / 5;
 
@@ -290,8 +290,8 @@ class UIManager {
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
     this.drawUpArrow(TEXT_X, UP_ARROW_Y);
-    text('Single Player', TEXT_X, currentLevel.getYPosOfItem(1));
-    text('Multiplayer', TEXT_X, currentLevel.getYPosOfItem(2));
+    text('1 player', TEXT_X, currentLevel.getYPosOfItem(1));
+    text('2 player', TEXT_X, currentLevel.getYPosOfItem(2));
     this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem(3));
 
     let currentItemSelected = currentLevel.currentItemSelected;
@@ -312,7 +312,7 @@ class UIManager {
   }
 
   drawSongSelectionScreen() {
-    const ITEM_TEXT_SIZE = height / 15;
+    const ITEM_TEXT_SIZE = height / 20;
     const TEXT_X = width / 2;
 
     const UP_ARROW_Y = height * 0.01;
@@ -338,7 +338,7 @@ class UIManager {
   }
 
   drawNetworkSelectionScreen() {
-    const ITEM_TEXT_SIZE = height / 15;
+    const ITEM_TEXT_SIZE = height / 20;
     const TEXT_X = width / 2;
     const CURSOR_X = width / 5;
 
@@ -391,7 +391,7 @@ class UIManager {
   }
 
   drawRoleSelectionScreen() {
-    const ITEM_TEXT_SIZE = height / 15;
+    const ITEM_TEXT_SIZE = height / 20;
     const TEXT_X = width / 2;
     const CURSOR_X = width / 5;
 
@@ -442,7 +442,7 @@ class UIManager {
   }
 
   drawMIDIControllerSelectionScreen(controllers) {
-    const ITEM_TEXT_SIZE = height / 15;
+    const ITEM_TEXT_SIZE = height / 20;
     const CONTROLLER_TEXT_SIZE = height / 30;
     const TEXT_X = width / 2;
     const CURSOR_X = width / 5;
