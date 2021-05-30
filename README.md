@@ -1,2 +1,2 @@
 # juke
-Juke: An Audiovisual Game
+Juke: An Audiovisual Universe
