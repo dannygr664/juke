@@ -495,6 +495,7 @@ class AudioManager {
 
   playSongSample(genre) {
     this.pauseSounds();
+    this.resetSoundProperties(genre);
     let songsWithGenre = this.songs.filter(
       song => song.soundInfo.genre === genre
     );
