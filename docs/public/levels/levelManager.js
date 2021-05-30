@@ -22,9 +22,9 @@ class LevelManager {
   // }
 
   changeLevel(genre) {
-    if (this.getCurrentLevel().genre === TITLE_GENRE) {
-      audioManager.stopSounds();
-    }
+    //if (this.getCurrentLevel().genre === TITLE_GENRE) {
+    audioManager.stopSounds();
+    //}
     this.currentLevel = genre;
   }
 }

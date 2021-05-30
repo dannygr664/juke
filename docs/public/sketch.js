@@ -37,6 +37,7 @@ function preload() {
   isAwake = false;
   isMultiplayerMode = false;
   controllerSelected = false;
+  returningToSongSelectionScreen = false;
   playerRole = GAMER;
   networkMode = LOCAL;
   audioManager = new AudioManager();
@@ -278,8 +279,9 @@ function handleRevived() {
 
 
 function returnToSongSelectionScreen(genre) {
+  returningToSongSelectionScreen = true;
   audioManager.resetSoundProperties(genre);
-  audioManager.stopSounds();
+  //audioManager.stopSounds();
   let wasMultiplayerMode = isMultiplayerMode;
   changeLevel(TITLE_GENRE);
   isMultiplayerMode = wasMultiplayerMode;
@@ -291,6 +293,7 @@ function returnToSongSelectionScreen(genre) {
     audioManager.songs.indexOf(songToSample);
 
   audioManager.playSongSample(genre);
+  returningToSongSelectionScreen = false;
 }
 
 
@@ -304,9 +307,9 @@ function changeLevel(genre) {
   jukeboxManager.changeLevel();
   drawMode = currentLevel.initialDrawMode;
 
-  audioManager.startSounds(currentLevel.genre);
+  audioManager.startSounds(genre);
 
-  if (currentLevel.genre !== TITLE_GENRE) {
+  if (genre !== TITLE_GENRE) {
     audioManager.updateSoundSpeed(INITIAL_SOUND_SPEED, 0);
     audioManager.updateVolume(INITIAL_VOLUME, 0);
     audioManager.updateReverb(INITIAL_REVERB);

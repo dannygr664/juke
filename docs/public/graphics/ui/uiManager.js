@@ -74,8 +74,8 @@ class UIManager {
       this.drawESCToReturn();
       this.drawModeSelectionScreen();
     } else if (currentScreen === SONG_SELECTION_SCREEN) {
-      this.drawESCToReturn();
       this.drawSongSelectionScreen();
+      this.drawESCToReturn();
     } else if (currentScreen === NETWORK_SELECTION_SCREEN) {
       this.drawESCToReturn();
       this.drawNetworkSelectionScreen();
@@ -102,6 +102,8 @@ class UIManager {
   }
 
   drawESCToReturn() {
+
+
     push();
     const ITEM_TEXT_SIZE = height / 35;
     textSize(ITEM_TEXT_SIZE);
@@ -109,6 +111,13 @@ class UIManager {
 
     const BACK_TEXT_X = width / 7;
     const BACK_TEXT_Y = height / 20;
+
+    push();
+    fill(ColorScheme.WHITE);
+    rectMode(CENTER);
+    rect(BACK_TEXT_X, BACK_TEXT_Y, width / 7, height / 25);
+    pop();
+
     text('[ESC] to return', BACK_TEXT_X, BACK_TEXT_Y);
     pop();
   }
@@ -321,17 +330,17 @@ class UIManager {
       'Spaceship': {
         songName: 'Cypher 5',
         artist: 'Calvin McCormack',
-        color: ColorScheme.BLACK
+        color: ColorScheme.SPACESHIP_LOWER_VOLUME
       },
       'LoFi': {
         songName: 'It\'s Too Late',
         artist: 'Guillermo Montalvan and Daniel Greenberg',
-        color: ColorScheme.BLUE
+        color: ColorScheme.LOFI_HIGHER_SPEED
       },
       'Ethereal': {
         songName: 'Ethereal',
         artist: 'Angel Rose (ft. Mateo Falgas)',
-        color: ColorScheme.ETHEREAL_GOLD
+        color: ColorScheme.ETHEREAL_HIGHER_REVERB
       }
     };
 

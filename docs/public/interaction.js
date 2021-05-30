@@ -73,7 +73,7 @@ function handleSoundSpeedControls() {
 
 
 function keyPressed() {
-  if (isLoaded && isAwake) {
+  if (isLoaded && isAwake && !returningToSongSelectionScreen) {
     if (currentLevel.genre === TITLE_GENRE) {
       if (
         currentLevel.currentScreen === MAIN_MENU_SCREEN
@@ -290,7 +290,7 @@ function howToPlayScreenKeyPressed(key, keyCode) {
     if (keyCode === DELETE || keyCode === BACKSPACE) {
       audioManager.stopSounds();
       isPaused = !isPaused;
-      changeLevel(TITLE_GENRE);
+      changeLevel(TITLE_GENRE, TITLE_GENRE);
     }
   }
 }

@@ -138,11 +138,11 @@ class AudioManager {
 
     this.levelSounds.forEach(sound => {
       sound.disconnect();
-      //if (genre === 'Ethereal') {
-      sound.connect(this.reverb);
-      //} else {
-      sound.connect(this.filter);
-      //}
+      if (genre === 'Ethereal') {
+        sound.connect(this.reverb);
+      } else {
+        sound.connect(this.filter);
+      }
       sound.amp(INITIAL_VOLUME);
     });
 
@@ -185,12 +185,16 @@ class AudioManager {
     sound.loop();
 
     // Volume analysis
-    sound.amplitudeAnalyzer = new p5.Amplitude();
-    sound.amplitudeAnalyzer.setInput(sound);
+    if (!sound.amplitudeAnalyzer) {
+      sound.amplitudeAnalyzer = new p5.Amplitude();
+      sound.amplitudeAnalyzer.setInput(sound);
+    }
 
     // Pitch analysis
-    sound.fft = new p5.FFT;
-    sound.fft.setInput(sound);
+    if (!sound.fft) {
+      sound.fft = new p5.FFT;
+      sound.fft.setInput(sound);
+    }
 
     sound.animationType = animationType;
     sound.animation = animation;
@@ -440,11 +444,13 @@ class AudioManager {
   }
 
   stopSounds() {
-    let sound = this.getCurrentSound();
-    //if (sound.isPlaying()) {
-    sound.amp(0, this.volumeRampTime);
-    sound.stop();
-    //}
+    // let sound = this.getCurrentSound();
+    // //if (sound.isPlaying()) {
+    // sound.amp(0, this.volumeRampTime);
+    // if (sound.isPlaying()) {
+    //   sound.stop();
+    // }
+    // //}
     let playingSounds = this.sounds.filter(
       sound => sound.isPlaying()
     );
