@@ -1,6 +1,6 @@
 /// <reference path="TSDef/p5.global-mode.d.ts" />
 
-let socket;
+// let socket;
 
 let TITLE_GENRE = 'City';
 
@@ -85,8 +85,8 @@ function setup() {
 
   createBoundingRectangles();
 
-  socket = io();
-  socket.on('game start', startMultiplayerMode);
+  // socket = io();
+  // socket.on('game start', startMultiplayerMode);
 }
 
 
@@ -400,17 +400,18 @@ function changeToSongSelectionScreen() {
 
 
 function changeToControllerSelectionScreen() {
-  if (networkMode === ONLINE) {
-    socket.emit('add player to room', playerRole);
-  }
+  // if (networkMode === ONLINE) {
+  //   socket.emit('add player to room', playerRole);
+  // }
   controllerSelected = false;
   currentLevel.currentScreen = CONTROLLER_SELECTION_SCREEN;
   currentLevel.currentItemSelected = 0;
   if (playerRole === MUSICIAN || networkMode === LOCAL) {
     midiManager.getAvailableMIDIDevices();
-  } else if (playerRole === GAMER && networkMode === ONLINE) {
-    socket.emit('ready');
   }
+  // else if (playerRole === GAMER && networkMode === ONLINE) {
+  //   socket.emit('ready');
+  // }
 }
 
 

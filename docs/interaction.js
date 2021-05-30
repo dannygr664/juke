@@ -183,14 +183,14 @@ function controllerSelectionScreenKeyPressed(key, keyCode) {
   if (keyCode === ESCAPE) {
     if (controllerSelected) {
       disconnectMIDIControllers();
-      if (networkMode === ONLINE) {
-        socket.emit('not ready');
-      }
+      // if (networkMode === ONLINE) {
+      //   socket.emit('not ready');
+      // }
       controllerSelected = false;
     } else {
-      if (networkMode === ONLINE) {
-        socket.emit('remove player from room');
-      }
+      // if (networkMode === ONLINE) {
+      //   socket.emit('remove player from room');
+      // }
       currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;
       playerRole = GAMER;
@@ -219,9 +219,10 @@ function handleControllerSelectionScreenKeyPressed(key, keyCode) {
       } else if (key === ' ' || keyCode === RETURN || keyCode === ENTER) {
         controllerSelected = true;
         connectMIDIController(midiManager.controllers[currentLevel.currentItemSelected]);
-        if (networkMode === ONLINE) {
-          socket.emit('ready');
-        } else if (networkMode === LOCAL) {
+        // if (networkMode === ONLINE) {
+        //   socket.emit('ready');
+        // } else
+        if (networkMode === LOCAL) {
           changeToSongSelectionScreen();
         }
       }
@@ -305,12 +306,12 @@ function creditsScreenKeyPressed(key, keyCode) {
 
 
 function pauseOrQuitKeyPressed(key, keyCode) {
-  if (isMultiplayerMode && networkMode === ONLINE) {
-    socket.emit('pause or quit', {
-      key: key,
-      keyCode: keyCode
-    });
-  }
+  // if (isMultiplayerMode && networkMode === ONLINE) {
+  //   socket.emit('pause or quit', {
+  //     key: key,
+  //     keyCode: keyCode
+  //   });
+  // }
   handlePauseOrQuitKeyPressed(key, keyCode);
 }
 
@@ -435,9 +436,10 @@ function handleMousePressed() {
   } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN && midiManager.controllers.length > 0) {
     controllerSelected = true;
     connectMIDIController(midiManager.controllers[currentLevel.currentItemSelected]);
-    if (networkMode === ONLINE) {
-      socket.emit('ready');
-    } else if (networkMode === LOCAL) {
+    // if (networkMode === ONLINE) {
+    //   socket.emit('ready');
+    // } else
+    if (networkMode === LOCAL) {
       changeToSongSelectionScreen();
     }
   }
