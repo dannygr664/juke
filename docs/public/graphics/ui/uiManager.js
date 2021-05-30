@@ -350,7 +350,7 @@ class UIManager {
       'Cinematic': {
         songName: 'Prelude Industeam',
         artist: 'Judy "Zhaoqing" Yin',
-        color: ColorScheme.LOFI_HIGHEST_SPEED
+        color: ColorScheme.LOFI_LOWEST_SPEED
       }
     };
 

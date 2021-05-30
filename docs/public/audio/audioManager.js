@@ -77,6 +77,14 @@ class AudioManager {
     chillAudioFileNames.forEach(chillAudioFileName => {
       this.audioFilePaths.push(`audio/Chill/Juke_Chill_${chillAudioFileName}`);
     });
+
+    let cinematicAudioFileNames = [
+      'Cinematic_96bpm4-4_L24M'
+    ];
+
+    cinematicAudioFileNames.forEach(cinematicAudioFileName => {
+      this.audioFilePaths.push(`audio/Cinematic/Juke_Cinematic_${cinematicAudioFileName}`);
+    });
   }
 
 
