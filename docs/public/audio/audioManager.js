@@ -181,6 +181,21 @@ class AudioManager {
     sound.animation = animation;
   }
 
+  loopSoundWithAnalysisAndAnimation(sound, animationType, animation) {
+    sound.loop();
+
+    // Volume analysis
+    sound.amplitudeAnalyzer = new p5.Amplitude();
+    sound.amplitudeAnalyzer.setInput(sound);
+
+    // Pitch analysis
+    sound.fft = new p5.FFT;
+    sound.fft.setInput(sound);
+
+    sound.animationType = animationType;
+    sound.animation = animation;
+  }
+
   getCurrentSound() {
     return this.levelSounds[this.currentSound];
   }
@@ -463,8 +478,11 @@ class AudioManager {
     );
 
     if (songsWithGenre.length > 0) {
-      songsWithGenre[0].amp(this.volume, this.volumeRampTime);
-      songsWithGenre[0].loop();
+      this.loopSoundWithAnalysisAndAnimation(
+        songsWithGenre[0],
+        songsWithGenre[0].animationType,
+        songsWithGenre[0].animation
+      );
     }
   }
 

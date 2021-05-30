@@ -312,22 +312,26 @@ class UIManager {
     const UP_ARROW_Y = height * 0.01;
     const DOWN_ARROW_Y = height * 0.99;
 
-    const GENRES_TO_SONG_NAMES_AND_ARTISTS = {
+    const GENRES_TO_SONG_SELECTION_INFO = {
       'City': {
         songName: 'Beat Cypher #3',
-        artist: 'Jesús Pineda'
+        artist: 'Jesús Pineda',
+        color: ColorScheme.RED
       },
       'Spaceship': {
         songName: 'Cypher 5',
-        artist: 'Calvin McCormack'
+        artist: 'Calvin McCormack',
+        color: ColorScheme.BLACK
       },
       'LoFi': {
         songName: 'It\'s Too Late',
-        artist: 'Guillermo Montalvan and Daniel Greenberg'
+        artist: 'Guillermo Montalvan and Daniel Greenberg',
+        color: ColorScheme.BLUE
       },
       'Ethereal': {
         songName: 'Ethereal',
-        artist: 'Angel Rose (ft. Mateo Falgas)'
+        artist: 'Angel Rose (ft. Mateo Falgas)',
+        color: ColorScheme.ETHEREAL_GOLD
       }
     };
 
@@ -335,10 +339,18 @@ class UIManager {
 
     const currentLevel = levelManager.getCurrentLevel();
 
-    const genre = audioManager.songs[currentLevel.currentItemSelected].soundInfo.genre;
+    const currentSong = audioManager.songs[currentLevel.currentItemSelected];
+    const genre = currentSong.soundInfo.genre;
 
-    const songName = GENRES_TO_SONG_NAMES_AND_ARTISTS[genre].songName;
-    const artist = GENRES_TO_SONG_NAMES_AND_ARTISTS[genre].artist;
+    const songName = GENRES_TO_SONG_SELECTION_INFO[genre].songName;
+    const artist = GENRES_TO_SONG_SELECTION_INFO[genre].artist;
+
+    animationController.drawSoundAnimation(currentSong, 0, width, GENRES_TO_SONG_SELECTION_INFO[genre].color);
+
+    push();
+    fill(ColorScheme.WHITE);
+    rect(width / 4, 7 * height / 16, width / 2, height / 8);
+    pop();
 
     push();
     textAlign(CENTER, CENTER);
