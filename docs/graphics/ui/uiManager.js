@@ -519,35 +519,40 @@ class UIManager {
     textSize(ITEM_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
 
-    if (playerRole === MUSICIAN || networkMode === LOCAL) {
-      if (controllerSelected) {
-        text('Waiting for GAMER to join...', TEXT_X, currentLevel.getYPosOfItem(1));
-      } else {
-        if (controllers.length === 0) {
-          textSize(CONTROLLER_TEXT_SIZE);
-          text('Please connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
+    if (browserSupportsMIDI) {
+      if (playerRole === MUSICIAN || networkMode === LOCAL) {
+        if (controllerSelected) {
+          text('Waiting for GAMER to join...', TEXT_X, currentLevel.getYPosOfItem(1));
         } else {
-          text('Please select a controller.', TEXT_X, currentLevel.getYPosOfItem(0.5));
-          this.drawUpArrow(TEXT_X, currentLevel.getYPosOfItem(1));
-          textSize(CONTROLLER_TEXT_SIZE);
-          for (let i = 0; i < controllers.length; i++) {
-            text(controllers[i], TEXT_X, currentLevel.getYPosOfItem((i * 0.5) + 1.5));
+          if (controllers.length === 0) {
+            textSize(CONTROLLER_TEXT_SIZE);
+            text('Please (re)connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
+          } else {
+            text('Please select a controller.', TEXT_X, currentLevel.getYPosOfItem(0.5));
+            this.drawUpArrow(TEXT_X, currentLevel.getYPosOfItem(1));
+            textSize(CONTROLLER_TEXT_SIZE);
+            for (let i = 0; i < controllers.length; i++) {
+              text(controllers[i], TEXT_X, currentLevel.getYPosOfItem((i * 0.5) + 1.5));
+            }
+            this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem((controllers.length * 0.5) + 1.5));
+
+            let currentItemSelected = currentLevel.currentItemSelected;
+            let cursorY = currentLevel.getYPosOfItem((currentItemSelected * 0.5) + 1.5);
+
+            rect(
+              CURSOR_X - CURSOR_WIDTH / 2,
+              cursorY - CURSOR_HEIGHT / 2,
+              CURSOR_WIDTH,
+              CURSOR_HEIGHT
+            );
           }
-          this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem((controllers.length * 0.5) + 1.5));
-
-          let currentItemSelected = currentLevel.currentItemSelected;
-          let cursorY = currentLevel.getYPosOfItem((currentItemSelected * 0.5) + 1.5);
-
-          rect(
-            CURSOR_X - CURSOR_WIDTH / 2,
-            cursorY - CURSOR_HEIGHT / 2,
-            CURSOR_WIDTH,
-            CURSOR_HEIGHT
-          );
         }
+      } else {
+        text('Waiting for MUSICIAN to join...', TEXT_X, currentLevel.getYPosOfItem(1));
       }
     } else {
-      text('Waiting for MUSICIAN to join...', TEXT_X, currentLevel.getYPosOfItem(1));
+      textSize(CONTROLLER_TEXT_SIZE);
+      text('Browser does not support WebMIDI! Please use Google Chrome.', TEXT_X, currentLevel.getYPosOfItem(1));
     }
 
     pop();
