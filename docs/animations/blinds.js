@@ -2,7 +2,7 @@
 let tileCount = 10;
 let actRandomSeed = 0;
 let rectSize;
-let ORIGAMI_SCALE_FACTOR = 200;
+let ORIGAMI_SCALE_FACTOR;
 
 class Blinds {
   constructor(x1, x2, y1, y2, color) {
@@ -11,6 +11,7 @@ class Blinds {
     this.y1 = y1;
     this.y2 = y2;
     this.color = color;
+    ORIGAMI_SCALE_FACTOR = 200 / VOLUME_MAX;
   }
 
   draw(rms) {
