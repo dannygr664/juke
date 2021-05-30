@@ -75,7 +75,7 @@ class MIDIManager {
               if (eventType === NOTE_ON && velocity > 0) {
                 this.spawningPlatforms[note] = platformManager.createPlatformAtHeight(map(note, NOTE_MIN, NOTE_MAX, height, 0));
 
-                this.synth.noteAttack(frequency, velocity);
+                this.synth.noteAttack(frequency, map(velocity, 0, 127, 0, 0.05));
               }
             }
 
@@ -87,6 +87,7 @@ class MIDIManager {
               this.synth.noteRelease(frequency);
             }
           }
+          this.initializeSynth();
         } else {
           input.value.onmidimessage = undefined;
         }
@@ -101,6 +102,7 @@ class MIDIManager {
 
       for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
         console.log('Disconnecting all MIDI controllers');
+        this.synth.dispose();
         input.value.onmidimessage = undefined;
       }
     }

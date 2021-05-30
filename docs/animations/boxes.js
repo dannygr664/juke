@@ -35,8 +35,8 @@ class Boxes {
     for (let gridY = 0; gridY < (this.y2 - this.y1); gridY += 25) {
       for (let gridX = 0; gridX < (this.x2 - this.x1); gridX += 25) {
         let diameter = dist(
-          map(rms, 0, 0.05, 0, (this.x2 - this.x1)),
-          map(rms, 0, 0.05, 0, (this.y2 - this.y1)),
+          map(rms, 0, 0.05 * VOLUME_MAX, 0, (this.x2 - this.x1)),
+          map(rms, 0, 0.05 * VOLUME_MAX, 0, (this.y2 - this.y1)),
           gridX,
           gridY
         );
