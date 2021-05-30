@@ -241,7 +241,7 @@ class AudioManager {
       sound.amp(this.volume, this.volumeRampTime);
     });
 
-    updateBackgroundBrightness(map(this.volume, VOLUME_MIN, VOLUME_MAX, 0, 100), colorFadeTime);
+    updateBackgroundBrightness(map(this.volume, VOLUME_MIN, VOLUME_MAX, 20, 100), colorFadeTime);
 
     let volumeScaleFactor = this.volume / INITIAL_VOLUME;
     let sizeScaleFactor;

@@ -63,7 +63,7 @@ class Lines {
     fill(hue(this.color), saturation(this.color), brightness(this.color), 40);
     rect(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
     pop();
-    if (rms > 0.005) {
+    if (rms > 0.005 * VOLUME_MAX) {
       const stepSize = (drawMode === 0) ? 10 : 5;
       const diameter = (drawMode === 0) ? 10 : 5;
 
