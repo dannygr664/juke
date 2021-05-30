@@ -52,8 +52,8 @@ class Blinds {
     for (let gridY = 0; gridY < tileCount; gridY++) {
       for (let gridX = 0; gridX < tileCount; gridX++) {
 
-        let posX = this.x1 + ((this.x2 - this.x1) / tileCount * gridX);
-        let posY = (this.y2 - this.y1) / tileCount * gridY;
+        let posX = this.x1 + ((this.x2 - this.x1) / tileCount * gridX) + (this.x2 - this.x1) / tileCount / 2;
+        let posY = ((this.y2 - this.y1) / tileCount * gridY) + (this.y2 - this.y1) / tileCount / 2;
 
         let shiftX1 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
         let shiftY1 = rms * ORIGAMI_SCALE_FACTOR * colorScaleFactor * random(-1, 1);
