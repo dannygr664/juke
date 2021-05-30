@@ -417,12 +417,12 @@ function changeToControllerSelectionScreen() {
 
 function connectMIDIController(controller) {
   midiManager.setInputController(controller);
-  midiManager.initializeSynth();
 }
 
 
 function disconnectMIDIControllers() {
   midiManager.disconnectInputControllers();
+  controllerSelected = false;
 }
 
 

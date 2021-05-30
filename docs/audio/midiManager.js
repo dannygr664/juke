@@ -87,6 +87,7 @@ class MIDIManager {
               this.synth.noteRelease(frequency);
             }
           }
+          this.initializeSynth();
         } else {
           input.value.onmidimessage = undefined;
         }
@@ -101,6 +102,7 @@ class MIDIManager {
 
       for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
         console.log('Disconnecting all MIDI controllers');
+        this.synth.dispose();
         input.value.onmidimessage = undefined;
       }
     }
