@@ -5,10 +5,12 @@ class LevelManager {
     let spaceship = new Spaceship();
     let lofi = new LoFi();
     let ethereal = new Ethereal();
+    let chill = new Chill();
     this.levels[TITLE_GENRE] = mainMenu;
     this.levels['Spaceship'] = spaceship;
     this.levels['LoFi'] = lofi;
     this.levels['Ethereal'] = ethereal;
+    this.levels['Chill'] = chill;
     this.currentLevel = TITLE_GENRE;
   }
 

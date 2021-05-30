@@ -26,7 +26,7 @@ const REVIVING_LPF_PEAK_VOLUME = 0;
 
 class AudioManager {
   constructor() {
-    soundFormats('wav', 'mp3');
+    soundFormats('mp3');
     this.getAudioFilePaths();
     this.sounds = {};
     this.songs = {};
@@ -43,7 +43,7 @@ class AudioManager {
     ];
 
     cityAudioFileNames.forEach(cityAudioFileName => {
-      this.audioFilePaths.push(`audio/City/Juke_City_${cityAudioFileName}.wav`);
+      this.audioFilePaths.push(`audio/City/Juke_City_${cityAudioFileName}`);
     });
 
     let spaceshipAudioFileNames = [
@@ -51,7 +51,7 @@ class AudioManager {
     ];
 
     spaceshipAudioFileNames.forEach(spaceshipAudioFileName => {
-      this.audioFilePaths.push(`audio/Spaceship/Juke_Spaceship_${spaceshipAudioFileName}.wav`);
+      this.audioFilePaths.push(`audio/Spaceship/Juke_Spaceship_${spaceshipAudioFileName}`);
     });
 
     let etherealAudioFileNames = [
@@ -59,7 +59,7 @@ class AudioManager {
     ];
 
     etherealAudioFileNames.forEach(etherealAudioFileName => {
-      this.audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}.wav`);
+      this.audioFilePaths.push(`audio/Ethereal/Juke_Ethereal_${etherealAudioFileName}`);
     });
 
     let lofiAudioFileNames = [
@@ -67,7 +67,15 @@ class AudioManager {
     ];
 
     lofiAudioFileNames.forEach(lofiAudioFileName => {
-      this.audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}.wav`);
+      this.audioFilePaths.push(`audio/LoFi/Juke_LoFi_${lofiAudioFileName}`);
+    });
+
+    let chillAudioFileNames = [
+      'Chill_95,94bpm4-4_L82M'
+    ];
+
+    chillAudioFileNames.forEach(chillAudioFileName => {
+      this.audioFilePaths.push(`audio/Chill/Juke_Chill_${chillAudioFileName}`);
     });
   }
 

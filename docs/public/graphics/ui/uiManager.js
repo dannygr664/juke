@@ -341,6 +341,16 @@ class UIManager {
         songName: 'Ethereal',
         artist: 'Angel Rose (ft. Mateo Falgas)',
         color: ColorScheme.ETHEREAL_HIGHER_REVERB
+      },
+      'Chill': {
+        songName: 'Should Be Good',
+        artist: 'Matthew Jontiff',
+        color: ColorScheme.SPACESHIP_LOWEST_VOLUME
+      },
+      'Cinematic': {
+        songName: 'Prelude Industeam',
+        artist: 'Judy "Zhaoqing" Yin',
+        color: ColorScheme.LOFI_HIGHEST_SPEED
       }
     };
 
