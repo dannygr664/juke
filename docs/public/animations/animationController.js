@@ -106,6 +106,10 @@ class AnimationController {
         return 1;
       case 'Spaceship':
         return 2;
+      case 'Chill':
+        return 3;
+      case 'Cinematic':
+        return 4;
       default:
         return 2;
     }
