@@ -305,27 +305,51 @@ class UIManager {
   }
 
   drawSongSelectionScreen() {
-    const ITEM_TEXT_SIZE = height / 20;
+    const SONG_NAME_TEXT_SIZE = height / 20;
+    const ARTIST_TEXT_SIZE = height / 30;
     const TEXT_X = width / 2;
 
     const UP_ARROW_Y = height * 0.01;
     const DOWN_ARROW_Y = height * 0.99;
 
+    const GENRES_TO_SONG_NAMES_AND_ARTISTS = {
+      'City': {
+        songName: 'Beat Cypher #3',
+        artist: 'Jesús Pineda'
+      },
+      'Spaceship': {
+        songName: 'Cypher 5',
+        artist: 'Calvin McCormack'
+      },
+      'LoFi': {
+        songName: 'It\'s Too Late',
+        artist: 'Guillermo Montalvan and Daniel Greenberg'
+      },
+      'Ethereal': {
+        songName: 'Ethereal',
+        artist: 'Angel Rose (ft. Mateo Falgas)'
+      }
+    };
+
     // let sound = audioManager.sounds.filter(sound => sound.isPlaying())[0];
 
-    let currentLevel = levelManager.getCurrentLevel();
+    const currentLevel = levelManager.getCurrentLevel();
 
-    let genre = audioManager.songs[currentLevel.currentItemSelected].soundInfo.genre;
+    const genre = audioManager.songs[currentLevel.currentItemSelected].soundInfo.genre;
+
+    const songName = GENRES_TO_SONG_NAMES_AND_ARTISTS[genre].songName;
+    const artist = GENRES_TO_SONG_NAMES_AND_ARTISTS[genre].artist;
 
     push();
     textAlign(CENTER, CENTER);
-    textSize(ITEM_TEXT_SIZE);
+    textSize(SONG_NAME_TEXT_SIZE);
     textFont('HelveticaNeue-Thin');
     this.drawUpArrow(TEXT_X, UP_ARROW_Y);
-    text(genre, TEXT_X, height / 2);
+    text(songName, TEXT_X, 14 * height / 30);
+    textSize(ARTIST_TEXT_SIZE);
+    text(artist, TEXT_X, 16 * height / 30);
+    textSize(SONG_NAME_TEXT_SIZE);
     this.drawDownArrow(TEXT_X, DOWN_ARROW_Y);
-
-    let currentItemSelected = currentLevel.currentItemSelected;
 
     pop();
   }
