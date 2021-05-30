@@ -23,12 +23,12 @@ class Spaceship {
   handleFluidEnter(_, fluid) {
     switch (fluid.animation.color) {
       case ColorScheme.SPACESHIP_HIGHEST_VOLUME:
-        audioManager.updateVolume(1, 20);
+        audioManager.updateVolume(VOLUME_MAX, 20);
         player.sprite.width = DEFAULT_PLAYER_WIDTH * 2;
         player.sprite.height = DEFAULT_PLAYER_HEIGHT * 2;
         break;
       case ColorScheme.SPACESHIP_LOWER_VOLUME:
-        audioManager.updateVolume(0.25, 20);
+        audioManager.updateVolume(VOLUME_MAX * 0.25, 20);
         player.sprite.width = DEFAULT_PLAYER_WIDTH * 0.5;
         player.sprite.height = DEFAULT_PLAYER_HEIGHT * 0.5;
         break;
@@ -38,7 +38,7 @@ class Spaceship {
         player.sprite.height = DEFAULT_PLAYER_HEIGHT * 0.25;
         break;
       case ColorScheme.SPACESHIP_HIGHER_VOLUME:
-        audioManager.updateVolume(0.75, 20);
+        audioManager.updateVolume(VOLUME_MAX * 0.75, 20);
         player.sprite.width = DEFAULT_PLAYER_WIDTH * 1.5;
         player.sprite.height = DEFAULT_PLAYER_HEIGHT * 1.5;
         break;

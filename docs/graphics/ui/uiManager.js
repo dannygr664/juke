@@ -138,7 +138,7 @@ class UIManager {
       stroke(0);
       strokeWeight(1);
       let point = this.titlePoints[i];
-      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+      if (random(100) < map(rms, 0.01 * VOLUME_MAX, 0.05 * VOLUME_MAX, 0, 50)) {
         point.platformWidth = random(5, 15);
       }
       line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
@@ -278,7 +278,7 @@ class UIManager {
       stroke(0);
       strokeWeight(1);
       let point = this.titlePoints[i];
-      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+      if (random(100) < map(rms, 0.01 * VOLUME_MAX, 0.05 * VOLUME_MAX, 0, 50)) {
         point.platformWidth = random(5, 15);
       }
       line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
@@ -401,7 +401,7 @@ class UIManager {
       stroke(0);
       strokeWeight(1);
       let point = this.titlePoints[i];
-      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+      if (random(100) < map(rms, 0.01 * VOLUME_MAX, 0.05 * VOLUME_MAX, 0, 50)) {
         point.platformWidth = random(5, 15);
       }
       line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
@@ -454,7 +454,7 @@ class UIManager {
       stroke(0);
       strokeWeight(1);
       let point = this.titlePoints[i];
-      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+      if (random(100) < map(rms, 0.01 * VOLUME_MAX, 0.05 * VOLUME_MAX, 0, 50)) {
         point.platformWidth = random(5, 15);
       }
       line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
@@ -505,7 +505,7 @@ class UIManager {
       stroke(0);
       strokeWeight(1);
       let point = this.titlePoints[i];
-      if (random(100) < map(rms, 0.01, 0.05, 0, 50)) {
+      if (random(100) < map(rms, 0.01 * VOLUME_MAX, 0.05 * VOLUME_MAX, 0, 50)) {
         point.platformWidth = random(5, 15);
       }
       line(point.x - this.titleBounds.w / 2, point.y - this.titleBounds.h / 2, point.x - this.titleBounds.w / 2 + point.platformWidth, point.y - this.titleBounds.h / 2);
@@ -580,7 +580,7 @@ class UIManager {
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();
 
-    const fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
 
     const AUDIO_PARAM_LABEL_X = 20
     const AUDIO_PARAM_LABEL_Y = 95;
@@ -604,7 +604,7 @@ class UIManager {
 
   drawSongProgressMeter() {
     push();
-    let fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    let fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
     stroke(fillColor);
     fill(ColorScheme.CLEAR);
     rect(width / 2 - 100, 5, 200, 20);
@@ -625,12 +625,12 @@ class UIManager {
 
   drawVolumeMeter() {
     push();
-    let fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    let fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
     noStroke();
     fill(fillColor);
     text('Volume', 0, 5);
     //fill(0, 0, map(audioManager.volume, 0, 1, 100, 0));
-    let rectWidth = map(audioManager.volume, 0, 1, 0, 160);
+    let rectWidth = map(audioManager.volume, VOLUME_MIN, VOLUME_MAX, 0, 160);
     rect(70, 5, rectWidth, 20);
     stroke(fillColor);
     fill(ColorScheme.CLEAR);
@@ -643,7 +643,7 @@ class UIManager {
 
   drawSoundSpeedMeter() {
     push();
-    let fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    let fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
     noStroke();
     fill(fillColor);
     text('Speed', 0, 35);
@@ -654,9 +654,9 @@ class UIManager {
     }
 
     let soundSpeedFillBrightness = 100;
-    if (audioManager.volume >= 0.5) {
+    if (audioManager.volume >= VOLUME_MAX * 0.5) {
       soundSpeedFillBrightness = 45;
-    } else if (audioManager.volume === 0) {
+    } else if (audioManager.volume === VOLUME_MIN) {
       soundSpeedFillBrightness = 0;
     }
 
@@ -675,7 +675,7 @@ class UIManager {
 
   drawReverbMeter() {
     push();
-    let fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    let fillColor = audioManager.volume < VOLUME_MAX * 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
     noStroke();
     fill(fillColor);
     text('Reverb', 0, 65);

@@ -75,7 +75,7 @@ class MIDIManager {
               if (eventType === NOTE_ON && velocity > 0) {
                 this.spawningPlatforms[note] = platformManager.createPlatformAtHeight(map(note, NOTE_MIN, NOTE_MAX, height, 0));
 
-                this.synth.noteAttack(frequency, velocity);
+                this.synth.noteAttack(frequency, map(velocity, 0, 127, 0, 0.05));
               }
             }
 

@@ -141,7 +141,7 @@ class PlatformManager {
   updatePlatformWidth(platform) {
     if (platform.width !== startingPlatformWidth) {
       let rms = audioManager.getCurrentSound().amplitudeAnalyzer.getLevel();
-      platform.width = map(rms, 0, 0.05, 7 * this.platformWidth / 8, this.platformWidth);
+      platform.width = map(rms, 0, 0.05 * VOLUME_MAX, 7 * this.platformWidth / 8, this.platformWidth);
     }
   }
 

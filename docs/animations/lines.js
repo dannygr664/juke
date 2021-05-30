@@ -72,7 +72,7 @@ class Lines {
         if (drawMode == 0) {
           direction = int(random([1, 3, 5]));
         } else if (drawMode === 1) {
-          direction = int(random(map(rms, 0, 0.01, 1, 8)));
+          direction = int(random(map(rms, 0, 0.01 * VOLUME_MAX, 1, 8)));
         }
 
         if (direction == NORTH) {
@@ -102,7 +102,7 @@ class Lines {
         if (posY < this.y1) posY = this.y2;
         if (posY > this.y2) posY = this.y1;
 
-        fill(hue(this.color), saturation(this.color), map(rms, 0, 0.05, 0, 100));
+        fill(hue(this.color), saturation(this.color), map(rms, 0, 0.05 * VOLUME_MAX, 0, 100));
         ellipse(posX + stepSize / 2, posY + stepSize / 2, diameter, diameter);
       }
     }
