@@ -29,6 +29,7 @@ class MIDIManager {
         });
     } else {
       console.log('Browser does not support WebMIDI!');
+      browserSupportsMIDI = false;
       return;
     }
   }

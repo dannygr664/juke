@@ -38,6 +38,7 @@ function preload() {
   isMultiplayerMode = false;
   controllerSelected = false;
   returningToSongSelectionScreen = false;
+  browserSupportsMIDI = true;
   playerRole = GAMER;
   networkMode = LOCAL;
   audioManager = new AudioManager();
