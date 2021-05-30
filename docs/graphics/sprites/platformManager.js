@@ -14,17 +14,27 @@ class PlatformManager {
     this.platforms = new Group();
     this.platformYMin = height / 4;
     this.platformYMax = height;
-    this.platformWidth = width / 4;
+    this.platformWidth = 100;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
     this.platformSpacing = width / 7;
     this.beatTimer = 0;
     this.platformColor = levelManager.getCurrentLevel().platformColor;
+    this.oldPlatformColor = this.platformColor;
+    this.newPlatformColor = this.platformColor;
+    this.platformColorFadeTime = 0;
+    this.platformColorFadeTimer = 0;
 
     startingPlatformWidth = width / 1.5;
   }
 
   enableMIDIMode() {
     this.mode = MIDI_MODE;
+    this.platformWidth = width * 2;
+  }
+
+  disableMIDIMode() {
+    this.mode = PLATFORMER_MODE;
+    this.platformWidth = width / 8;
   }
 
   createInitialPlatform() {
@@ -35,9 +45,12 @@ class PlatformManager {
       this.platformHeight
     );
     platform.shapeColor = this.platformColor;
-    if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
-      platform.setSpeed(this.baseSpeed, 180);
+    if (levelManager.getCurrentLevel().genre === TITLE_GENRE) {
+      this.baseSpeed = 0;
+    } else {
+      this.baseSpeed = DEFAULT_BASE_PLATFORM_SPEED;
     }
+    platform.setSpeed(this.baseSpeed, 180);
     platform.setDefaultCollider();
     this.platforms.add(platform);
     return platform;
@@ -47,7 +60,7 @@ class PlatformManager {
     let platform = createSprite(
       width + this.platformWidth / 2,
       yPos,
-      this.plaformWidth,
+      this.platformWidth,
       this.platformHeight
     );
     platform.shapeColor = this.platformColor;
@@ -57,17 +70,24 @@ class PlatformManager {
     return platform;
   }
 
-  initializeMIDIPlatforms(numberOfPlatforms) {
-    for (let i = 0; i < numberOfPlatforms; i++) {
-      let platform = createSprite(
-        -this.platformWidth / 2,
-        (i + 0.5) * height / numberOfPlatforms,
-        this.plaformWidth,
+  terminateMIDIPlatform(platform) {
+    if (platform) {
+      let platformIndex = this.platforms.indexOf(platform);
+
+      let newPlatformWidth = width - (platform.position.x - platform.width / 2);
+
+      let newPlatform = createSprite(
+        (width + (width - newPlatformWidth)) / 2,
+        platform.position.y,
+        newPlatformWidth,
         this.platformHeight
       );
-      platform.shapeColor = this.platformColor;
-      platform.setSpeed(this.baseSpeed, 0);
-      this.platforms.add(platform);
+      this.platforms.get(platformIndex).remove();
+
+      newPlatform.shapeColor = this.platformColor;
+      newPlatform.setSpeed(this.baseSpeed, 180);
+      newPlatform.setDefaultCollider();
+      this.platforms.add(newPlatform);
     }
   }
 
@@ -137,11 +157,15 @@ class PlatformManager {
   }
 
   handleFalling() {
-    this.pausePlatforms();
+    if (this.mode === PLATFORMER_MODE) {
+      this.pausePlatforms();
+    }
   }
 
   handleRevived() {
-    this.resumePlatforms();
+    if (this.mode === PLATFORMER_MODE) {
+      this.resumePlatforms();
+    }
   }
 
   handlePausing() {
@@ -170,14 +194,32 @@ class PlatformManager {
 
   changeLevel() {
     this.platforms.removeSprites();
-    this.updatePlatformColor(levelManager.getCurrentLevel().platformColor);
+    this.triggerUpdatePlatformColor(levelManager.getCurrentLevel().platformColor, 0);
     this.createInitialPlatform();
   }
 
-  updatePlatformColor(newColor) {
-    this.platformColor = newColor;
-    for (let i = 0; i < this.platforms.size(); i++) {
-      this.platforms[i].shapeColor = this.platformColor;
+  triggerUpdatePlatformColor(newColor, platformColorFadeTime) {
+    if (platformColorFadeTime > 0) {
+      this.newPlatformColor = newColor;
+      this.platformColorFadeTimer = platformColorFadeTime;
+      this.platformColorFadeTime = platformColorFadeTime;
+    } else {
+      this.platformColor = newColor;
+      for (let i = 0; i < this.platforms.size(); i++) {
+        this.platforms[i].shapeColor = newColor;
+      }
+    }
+  }
+
+  updatePlatformColor() {
+    if (this.platformColorFadeTimer > 0) {
+      this.platformColor = lerpColor(this.newPlatformColor, this.oldPlatformColor, map(this.platformColorFadeTimer, 0, this.platformColorFadeTime, 0, 1));
+      for (let i = 0; i < this.platforms.size(); i++) {
+        this.platforms[i].shapeColor = this.platformColor;
+      }
+      this.platformColorFadeTimer--;
+    } else if (this.newPlatformColor !== this.oldPlatformColor) {
+      this.oldPlatformColor = this.newPlatformColor;
     }
   }
 }

@@ -1,4 +1,4 @@
-const DEFAULT_BASE_FLUID_SPEED = 0.5;
+const DEFAULT_BASE_FLUID_SPEED = 2;
 const NUMBER_OF_FLUIDS = 1;
 
 let fluidXInitial;
@@ -12,14 +12,14 @@ class FluidManager {
     this.fluids = new Group();
 
     fluidXInitial = width;
-    this.fluidWidthMin = width / 1.5;
-    this.fluidWidthMax = width / 1.5;
+    this.fluidWidthMin = width / 2;
+    this.fluidWidthMax = 2 * width / 3;
     this.fluidHeightMin = height;
     this.fluidHeightMax = height;
     this.fluidYMin = 0;
     this.fluidYMax = 0;
-    this.fluidSpacingMin = width / 8;
-    this.fluidSpacingMax = width / 8;
+    this.fluidSpacingMin = 0;
+    this.fluidSpacingMax = 0;
 
     for (let i = 0; i < NUMBER_OF_FLUIDS; i++) {
       let fluid = createSprite(

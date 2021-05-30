@@ -26,7 +26,7 @@ class ColorScheme {
     this.CLEAR = color(360, 0);
 
     // Assign color schemes for each level
-    this.SPACESHIP_BACKGROUND_COLOR = this.WHITE;
+    this.SPACESHIP_BACKGROUND_COLOR = color(hue(this.WHITE), saturation(this.WHITE), 50);
     this.SPACESHIP_LOWEST_VOLUME = this.BLACK;
     this.SPACESHIP_LOWER_VOLUME = color(hue(this.BLACK), 0, 25);
     this.SPACESHIP_HIGHER_VOLUME = color(hue(this.BLACK), 0, 75);

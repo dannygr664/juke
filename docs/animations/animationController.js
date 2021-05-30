@@ -74,7 +74,6 @@ class AnimationController {
 
   handleJukeboxFadeout(jukebox) {
     if (jukebox.passed && moireAnim.fadeTimer > 0) {
-      console.log(moireAnim.fadeTimer);
       moireAnim.fadeTimer -= audioManager.soundSpeed;
     }
   }
@@ -107,6 +106,10 @@ class AnimationController {
         return 1;
       case 'Spaceship':
         return 2;
+      case 'Chill':
+        return 3;
+      case 'Cinematic':
+        return 4;
       default:
         return 2;
     }

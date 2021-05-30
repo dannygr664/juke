@@ -88,7 +88,7 @@ class JukeboxManager {
       this.jukeboxes[i].setSpeed(0, 180);
       this.spawnJukebox(this.jukeboxes[i]);
     }
-    this.didPlayerFall = true;
+    //this.didPlayerFall = true;
   }
 
   handleRevived() {
