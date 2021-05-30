@@ -312,6 +312,7 @@ function changeLevel(genre) {
     audioManager.updateReverb(INITIAL_REVERB);
     //audioManager.unloopCurrentSound();
   } else {
+    audioManager.resetSoundProperties(genre);
     if (platformManager.mode === MIDI_MODE) {
       platformManager.disableMIDIMode();
     }

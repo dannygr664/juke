@@ -190,12 +190,6 @@ class UIManager {
     const CONTROLS_X = 20 * width / 64;
     const GOAL_X = width / 2;
 
-    const AUDIO_PARAM_LABEL_X = 20
-    const AUDIO_PARAM_LABEL_Y = 95;
-
-    const SONG_PROGRESS_LABEL_X = width / 2;
-    const SONG_PROGRESS_LABEL_Y = 40;
-
     const SUBTITLE_Y = height / 4;
     const SUBITEM1_Y = 5 * height / 16
     const CONTROLS_Y = 20 * height / 32;
@@ -210,12 +204,6 @@ class UIManager {
       text('GOAL', GOAL_X, SUBTITLE_Y);
       textSize(ITEM_TEXT_SIZE);
       text('Reach end of section without falling to progress.', GOAL_X, SUBITEM1_Y);
-      textAlign(LEFT, TOP);
-      textSize(ITEM_TEXT_SIZE);
-      text('AUDIO PARAMS', AUDIO_PARAM_LABEL_X, AUDIO_PARAM_LABEL_Y);
-
-      textAlign(CENTER, TOP);
-      text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
 
       textAlign(CENTER, CENTER);
       textSize(HEADING_TEXT_SIZE);
@@ -238,25 +226,30 @@ class UIManager {
 
   drawCreditsScreen() {
     const SUBTITLE_TEXT_SIZE = height / 20;
-    const ITEM_TEXT_SIZE = height / 35;
+    const CREDIT_TEXT_SIZE = height / 35;
     const TEXT_X = width / 2;
 
-    const ITEM1_Y = height / 4;
-    const ITEM2_Y = 3 * height / 8;
-    const ITEM3_Y = height / 2;
-    const ITEM4_Y = 5 * height / 8;
-    const ITEM5_Y = 3 * height / 4;
-    const ITEM6_Y = 7 * height / 8;
+    const credits = [
+      'Game Concept, Visuals, and Programming by Daniel Greenberg',
+      '"Beat Cypher #3" by Jesús Pineda',
+      '"Cypher 5" by Calvin McCormack',
+      '"It\'s Too Late" by Guillermo Montalvan and Daniel Greenberg',
+      '"Ethereal" by Angel Rose (ft. Mateo Falgas)',
+      '"Should Be Good" by Matthew Jontiff',
+      '"Prelude Industeam" by Judy "Zhaoqing" Yin',
+      'Special Thanks: Sam Vincent and Brian Ellsworth'
+    ];
+
     push();
     textFont('HelveticaNeue-Thin');
     textSize(SUBTITLE_TEXT_SIZE);
-    text('CREDITS', TEXT_X, ITEM1_Y);
-    textSize(ITEM_TEXT_SIZE);
-    text('Game Concept, Visuals, and Programming by Daniel Greenberg', TEXT_X, ITEM2_Y);
-    text('"Beat Cypher #3" by Jesús Pineda', TEXT_X, ITEM3_Y);
-    text('"Cypher 5" by Calvin McCormack', TEXT_X, ITEM4_Y);
-    text('"It\'s Too Late" by Guillermo Montalvan and Daniel Greenberg', TEXT_X, ITEM5_Y);
-    text('"Ethereal" by Angel Rose (ft. Mateo Falgas)', TEXT_X, ITEM6_Y);
+    text('CREDITS', TEXT_X, 3 * height / 16);
+    textSize(CREDIT_TEXT_SIZE);
+
+    for (let i = 0; i < credits.length; i++) {
+      const CREDIT_Y = ((i * 2) + 7) / 24 * height;
+      text(credits[i], TEXT_X, CREDIT_Y);
+    }
     pop();
   }
 
@@ -531,6 +524,25 @@ class UIManager {
     this.drawVolumeMeter();
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();
+
+    const fillColor = audioManager.volume < 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+
+    const AUDIO_PARAM_LABEL_X = 20
+    const AUDIO_PARAM_LABEL_Y = 95;
+
+    const SONG_PROGRESS_LABEL_X = width / 2;
+    const SONG_PROGRESS_LABEL_Y = 40;
+
+    const ITEM_TEXT_SIZE = height / 30;
+
+    fill(fillColor);
+
+    textAlign(LEFT, TOP);
+    textSize(ITEM_TEXT_SIZE);
+    text('AUDIO PARAMS', AUDIO_PARAM_LABEL_X, AUDIO_PARAM_LABEL_Y);
+
+    textAlign(CENTER, TOP);
+    text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
 
     pop();
   }
