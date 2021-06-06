@@ -5,8 +5,8 @@ let boxesAnim;
 let wipeAnim;
 let linesAnim;
 let blindsAnim;
-
 let moireAnim;
+let waveformAnim;
 
 class AnimationController {
   constructor() {
@@ -48,6 +48,13 @@ class AnimationController {
       0,
       height,
       ColorScheme.BLACK_INACTIVE
+    );
+    waveformAnim = new Waveform(
+      0,
+      width,
+      0,
+      height,
+      ColorScheme.CLEAR
     );
   }
 
@@ -98,6 +105,22 @@ class AnimationController {
     anim.color = color;
   }
 
+  createPlayerAnimation(xPosition, yPosition, width, height, color) {
+    let playerAnim = new Waveform(
+      xPosition,
+      xPosition + width,
+      yPosition,
+      yPosition + height,
+      color
+    );
+
+    return playerAnim;
+  }
+
+  setPlayerAnimationColor(anim, color) {
+    anim.color = color;
+  }
+
   getSoundAnimationForSound(sound) {
     switch (sound.soundInfo.genre) {
       case 'Ethereal':
@@ -127,6 +150,21 @@ class AnimationController {
     audioManager.sounds
       .filter(sound => sound.isPlaying())
       .forEach(sound => { this.drawSoundAnimation(sound, x1, x2, color); });
+  }
+
+  drawPlayerAnimation(x1, x2, y1, y2, color) {
+    const playingSounds = audioManager.sounds
+      .filter(sound => sound.isPlaying());
+    let rms = 0;
+    if (playingSounds.length > 0) {
+      rms = playingSounds[0].amplitudeAnalyzer.getLevel();
+    }
+    waveformAnim.x1 = x1;
+    waveformAnim.x2 = x2;
+    waveformAnim.y1 = y1;
+    waveformAnim.y2 = y2;
+    waveformAnim.color = color;
+    waveformAnim.draw(rms);
   }
 
   drawSoundAnimation(sound, x1, x2, color) {

@@ -13,8 +13,17 @@ class Player {
     this.sprite = createSprite(
       PLAYER_X_INITIAL, PLAYER_Y_INITIAL, DEFAULT_PLAYER_WIDTH, DEFAULT_PLAYER_HEIGHT);
     this.sprite.setDefaultCollider();
+    this.sprite.shapeColor = ColorScheme.CLEAR;
 
     this.resetPlayer();
+
+    this.animation = animationController.createPlayerAnimation(
+      this.sprite.position.x,
+      this.sprite.position.y,
+      this.sprite.width,
+      this.sprite.height,
+      this.color
+    );
   }
 
   resetPlayer() {
@@ -36,7 +45,6 @@ class Player {
     this.inFluid = false;
     this.strokeColor = ColorScheme.CLEAR;
     this.energy = levelManager.getCurrentLevel().maxEnergy;
-    this.sprite.shapeColor = this.color
     this.sprite.position.x = PLAYER_X_INITIAL;
     this.sprite.position.y = PLAYER_Y_INITIAL;
     this.sprite.width = DEFAULT_PLAYER_WIDTH;
@@ -58,44 +66,38 @@ class Player {
     this.gravitySpeed = 0;
     this.energy = levelManager.getCurrentLevel().maxEnergy;
     this.sprite.setSpeed(REVIVING_SPEED, 270);
-    this.sprite.shapeColor = ColorScheme.BLACK_INACTIVE;
+    animationController.setPlayerAnimationColor(this.animation, ColorScheme.BLACK_INACTIVE);
+  }
+
+  handleRevived() {
+    this.isReviving = false;
+    animationController.setPlayerAnimationColor(this.animation, this.color);
   }
 
   handlePausing() {
-    this.sprite.shapeColor = ColorScheme.BLACK_INACTIVE;
+    animationController.setPlayerAnimationColor(this.animation, ColorScheme.BLACK_INACTIVE);
     this.sprite.setSpeed(0, 270);
     this.sprite.setSpeed(0, 90);
   }
 
   handleUnpausing() {
-    this.sprite.shapeColor = this.color
+    animationController.setPlayerAnimationColor(this.animation, this.color);
     this.sprite.setSpeed(this.jumpSpeed, 270);
-  }
-
-  drawStroke() {
-    push();
-    if (this.isReviving) {
-      stroke(ColorScheme.WHITE);
-      strokeWeight(10);
-    } else {
-      stroke(this.strokeColor);
-      strokeWeight(map(audioManager.reverbLevel, REVERB_MIN, REVERB_MAX, 4, 10));
-    }
-
-    fill(ColorScheme.CLEAR);
-    rect(this.sprite.position.x - this.sprite.width / 2, this.sprite.position.y - this.sprite.height / 2, this.sprite.width, this.sprite.height);
-    pop();
   }
 
   changeLevel() {
     this.resetPlayer();
   }
 
-  drawEnergyMeter() {
-    push();
-    fill(ColorScheme.getComplementaryColor(this.color));
-    rect(this.sprite.position.x - this.sprite.width / 2, this.sprite.position.y - this.sprite.height / 2, this.sprite.width, map(this.energy, 0, levelManager.getCurrentLevel().maxEnergy, this.sprite.height, 0));
-    pop();
+  drawPlayer() {
+    drawSprite(this.sprite);
+    animationController.drawPlayerAnimation(
+      this.sprite.position.x,
+      this.sprite.position.x + this.sprite.width,
+      this.sprite.position.y,
+      this.sprite.position.y + this.sprite.height,
+      this.color
+    );
   }
 
   triggerUpdatePlayerColor(newColor, playerColorFadeTime) {
@@ -104,14 +106,13 @@ class Player {
       this.playerColorFadeTime = playerColorFadeTime;
       this.playerColorFadeTimer = playerColorFadeTime;
     } else {
-      this.sprite.shapeColor = newColor;
+      this.color = newColor;
     }
   }
 
   updatePlayerColor() {
     if (this.playerColorFadeTimer > 0) {
       this.color = lerpColor(this.newColor, this.oldColor, map(this.playerColorFadeTimer, 0, this.playerColorFadeTime, 0, 1));
-      this.sprite.shapeColor = this.color;
       this.playerColorFadeTimer--;
     } else if (this.newColor !== this.oldColor) {
       this.oldColor = this.newColor;

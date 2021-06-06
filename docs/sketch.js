@@ -172,11 +172,7 @@ function draw() {
       jukeboxManager.drawJukeboxes();
       platformManager.drawPlatforms();
 
-      player.drawEnergyMeter();
-
-      player.drawStroke();
-
-      drawSprite(player.sprite);
+      player.drawPlayer();
     }
   }
 
@@ -251,8 +247,7 @@ function revivingLoop() {
 
 
 function handleRevived() {
-  player.isReviving = false;
-  player.sprite.shapeColor = player.color;
+  player.handleRevived();
   audioManager.handleRevived();
   platformManager.handleRevived();
   fluidManager.handleRevived();
