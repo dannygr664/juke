@@ -71,6 +71,7 @@ class MIDIManager {
             let eventType = message.data[0];
             let note = message.data[1];
             if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
+              let channel = this.getChannelFromEvenType(eventType);
               let frequency = midiToFreq(note);
               let velocity = message.data[2];
 
@@ -80,7 +81,8 @@ class MIDIManager {
                 if (this.isNoteOn(eventType) && velocity > 0) {
                   this.spawningPlatforms[mappedNote] = platformManager.createPlatformAtHeight(map(mappedNote, NOTE_MIN, NOTE_MAX, height, 0));
 
-                  this.synth.noteAttack(frequency, map(velocity, 0, 127, 0, 0.05));
+                  const delay = 0;
+                  MIDI.noteOn(channel, note, velocity, delay);
                 }
               }
 
@@ -89,7 +91,8 @@ class MIDIManager {
                 platformManager.terminateMIDIPlatform(platform);
                 this.spawningPlatforms[mappedNote] = null;
 
-                this.synth.noteRelease(frequency);
+                const delay = 0;
+                MIDI.noteOff(channel, note, delay);
               }
             }
           }
@@ -108,15 +111,25 @@ class MIDIManager {
 
       for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
         console.log('Disconnecting all MIDI controllers');
-        this.synth.dispose();
         input.value.onmidimessage = undefined;
       }
     }
   }
 
   initializeSynth() {
-    this.synth = new p5.PolySynth();
-    this.synth.setADSR(0.1, 0.1, 1, 0);
+    MIDI.loadPlugin({
+      soundfontUrl: "lib/midi-js/soundfont/",
+      instrument: "acoustic_grand_piano",
+      onprogress: function (state, progress) {
+        console.log(state, progress);
+      },
+      onsuccess: function () {
+        // play the note
+        for (let i = 0; i < NUM_CHANNELS; i++) {
+          MIDI.setVolume(i, 40);
+        }
+      }
+    });
   }
 
   isNoteOn(eventType) {
@@ -137,6 +150,14 @@ class MIDIManager {
     }
 
     return false;
+  }
+
+  getChannelFromEvenType(eventType) {
+    if (this.isNoteOn(eventType)) {
+      return eventType - NOTE_ON;
+    } else if (this.isNoteOff(eventType)) {
+      return eventType - NOTE_OFF;
+    }
   }
 
   mapNoteToRange(note, noteMin, noteMax) {
