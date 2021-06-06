@@ -102,8 +102,6 @@ class UIManager {
   }
 
   drawESCToReturn() {
-
-
     push();
     const ITEM_TEXT_SIZE = height / 35;
     textSize(ITEM_TEXT_SIZE);
