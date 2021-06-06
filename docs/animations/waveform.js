@@ -9,7 +9,7 @@ class Waveform {
 
   draw(rms) {
     push();
-    strokeWeight(map(rms, 0, 0.05, 1, 5));
+    strokeWeight(map(rms, 0, 0.05, 1, 30));
     stroke(ColorScheme.WHITE);
 
     fill(this.color);
