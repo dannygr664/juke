@@ -79,7 +79,7 @@ class MIDIManager {
 
               if (!isPaused) {
                 if (this.isNoteOn(eventType) && velocity > 0) {
-                  this.spawningPlatforms[mappedNote] = platformManager.createPlatformAtHeight(map(mappedNote, NOTE_MIN, NOTE_MAX, height, 0));
+                  this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, NOTE_MIN, NOTE_MAX, height, 0));
 
                   const delay = 0;
                   MIDI.noteOn(channel, note, velocity, delay);
@@ -157,6 +157,21 @@ class MIDIManager {
       return eventType - NOTE_ON;
     } else if (this.isNoteOff(eventType)) {
       return eventType - NOTE_OFF;
+    }
+  }
+
+  getNoteColor(note) {
+    const colorMap = MIDI.Synesthesia.data['D. D. Jameson (1844)'];
+    const noteColor = colorMap[(note - 27) % 12];
+    if (noteColor) {
+      push();
+      colorMode(HSL, 360, 100, 100, 1);
+      const hslColor = color(noteColor[0], noteColor[1], noteColor[2]);
+      pop();
+      return hslColor;
+
+    } else {
+      return ColorScheme.BLACK;
     }
   }
 

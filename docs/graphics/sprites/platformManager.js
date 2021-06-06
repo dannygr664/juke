@@ -56,14 +56,14 @@ class PlatformManager {
     return platform;
   }
 
-  createPlatformAtHeight(yPos) {
+  createColoredPlatformAtHeight(platformColor, yPos) {
     let platform = createSprite(
       width + this.platformWidth / 2,
       yPos,
       this.platformWidth,
       this.platformHeight
     );
-    platform.shapeColor = this.platformColor;
+    platform.shapeColor = platformColor;
     platform.setSpeed(this.baseSpeed, 180);
     platform.setDefaultCollider();
     this.platforms.add(platform);
@@ -133,7 +133,7 @@ class PlatformManager {
 
     let yPos = map(meanFrequencyIndex, 0, spectrum.length, height, 0);//map(peakFrequencyIndex, 0, spectrum.length, height, 0);
 
-    let platform = this.createPlatformAtHeight(yPos);
+    let platform = this.createColoredPlatformAtHeight(ColorScheme.BLACK, yPos);
 
     return platform;
   }
