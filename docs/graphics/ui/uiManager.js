@@ -210,7 +210,7 @@ class UIManager {
       textSize(SUBTITLE_TEXT_SIZE);
       text('GOAL', GOAL_X, SUBTITLE_Y);
       textSize(ITEM_TEXT_SIZE);
-      text('Reach end of section without falling to progress.', GOAL_X, SUBITEM1_Y);
+      text('Finish the song and try not to fall!', GOAL_X, SUBITEM1_Y);
 
       textAlign(CENTER, CENTER);
       textSize(HEADING_TEXT_SIZE);
