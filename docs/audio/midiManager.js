@@ -1,5 +1,6 @@
 const NOTE_ON = 144;
 const NOTE_OFF = 128;
+const NUM_CHANNELS = 16;
 
 const NOTE_MAX = 72;
 const NOTE_MIN = 48;
@@ -69,23 +70,27 @@ class MIDIManager {
           input.value.onmidimessage = (message) => {
             let eventType = message.data[0];
             let note = message.data[1];
-            let frequency = midiToFreq(note);
-            let velocity = message.data[2];
+            if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
+              let frequency = midiToFreq(note);
+              let velocity = message.data[2];
 
-            if (!isPaused) {
-              if (eventType === NOTE_ON && velocity > 0) {
-                this.spawningPlatforms[note] = platformManager.createPlatformAtHeight(map(note, NOTE_MIN, NOTE_MAX, height, 0));
+              const mappedNote = this.mapNoteToRange(note, NOTE_MIN, NOTE_MAX);
 
-                this.synth.noteAttack(frequency, map(velocity, 0, 127, 0, 0.05));
+              if (!isPaused) {
+                if (this.isNoteOn(eventType) && velocity > 0) {
+                  this.spawningPlatforms[mappedNote] = platformManager.createPlatformAtHeight(map(mappedNote, NOTE_MIN, NOTE_MAX, height, 0));
+
+                  this.synth.noteAttack(frequency, map(velocity, 0, 127, 0, 0.05));
+                }
               }
-            }
 
-            if (eventType === NOTE_OFF || velocity === 0) {
-              let platform = this.spawningPlatforms[note];
-              platformManager.terminateMIDIPlatform(platform);
-              this.spawningPlatforms[note] = null;
+              if (this.isNoteOff(eventType) || velocity === 0) {
+                let platform = this.spawningPlatforms[mappedNote];
+                platformManager.terminateMIDIPlatform(platform);
+                this.spawningPlatforms[mappedNote] = null;
 
-              this.synth.noteRelease(frequency);
+                this.synth.noteRelease(frequency);
+              }
             }
           }
           this.initializeSynth();
@@ -112,5 +117,40 @@ class MIDIManager {
   initializeSynth() {
     this.synth = new p5.PolySynth();
     this.synth.setADSR(0.1, 0.1, 1, 0);
+  }
+
+  isNoteOn(eventType) {
+    for (let i = 0; i < NUM_CHANNELS; i++) {
+      if (eventType === NOTE_ON + i) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  isNoteOff(eventType) {
+    for (let i = 0; i < NUM_CHANNELS; i++) {
+      if (eventType === NOTE_OFF + i) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  mapNoteToRange(note, noteMin, noteMax) {
+    const SHIFT_AMOUNT = noteMax - noteMin;
+    let mappedNote = note;
+
+    while (mappedNote < noteMin) {
+      mappedNote += SHIFT_AMOUNT;
+    }
+
+    while (mappedNote > noteMax) {
+      mappedNote -= SHIFT_AMOUNT;
+    }
+
+    return mappedNote;
   }
 }
