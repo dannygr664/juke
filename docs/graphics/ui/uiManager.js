@@ -591,7 +591,7 @@ class UIManager {
     const SONG_PROGRESS_LABEL_X = width / 2;
     const SONG_PROGRESS_LABEL_Y = 40;
 
-    const ITEM_TEXT_SIZE = width / 33;
+    const ITEM_TEXT_SIZE = min(width / 33, 40);
 
     fill(fillColor);
 
