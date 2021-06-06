@@ -78,6 +78,7 @@ function setup() {
   newBackgroundColor = backgroundColor;
   backgroundColorFadeTimer = 0;
   backgroundColorFadeTime = 0;
+  score = 0;
 
   audioManager.loadFilter();
   audioManager.loadReverb();
@@ -229,11 +230,14 @@ function handleCollisionsAndJumping() {
 
 function handleFalling() {
   if (player.sprite.position.y > height || player.energy < 0) {
+    score -= 500;
     player.handleFalling();
     audioManager.handleFalling();
     platformManager.handleFalling();
     fluidManager.handleFalling();
     jukeboxManager.handleFalling();
+  } else {
+    score++;
   }
 }
 
@@ -275,6 +279,7 @@ function handleRevived() {
 
 
 function returnToSongSelectionScreen(genre) {
+  score = 0;
   returningToSongSelectionScreen = true;
   audioManager.resetSoundProperties(genre);
   //audioManager.stopSounds();
@@ -294,6 +299,7 @@ function returnToSongSelectionScreen(genre) {
 
 
 function changeLevel(genre) {
+  score = 0;
   levelManager.changeLevel(genre);
   currentLevel = levelManager.getCurrentLevel();
   newBackgroundColor = currentLevel.initialBackgroundColor;

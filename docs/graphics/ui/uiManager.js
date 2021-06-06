@@ -591,6 +591,9 @@ class UIManager {
     const SONG_PROGRESS_LABEL_X = width / 2;
     const SONG_PROGRESS_LABEL_Y = 40;
 
+    const SCORE_X = width - 20;
+    const SCORE_Y = 5;
+
     const ITEM_TEXT_SIZE = min(width / 33, 40);
 
     fill(fillColor);
@@ -601,6 +604,9 @@ class UIManager {
 
     textAlign(CENTER, TOP);
     text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
+
+    textAlign(RIGHT, TOP);
+    text(`SCORE: ${score}`, SCORE_X, SCORE_Y);
 
     pop();
   }
