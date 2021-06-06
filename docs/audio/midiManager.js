@@ -124,7 +124,6 @@ class MIDIManager {
         console.log(state, progress);
       },
       onsuccess: function () {
-        // play the note
         for (let i = 0; i < NUM_CHANNELS; i++) {
           MIDI.setVolume(i, 40);
         }
