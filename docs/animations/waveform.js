@@ -9,7 +9,8 @@ class Waveform {
 
   draw(rms) {
     push();
-    strokeWeight(5);
+    strokeWeight(map(rms, 0, 0.05, 1, 5));
+    stroke(ColorScheme.WHITE);
 
     fill(this.color);
 
@@ -39,6 +40,33 @@ class Waveform {
 
     fill(ColorScheme.CLEAR);
     ellipse(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
+    pop();
+  }
+
+  drawDynamics() {
+    push();
+    noStroke();
+    const TEXT_SIZE = width / 35;
+    textSize(TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    const volume = audioManager.volume;
+    const TEXT_X = this.x1;
+    const TEXT_Y = this.y1;
+    let dynamics;
+    if (volume === 0) {
+      dynamics = 'pp';
+    } else if (volume < VOLUME_MAX * 0.25) {
+      dynamics = 'p'
+    } else if (volume < VOLUME_MAX * 0.5) {
+      dynamics = 'mp';
+    } else if (volume < VOLUME_MAX * 0.75) {
+      dynamics = 'mf';
+    } else if (volume < VOLUME_MAX) {
+      dynamics = 'f';
+    } else if (volume === VOLUME_MAX) {
+      dynamics = 'ff';
+    }
+    text(dynamics, TEXT_X, TEXT_Y);
     pop();
   }
 }
