@@ -33,7 +33,11 @@ class Waveform {
     const OFFSET = (this.x2 - this.x1) * 0.1;
     push();
     if (player.isReviving) {
-      stroke(ColorScheme.WHITE);
+      if (audioManager.volume > VOLUME_MAX * 0.5) {
+        stroke(ColorScheme.BLACK);
+      } else {
+        stroke(ColorScheme.WHITE);
+      }
       strokeWeight(10);
     } else {
       stroke(player.strokeColor);
@@ -41,7 +45,7 @@ class Waveform {
     }
 
     fill(ColorScheme.CLEAR);
-    ellipse(this.x1 - OFFSET, this.y1 - OFFSET, (this.x2 - this.x1) * 2, (this.y2 - this.y1) * 2);
+    ellipse(this.x1, this.y1, (this.x2 - this.x1) * 2, (this.y2 - this.y1) * 2);
     pop();
   }
 
