@@ -32,6 +32,10 @@ const MUSICIAN = 1;
 const LOCAL = 0;
 const ONLINE = 1;
 
+const STREAK_THRESHOLD_1 = 16;
+const STREAK_THRESHOLD_2 = 32;
+const STREAK_THRESHOLD_3 = 48;
+
 function preload() {
   isLoaded = false;
   isAwake = false;
@@ -78,6 +82,7 @@ function setup() {
   newBackgroundColor = backgroundColor;
   backgroundColorFadeTimer = 0;
   backgroundColorFadeTime = 0;
+  streak = 0;
   score = 0;
 
   audioManager.loadFilter();
@@ -230,14 +235,24 @@ function handleCollisionsAndJumping() {
 
 function handleFalling() {
   if (player.sprite.position.y > height || player.energy < 0) {
-    score -= 500;
+    streak = 0;
     player.handleFalling();
     audioManager.handleFalling();
     platformManager.handleFalling();
     fluidManager.handleFalling();
     jukeboxManager.handleFalling();
   } else {
-    score++;
+    if (streak < STREAK_THRESHOLD_1) {
+      if (streak % 2 === 0) {
+        score++;
+      }
+    } else if (streak < STREAK_THRESHOLD_2) {
+      score++;
+    } else if (streak < STREAK_THRESHOLD_3) {
+      score += 2;
+    } else {
+      score += 10;
+    }
   }
 }
 
@@ -279,7 +294,6 @@ function handleRevived() {
 
 
 function returnToSongSelectionScreen(genre) {
-  score = 0;
   returningToSongSelectionScreen = true;
   audioManager.resetSoundProperties(genre);
   //audioManager.stopSounds();
@@ -300,6 +314,7 @@ function returnToSongSelectionScreen(genre) {
 
 function changeLevel(genre) {
   score = 0;
+  streak = 0;
   levelManager.changeLevel(genre);
   currentLevel = levelManager.getCurrentLevel();
   newBackgroundColor = currentLevel.initialBackgroundColor;

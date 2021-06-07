@@ -594,6 +594,9 @@ class UIManager {
     const SCORE_X = width - 20;
     const SCORE_Y = 5;
 
+    const STREAK_X = width - 20;
+    const STREAK_Y = 45;
+
     const ITEM_TEXT_SIZE = min(width / 33, 40);
 
     fill(fillColor);
@@ -607,6 +610,13 @@ class UIManager {
 
     textAlign(RIGHT, TOP);
     text(`SCORE: ${score}`, SCORE_X, SCORE_Y);
+
+    if (streak > STREAK_THRESHOLD_1) {
+      const SUBITEM_TEXT_SIZE = (min(width / 40, 30));
+      textSize(SUBITEM_TEXT_SIZE);
+
+      text(`BEAT STREAK: ${streak}`, STREAK_X, STREAK_Y);
+    }
 
     pop();
   }

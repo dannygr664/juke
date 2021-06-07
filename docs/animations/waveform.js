@@ -9,8 +9,9 @@ class Waveform {
 
   draw(rms) {
     push();
-    strokeWeight(map(rms, 0, 0.05, 1, 30));
-    stroke(ColorScheme.WHITE);
+    strokeWeight(map(rms, 0, 0.05, 1, this.getStrokeWeightFromStreak()));
+
+    stroke(this.getStrokeColorFromStreak());
 
     fill(this.color);
 
@@ -29,6 +30,7 @@ class Waveform {
   }
 
   drawStroke() {
+    const OFFSET = (this.x2 - this.x1) * 0.1;
     push();
     if (player.isReviving) {
       stroke(ColorScheme.WHITE);
@@ -39,7 +41,7 @@ class Waveform {
     }
 
     fill(ColorScheme.CLEAR);
-    ellipse(this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1);
+    ellipse(this.x1 - OFFSET, this.y1 - OFFSET, (this.x2 - this.x1) * 2, (this.y2 - this.y1) * 2);
     pop();
   }
 
@@ -68,5 +70,29 @@ class Waveform {
     }
     text(dynamics, TEXT_X, TEXT_Y);
     pop();
+  }
+
+  getStrokeWeightFromStreak() {
+    if (streak < STREAK_THRESHOLD_1) {
+      return 0;
+    } else if (streak < STREAK_THRESHOLD_2) {
+      return 10;
+    } else if (streak < STREAK_THRESHOLD_3) {
+      return 20;
+    } else {
+      return 30;
+    }
+  }
+
+  getStrokeColorFromStreak() {
+    if (streak < STREAK_THRESHOLD_1) {
+      return ColorScheme.CLEAR;
+    } else if (streak < STREAK_THRESHOLD_2) {
+      return ColorScheme.ETHEREAL_SAPPHIRE;
+    } else if (streak < STREAK_THRESHOLD_3) {
+      return ColorScheme.ETHEREAL_GOLD;
+    } else {
+      return ColorScheme.WHITE;
+    }
   }
 }

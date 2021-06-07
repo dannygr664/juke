@@ -97,6 +97,7 @@ class PlatformManager {
       this.beatTimer = audioManager.getCurrentSound().currentTime()
         % audioManager.getDurationOfBeat();
       if (oldBeatTimer > this.beatTimer) {
+        streak++;
         let newPlatform = this.spawnPlatform();
         this.updatePlatformSpeed(newPlatform);
       }
