@@ -83,7 +83,10 @@ class PlatformManager {
         newPlatformWidth,
         this.platformHeight
       );
-      this.platforms.get(platformIndex).remove();
+      let platformToRemove = this.platforms.get(platformIndex);
+      if (platformToRemove) {
+        platformToRemove.remove();
+      }
 
       newPlatform.shapeColor = this.platformColor;
       newPlatform.setSpeed(this.baseSpeed, 180);
