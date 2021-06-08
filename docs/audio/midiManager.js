@@ -79,7 +79,7 @@ class MIDIManager {
 
               if (!isPaused) {
                 if (this.isNoteOn(eventType) && velocity > 0) {
-                  this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, NOTE_MIN, NOTE_MAX, height, 0));
+                  this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos));
 
                   const delay = 0;
                   MIDI.noteOn(channel, note, velocity, delay);

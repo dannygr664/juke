@@ -16,6 +16,7 @@ class PlatformManager {
     this.platformYMax = height;
     this.platformWidth = 100;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
+    this.minPlatformYPos = height * 0.125;
     this.platformSpacing = width / 7;
     this.beatTimer = 0;
     this.platformColor = levelManager.getCurrentLevel().platformColor;
@@ -132,7 +133,7 @@ class PlatformManager {
     //   }
     // }
 
-    let yPos = map(meanFrequencyIndex, 0, spectrum.length, height, 0);//map(peakFrequencyIndex, 0, spectrum.length, height, 0);
+    let yPos = map(meanFrequencyIndex, 0, spectrum.length, height, this.minPlatformYPos);//map(peakFrequencyIndex, 0, spectrum.length, height, 0);
 
     let platform = this.createColoredPlatformAtHeight(ColorScheme.BLACK, yPos);
 
