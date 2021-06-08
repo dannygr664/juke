@@ -26,7 +26,7 @@ const REVIVING_LPF_PEAK_VOLUME = 0;
 
 class AudioManager {
   constructor() {
-    soundFormats('mp3');
+    soundFormats('wav', 'mp3');
     this.getAudioFilePaths();
     this.sounds = {};
     this.songs = {};
