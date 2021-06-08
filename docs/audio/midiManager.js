@@ -188,4 +188,42 @@ class MIDIManager {
 
     return mappedNote;
   }
+
+  playMIDIFile(filePath) {
+    loadFile({
+      file: filePath,
+      onSuccess: function () {
+        console.log(`${file} loaded!`);
+        MIDI.Player.addListener((data) => {
+          const eventType = data.message;
+          const note = data.note;
+          if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
+            // const channel = data.channel;
+            let velocity = message.data[2];
+
+            const mappedNote = this.mapNoteToRange(note, NOTE_MIN, NOTE_MAX);
+
+            if (!isPaused) {
+              if (this.isNoteOn(eventType) && velocity > 0) {
+                this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos));
+
+                // const delay = 0;
+                // MIDI.noteOn(channel, note, velocity, delay);
+              }
+            }
+
+            if (this.isNoteOff(eventType) || velocity === 0) {
+              let platform = this.spawningPlatforms[mappedNote];
+              platformManager.terminateMIDIPlatform(platform);
+              this.spawningPlatforms[mappedNote] = null;
+
+              // const delay = 0;
+              // MIDI.noteOff(channel, note, delay);
+            }
+          }
+        });
+        MIDI.Player.start();
+      }
+    });
+  }
 }
