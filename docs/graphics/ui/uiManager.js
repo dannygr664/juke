@@ -582,6 +582,7 @@ class UIManager {
     this.drawVolumeMeter();
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();
+    this.drawBeatStreakMeter();
 
     const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
 
@@ -593,9 +594,6 @@ class UIManager {
 
     const SCORE_X = width - 20;
     const SCORE_Y = 5;
-
-    const STREAK_X = width - 20;
-    const STREAK_Y = 45;
 
     const ITEM_TEXT_SIZE = min(width / 33, 40);
 
@@ -610,13 +608,6 @@ class UIManager {
 
     textAlign(RIGHT, TOP);
     text(`SCORE: ${score}`, SCORE_X, SCORE_Y);
-
-    if (streak > STREAK_THRESHOLD_1) {
-      const SUBITEM_TEXT_SIZE = (min(width / 40, 30));
-      textSize(SUBITEM_TEXT_SIZE);
-
-      text(`BEAT STREAK: ${streak}`, STREAK_X, STREAK_Y);
-    }
 
     pop();
   }
@@ -706,6 +697,33 @@ class UIManager {
     rect(70, 65, 160, 20);
     noStroke();
     fill(fillColor);
+    pop();
+  }
+
+  drawBeatStreakMeter() {
+    push();
+    const fillColor = audioManager.volume < VOLUME_MAX * 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    noStroke();
+    fill(fillColor);
+    const STREAK_X = width - 180;
+    const STREAK_Y = 45;
+    text(`Beat Streak`, STREAK_X - 110, STREAK_Y);
+    let beatStreakFillColor = getStrokeColorFromStreak(streak + STREAK_THRESHOLD_1);
+    fill(beatStreakFillColor);
+    let streakWidth = 160;
+    if (streak < STREAK_THRESHOLD_3) {
+      streakWidth = map(streak % STREAK_THRESHOLD_1, 0, STREAK_THRESHOLD_1, 0, 160);
+      rect(STREAK_X, STREAK_Y, streakWidth, 20);
+    } else {
+      for (let i = 0; i < 360; i++) {
+        fill(color(i, 100, 100));
+        rect(STREAK_X + (i / 360) * streakWidth, STREAK_Y, streakWidth / 360, 20);
+      }
+    }
+
+    stroke(fillColor);
+    fill(ColorScheme.CLEAR);
+    rect(STREAK_X, STREAK_Y, 160, 20);
     pop();
   }
 }

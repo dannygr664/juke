@@ -463,3 +463,16 @@ function startMultiplayerMode(genre, gameSeed) {
 
   changeLevel(genre);
 }
+
+
+function getStrokeColorFromStreak(streak) {
+  if (streak < STREAK_THRESHOLD_1) {
+    return ColorScheme.BLACK;
+  } else if (streak < STREAK_THRESHOLD_2) {
+    return ColorScheme.ETHEREAL_SAPPHIRE;
+  } else if (streak < STREAK_THRESHOLD_3) {
+    return ColorScheme.ETHEREAL_GOLD;
+  } else {
+    return ColorScheme.WHITE;
+  }
+}

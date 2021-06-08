@@ -11,7 +11,7 @@ class Waveform {
     push();
     strokeWeight(map(rms, 0, 0.05, 1, this.getStrokeWeightFromStreak()));
 
-    stroke(this.getStrokeColorFromStreak());
+    stroke(getStrokeColorFromStreak(streak));
 
     fill(this.color);
 
@@ -85,18 +85,6 @@ class Waveform {
       return 20;
     } else {
       return 30;
-    }
-  }
-
-  getStrokeColorFromStreak() {
-    if (streak < STREAK_THRESHOLD_1) {
-      return ColorScheme.CLEAR;
-    } else if (streak < STREAK_THRESHOLD_2) {
-      return ColorScheme.ETHEREAL_SAPPHIRE;
-    } else if (streak < STREAK_THRESHOLD_3) {
-      return ColorScheme.ETHEREAL_GOLD;
-    } else {
-      return ColorScheme.WHITE;
     }
   }
 }
