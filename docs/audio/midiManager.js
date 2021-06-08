@@ -203,7 +203,7 @@ class MIDIManager {
       const note = data.note;
       if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
         // const channel = data.channel;
-        let velocity = message.data[2];
+        let velocity = data.velocity;
 
         const mappedNote = this.mapNoteToRange(note, NOTE_MIN, NOTE_MAX);
 
