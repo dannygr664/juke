@@ -732,12 +732,13 @@ class UIManager {
 
   drawPlatformGenerator() {
     push();
-    stroke(ColorScheme.BLACK);
     strokeWeight(5);
     for (let i = NOTE_MIN; i <= NOTE_MAX; i++) {
-      const fillColor = (i % 2 === 0) ? ColorScheme.WHITE : ColorScheme.BLACK;
+      const strokeColor = midiManager.getNoteColor(i);
+      stroke(strokeColor);
+      const fillColor = midiManager.spawningPlatforms[i] ? midiManager.getNoteColor(i) : ColorScheme.WHITE;
       fill(fillColor);
-      rect(width - 50, map(i, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos) - platformManager.platformHeight / 2, 50, platformManager.platformHeight);
+      rect(width - 50, map(i, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos) - platformManager.platformHeight / 2, 100, platformManager.platformHeight);
     }
     pop();
   }
