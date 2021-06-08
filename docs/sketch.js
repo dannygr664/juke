@@ -106,6 +106,7 @@ function centerCanvas() {
 
 function wakeUp() {
   audioManager.startSounds(currentLevel.genre);
+  midiManager.initializeSynth();
 
   animationController.loadAnimations();
 

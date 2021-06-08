@@ -96,7 +96,6 @@ class MIDIManager {
               }
             }
           }
-          this.initializeSynth();
         } else {
           input.value.onmidimessage = undefined;
         }
@@ -123,10 +122,11 @@ class MIDIManager {
       onprogress: function (state, progress) {
         console.log(state, progress);
       },
-      onsuccess: function () {
+      onsuccess: () => {
         for (let i = 0; i < NUM_CHANNELS; i++) {
           MIDI.setVolume(i, 40);
         }
+        this.playMIDIFile('audio/City/Juke_City_City_88bpm4-4_L74B.mid');
       }
     });
   }
@@ -190,39 +190,40 @@ class MIDIManager {
   }
 
   playMIDIFile(filePath) {
-    loadFile({
-      file: filePath,
-      onSuccess: function () {
-        console.log(`${file} loaded!`);
-        MIDI.Player.addListener((data) => {
-          const eventType = data.message;
-          const note = data.note;
-          if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
-            // const channel = data.channel;
-            let velocity = message.data[2];
-
-            const mappedNote = this.mapNoteToRange(note, NOTE_MIN, NOTE_MAX);
-
-            if (!isPaused) {
-              if (this.isNoteOn(eventType) && velocity > 0) {
-                this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos));
-
-                // const delay = 0;
-                // MIDI.noteOn(channel, note, velocity, delay);
-              }
-            }
-
-            if (this.isNoteOff(eventType) || velocity === 0) {
-              let platform = this.spawningPlatforms[mappedNote];
-              platformManager.terminateMIDIPlatform(platform);
-              this.spawningPlatforms[mappedNote] = null;
-
-              // const delay = 0;
-              // MIDI.noteOff(channel, note, delay);
-            }
-          }
-        });
+    MIDI.Player.loadFile(
+      filePath,
+      () => {
+        console.log(`${filePath} loaded!`);
         MIDI.Player.start();
+      }
+    );
+    MIDI.Player.addListener((data) => {
+      console.log(data);
+      const eventType = data.message;
+      const note = data.note;
+      if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
+        // const channel = data.channel;
+        let velocity = message.data[2];
+
+        const mappedNote = this.mapNoteToRange(note, NOTE_MIN, NOTE_MAX);
+
+        if (!isPaused) {
+          if (this.isNoteOn(eventType) && velocity > 0) {
+            this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos));
+
+            // const delay = 0;
+            // MIDI.noteOn(channel, note, velocity, delay);
+          }
+        }
+
+        if (this.isNoteOff(eventType) || velocity === 0) {
+          let platform = this.spawningPlatforms[mappedNote];
+          platformManager.terminateMIDIPlatform(platform);
+          this.spawningPlatforms[mappedNote] = null;
+
+          // const delay = 0;
+          // MIDI.noteOff(channel, note, delay);
+        }
       }
     });
   }
