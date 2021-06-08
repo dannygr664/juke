@@ -583,6 +583,9 @@ class UIManager {
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();
     this.drawBeatStreakMeter();
+    if (isMultiplayerMode) {
+      this.drawPlatformGenerator();
+    }
 
     const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
 
@@ -724,6 +727,18 @@ class UIManager {
     stroke(fillColor);
     fill(ColorScheme.CLEAR);
     rect(STREAK_X, STREAK_Y, 160, 20);
+    pop();
+  }
+
+  drawPlatformGenerator() {
+    push();
+    stroke(ColorScheme.BLACK);
+    strokeWeight(5);
+    for (let i = NOTE_MIN; i <= NOTE_MAX; i++) {
+      const fillColor = (i % 2 === 0) ? ColorScheme.WHITE : ColorScheme.BLACK;
+      fill(fillColor);
+      rect(width - 50, map(i, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos) - platformManager.platformHeight / 2, 50, platformManager.platformHeight);
+    }
     pop();
   }
 }
