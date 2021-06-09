@@ -9,7 +9,7 @@ class Waveform {
 
   draw(rms) {
     push();
-    strokeWeight(map(rms, 0, 0.05, 1, this.getStrokeWeightFromStreak()));
+    strokeWeight(map(rms, 0, 0.05, 1, getStrokeWeightFromStreak(streak)));
 
     stroke(getStrokeColorFromStreak(streak));
 
@@ -74,17 +74,5 @@ class Waveform {
     }
     text(dynamics, TEXT_X, TEXT_Y);
     pop();
-  }
-
-  getStrokeWeightFromStreak() {
-    if (streak < STREAK_THRESHOLD_1) {
-      return 0;
-    } else if (streak < STREAK_THRESHOLD_2) {
-      return 10;
-    } else if (streak < STREAK_THRESHOLD_3) {
-      return 20;
-    } else {
-      return 30;
-    }
   }
 }

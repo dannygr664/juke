@@ -16,7 +16,7 @@ class PlatformManager {
     this.platformYMax = height;
     this.platformWidth = 100;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
-    this.minPlatformYPos = height * 0.125;
+    this.minPlatformYPos = height * 0.15;
     this.platformSpacing = width / 7;
     this.beatTimer = 0;
     this.platformColor = levelManager.getCurrentLevel().platformColor;

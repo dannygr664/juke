@@ -496,3 +496,16 @@ function getStrokeColorFromStreak(streak) {
     return ColorScheme.WHITE;
   }
 }
+
+
+function getStrokeWeightFromStreak(streak) {
+  if (streak < STREAK_THRESHOLD_1) {
+    return 0;
+  } else if (streak < STREAK_THRESHOLD_2) {
+    return 10;
+  } else if (streak < STREAK_THRESHOLD_3) {
+    return 20;
+  } else {
+    return 30;
+  }
+}

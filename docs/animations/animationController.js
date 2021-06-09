@@ -6,6 +6,7 @@ let wipeAnim;
 let linesAnim;
 let blindsAnim;
 let moireAnim;
+let jukeboxAnim;
 let waveformAnim;
 
 class AnimationController {
@@ -56,6 +57,14 @@ class AnimationController {
       height,
       ColorScheme.CLEAR
     );
+    jukeboxAnim = new Moire(
+      width - 100,
+      150,
+      width - 105,
+      height,
+      50,
+      ColorScheme.BLACK
+    );
   }
 
   createJukeboxAnimation(xPosition, width) {
@@ -72,7 +81,7 @@ class AnimationController {
   drawJukeboxAnimation(xPosition) {
     moireAnim.x1 = xPosition;
     moireAnim.x2 = xPosition;
-    moireAnim.drawMoire();
+    moireAnim.drawMoire(0);
   }
 
   setJukeboxAnimationColor(color) {
@@ -87,6 +96,16 @@ class AnimationController {
 
   resetJukeboxFadeTimer() {
     moireAnim.resetFadeTimer();
+  }
+
+  drawJukebox() {
+    const playingSounds = audioManager.sounds
+      .filter(sound => sound.isPlaying());
+    let rms = 0;
+    if (playingSounds.length > 0) {
+      rms = playingSounds[0].amplitudeAnalyzer.getLevel();
+    }
+    jukeboxAnim.drawMoire(rms);
   }
 
   createFluidAnimation(xPosition, yPosition, width, height, color) {

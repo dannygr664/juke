@@ -740,6 +740,7 @@ class UIManager {
       fill(fillColor);
       rect(width - 50, map(i, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos) - platformManager.platformHeight, 100, platformManager.platformHeight);
     }
+    animationController.drawJukebox();
     pop();
   }
 }
