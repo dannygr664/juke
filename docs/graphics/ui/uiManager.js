@@ -583,7 +583,7 @@ class UIManager {
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();
     this.drawBeatStreakMeter();
-    if (isMultiplayerMode) {
+    if (midiManager.hasMIDIFile(levelManager.getCurrentLevel().genre)) {
       this.drawPlatformGenerator();
     }
 
@@ -733,12 +733,12 @@ class UIManager {
   drawPlatformGenerator() {
     push();
     strokeWeight(5);
-    for (let i = NOTE_MIN; i <= NOTE_MAX; i++) {
+    for (let i = midiManager.noteMin; i <= midiManager.noteMax; i++) {
       const strokeColor = midiManager.getNoteColor(i);
       stroke(strokeColor);
       const fillColor = midiManager.spawningPlatforms[i] ? midiManager.getNoteColor(i) : ColorScheme.WHITE;
       fill(fillColor);
-      rect(width - 50, map(i, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos) - platformManager.platformHeight / 2, 100, platformManager.platformHeight);
+      rect(width - 50, map(i, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos) - platformManager.platformHeight, 100, platformManager.platformHeight);
     }
     pop();
   }

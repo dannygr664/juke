@@ -239,6 +239,7 @@ function handleFalling() {
     streak = 0;
     player.handleFalling();
     audioManager.handleFalling();
+    midiManager.handleFalling();
     platformManager.handleFalling();
     fluidManager.handleFalling();
     jukeboxManager.handleFalling();
@@ -269,6 +270,7 @@ function revivingLoop() {
 function handleRevived() {
   player.handleRevived();
   audioManager.handleRevived();
+  midiManager.handleRevived();
   platformManager.handleRevived();
   fluidManager.handleRevived();
   jukeboxManager.handleRevived();
@@ -325,18 +327,29 @@ function changeLevel(genre) {
   jukeboxManager.changeLevel();
   drawMode = currentLevel.initialDrawMode;
 
-  audioManager.startSounds(genre);
+  if (genre !== TITLE_GENRE) {
+    if (platformManager.mode === PLATFORMER_MODE && midiManager.hasMIDIFile(genre)) {
+      midiManager.playMIDIFileForGenre(genre);
+    } else {
+      MIDI.Player.removeListener();
+      audioManager.startSounds(genre);
+    }
+  } else {
+    audioManager.startSounds(genre);
+  }
 
   if (genre !== TITLE_GENRE) {
     audioManager.updateSoundSpeed(INITIAL_SOUND_SPEED, 0);
     audioManager.updateVolume(INITIAL_VOLUME, 0);
     audioManager.updateReverb(INITIAL_REVERB);
+
     //audioManager.unloopCurrentSound();
   } else {
     audioManager.resetSoundProperties(genre);
     if (platformManager.mode === MIDI_MODE) {
       platformManager.disableMIDIMode();
     }
+    midiManager.stopMIDI();
     playerRole = GAMER;
     isMultiplayerMode = false;
     currentLevel.currentItemSelected = 0;
@@ -350,6 +363,7 @@ function changeLevel(genre) {
 function handlePausing() {
   player.handlePausing();
   audioManager.handlePausing();
+  midiManager.handlePausing();
   if (!player.isReviving) {
     platformManager.handlePausing();
     fluidManager.handlePausing();
@@ -400,6 +414,7 @@ function updateBackgroundHue(hueChange, saturationChange, fadeTime) {
 function handleUnpausing() {
   player.handleUnpausing();
   audioManager.handleUnpausing();
+  midiManager.handleUnpausing();
   if (!player.isReviving) {
     platformManager.handleUnpausing();
     fluidManager.handleUnpausing();

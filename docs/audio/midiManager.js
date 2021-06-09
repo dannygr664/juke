@@ -6,17 +6,47 @@ const NOTE_MAX = 72;
 const NOTE_MIN = 48;
 const MAX_NOTE_INDEX = NOTE_MAX - NOTE_MIN;
 
+const SYNTH_VOLUME = 40;
+
+const GENRES_TO_NOTE_RANGES = {
+  'Spaceship': {
+    'noteMin': 30,
+    'noteMax': 70
+  },
+  'Ethereal': {
+    'noteMin': 48,
+    'noteMax': 60
+  }
+};
+
 class MIDIManager {
   constructor() {
     this.controllers = [];
     this.midiAccess = null;
     this.spawningPlatforms = {};
+    this.fileLoaded = false;
+    this.noteMax = NOTE_MAX;
+    this.noteMin = NOTE_MIN;
+    this.getMIDIFilePaths();
+  }
+
+  getMIDIFilePaths() {
+    this.genresToMIDIFilePaths = {};
+
+    this.genresToMIDIFilePaths['City'] = 'audio/City/Juke_City_City_88bpm4-4_L74B.mid';
+    this.genresToMIDIFilePaths['Spaceship'] = 'audio/Spaceship/Juke_Spaceship_Spaceship_76,88bpm4-4_L26M.mid';
+    this.genresToMIDIFilePaths['Ethereal'] = 'audio/Ethereal/Juke_Ethereal_11Parts_88bpm4-4_L21M.mid';
+    this.genresToMIDIFilePaths['LoFi'] = 'audio/LoFi/Juke_LoFi_LoFi_87bpm4-4_L241B.mid';
+    //this.genresToMIDIFilePaths['Chill'] = 'audio/Chill/Juke_Chill_Chill_95,94bpm4-4_L82M.mid';
+    //this.genresToMIDIFilePaths['Cinematic'] = 'audio/Cinematic/Juke_Cinematic_Cinematic_96bpm4-4_L24M.mid';
   }
 
   getMIDIAccess() {
     if (navigator.requestMIDIAccess) {
       navigator.requestMIDIAccess()
         .then((access) => {
+          MIDI.Player.removeListener();
+          this.setSynthVolume(SYNTH_VOLUME);
           this.midiAccess = access;
           this.midiAccess.onstatechange = (e) => {
             // Print information about the (dis)connected MIDI controller
@@ -75,11 +105,11 @@ class MIDIManager {
               let frequency = midiToFreq(note);
               let velocity = message.data[2];
 
-              const mappedNote = this.mapNoteToRange(note, NOTE_MIN, NOTE_MAX);
+              const mappedNote = this.mapNoteToRange(note, this.noteMin, this.noteMax);
 
               if (!isPaused) {
                 if (this.isNoteOn(eventType) && velocity > 0) {
-                  this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos));
+                  this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, this.noteMin, this.noteMax, height, platformManager.minPlatformYPos));
 
                   const delay = 0;
                   MIDI.noteOn(channel, note, velocity, delay);
@@ -113,6 +143,8 @@ class MIDIManager {
         input.value.onmidimessage = undefined;
       }
     }
+    this.setSynthVolume(0);
+    this.setMIDIPlayerListener();
   }
 
   initializeSynth() {
@@ -123,12 +155,51 @@ class MIDIManager {
         console.log(state, progress);
       },
       onsuccess: () => {
-        for (let i = 0; i < NUM_CHANNELS; i++) {
-          MIDI.setVolume(i, 40);
-        }
-        this.playMIDIFile('audio/City/Juke_City_City_88bpm4-4_L74B.mid');
+        this.setSynthVolume(0);
       }
     });
+  }
+
+  setNoteRangeForGenre(genre) {
+    if (GENRES_TO_NOTE_RANGES[genre]) {
+      this.noteMin = GENRES_TO_NOTE_RANGES[genre]['noteMin'] ?? NOTE_MIN;
+      this.noteMax = GENRES_TO_NOTE_RANGES[genre]['noteMax'] ?? NOTE_MAX;
+    } else {
+      this.noteMin = NOTE_MIN;
+      this.noteMax = NOTE_MAX;
+    }
+  }
+
+  setMIDIPlayerListener() {
+    MIDI.Player.removeListener();
+    MIDI.Player.addListener((data) => {
+      const eventType = data.message;
+      const note = data.note;
+      if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
+        // const channel = data.channel;
+        let velocity = data.velocity;
+
+        const mappedNote = this.mapNoteToRange(note, this.noteMin, this.noteMax);
+
+        if (!isPaused) {
+          if (this.isNoteOn(eventType) && velocity > 0) {
+            this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, this.noteMin, this.noteMax, height, platformManager.minPlatformYPos));
+          }
+        }
+
+        if (this.isNoteOff(eventType) || velocity === 0) {
+          let platform = this.spawningPlatforms[mappedNote];
+          platformManager.terminateMIDIPlatform(platform);
+          this.spawningPlatforms[mappedNote] = null;
+        }
+      }
+    });
+  }
+
+  setSynthVolume(volume) {
+    for (let i = 0; i < NUM_CHANNELS; i++) {
+      MIDI.setVolume(i, volume);
+    }
   }
 
   isNoteOn(eventType) {
@@ -161,70 +232,97 @@ class MIDIManager {
 
   getNoteColor(note) {
     const colorMap = MIDI.Synesthesia.data['D. D. Jameson (1844)'];
-    const noteColor = colorMap[(note - 27) % 12];
+    const noteColor = colorMap[note % 12];
     if (noteColor) {
       push();
       colorMode(HSL, 360, 100, 100, 1);
       const hslColor = color(noteColor[0], noteColor[1], noteColor[2]);
       pop();
       return hslColor;
-
     } else {
       return ColorScheme.BLACK;
     }
   }
 
   mapNoteToRange(note, noteMin, noteMax) {
-    const SHIFT_AMOUNT = noteMax - noteMin;
+    const NOTES_PER_OCTAVE = 12;
+    const OCTAVE_SHIFT = floor((noteMax - noteMin) / NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE;
     let mappedNote = note;
 
     while (mappedNote < noteMin) {
-      mappedNote += SHIFT_AMOUNT;
+      mappedNote += OCTAVE_SHIFT;
     }
 
     while (mappedNote > noteMax) {
-      mappedNote -= SHIFT_AMOUNT;
+      mappedNote -= OCTAVE_SHIFT;
     }
 
     return mappedNote;
   }
 
-  playMIDIFile(filePath) {
+  playMIDIFileForGenre(genre) {
+    this.setNoteRangeForGenre(genre);
+    this.fileLoaded = false;
+    MIDI.Player.timewarp = 1.0;
+    this.baseBPM = audioManager.sounds.filter(sound => sound.soundInfo.genre === genre)[0].soundInfo.bpm;
+    MIDI.Player.BPM = this.baseBPM;
+    const filePath = this.genresToMIDIFilePaths[genre];
     MIDI.Player.loadFile(
       filePath,
       () => {
         console.log(`${filePath} loaded!`);
+        this.fileLoaded = true;
         MIDI.Player.start();
+        audioManager.startSounds(genre);
       }
     );
-    MIDI.Player.addListener((data) => {
-      console.log(data);
-      const eventType = data.message;
-      const note = data.note;
-      if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
-        // const channel = data.channel;
-        let velocity = data.velocity;
+    this.setMIDIPlayerListener();
+  }
 
-        const mappedNote = this.mapNoteToRange(note, NOTE_MIN, NOTE_MAX);
+  stopMIDI() {
+    if (MIDI.Player.playing) {
+      MIDI.Player.stop();
+    }
+  }
 
-        if (!isPaused) {
-          if (this.isNoteOn(eventType) && velocity > 0) {
-            this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, NOTE_MIN, NOTE_MAX, height, platformManager.minPlatformYPos));
+  pauseMIDI() {
+    if (MIDI.Player.playing && platformManager.mode === PLATFORMER_MODE) {
+      MIDI.Player.pause();
+    }
+  }
 
-            // const delay = 0;
-            // MIDI.noteOn(channel, note, velocity, delay);
-          }
-        }
+  resumeMIDI() {
+    if (!MIDI.Player.playing && platformManager.mode === PLATFORMER_MODE) {
+      MIDI.Player.resume();
+    }
+  }
 
-        if (this.isNoteOff(eventType) || velocity === 0) {
-          let platform = this.spawningPlatforms[mappedNote];
-          platformManager.terminateMIDIPlatform(platform);
-          this.spawningPlatforms[mappedNote] = null;
+  handlePausing() {
+    this.pauseMIDI();
+  }
 
-          // const delay = 0;
-          // MIDI.noteOff(channel, note, delay);
-        }
-      }
-    });
+  handleUnpausing() {
+    if (!player.isReviving) {
+      this.resumeMIDI();
+    }
+  }
+
+  handleFalling() {
+    this.pauseMIDI();
+  }
+
+  handleRevived() {
+    this.resumeMIDI();
+  }
+
+  updateSoundSpeed(newSpeed) {
+    MIDI.Player.BPM = this.baseBPM * newSpeed;
+    if (!player.isReviving && !isPaused) {
+      this.resumeMIDI();
+    }
+  }
+
+  hasMIDIFile(genre) {
+    return (this.genresToMIDIFilePaths[genre] !== undefined);
   }
 }

@@ -261,6 +261,7 @@ class AudioManager {
     this.levelSounds.filter(sound => sound.isPlaying()).forEach(sound => {
       sound.rate(newSpeed);
     });
+    midiManager.updateSoundSpeed(newSpeed);
 
     const RED_ANCHOR = hue(ColorScheme.RED);
     const YELLOW_ANCHOR = hue(ColorScheme.YELLOW);
@@ -358,7 +359,9 @@ class AudioManager {
   }
 
   handleUnpausing() {
-    this.getCurrentSound().play();;
+    if (!player.isReviving) {
+      this.getCurrentSound().play();
+    }
   }
 
   toggleSound(soundIndex) {
