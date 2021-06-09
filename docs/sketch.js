@@ -332,7 +332,9 @@ function changeLevel(genre) {
       platformManager.platformWidth = width * 2;
       midiManager.playMIDIFileForGenre(genre);
     } else {
-      platformManager.platformWidth = width / 8;
+      if (platformManager.mode === PLATFORMER_MODE) {
+        platformManager.platformWidth = width / 8;
+      }
       MIDI.Player.removeListener();
       audioManager.startSounds(genre);
     }

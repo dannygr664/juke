@@ -46,7 +46,6 @@ class MIDIManager {
       navigator.requestMIDIAccess()
         .then((access) => {
           MIDI.Player.removeListener();
-          this.setSynthVolume(SYNTH_VOLUME);
           this.midiAccess = access;
           this.midiAccess.onstatechange = (e) => {
             // Print information about the (dis)connected MIDI controller
@@ -97,6 +96,7 @@ class MIDIManager {
         // each time there is a midi message call the onMIDIMessage function
         if (input.value.name === controller) {
           console.log(`Setting input controller to ${controller}`);
+          this.setSynthVolume(SYNTH_VOLUME);
           input.value.onmidimessage = (message) => {
             let eventType = message.data[0];
             let note = message.data[1];
