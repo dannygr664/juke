@@ -41,7 +41,7 @@ class Moire {
       line(this.x1 + i, this.y1, this.x1 + i, this.y2);
       //line(this.x1 + i, this.y1, this.x1 + i + 100, this.y1 - 100);
       const RADIUS = 200;
-      arc(this.x1 + i + RADIUS / 2, this.y1, RADIUS, 0.75 * RADIUS - i, PI, 3 * HALF_PI);
+      arc(this.x1 + i + RADIUS / 2, this.y1, RADIUS, 0.75 * RADIUS - i * (5 / 3), PI, 3 * HALF_PI);
     }
     pop();
   };
