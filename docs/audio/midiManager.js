@@ -147,10 +147,13 @@ class MIDIManager {
     this.setMIDIPlayerListener();
   }
 
-  initializeSynth() {
+  initializeSynth(instrument) {
+    if (!instrument) {
+      instrument = 'acoustic_grand_piano';
+    }
     MIDI.loadPlugin({
       soundfontUrl: "lib/midi-js/soundfont/",
-      instrument: "acoustic_grand_piano",
+      instrument: instrument,
       onprogress: function (state, progress) {
         console.log(state, progress);
       },
