@@ -527,9 +527,9 @@ class UIManager {
           text('Waiting for GAMER to join...', TEXT_X, currentLevel.getYPosOfItem(1));
         } else {
           if (controllers.length === 0) {
-            controllerDropdown.hide();
-            instrumentDropdown.hide();
-            submitButton.hide();
+            controllerDropdown && controllerDropdown.hide();
+            instrumentDropdown && instrumentDropdown.hide();
+            submitButton && submitButton.hide();
             textSize(CONTROLLER_TEXT_SIZE);
             text('Please (re)connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
           } else {
@@ -560,9 +560,9 @@ class UIManager {
               submitButton = createButton('Next');
               submitButton.position(TEXT_X, currentLevel.getYPosOfItem(2));
               submitButton.mouseClicked(() => {
-                controllerDropdown.hide();
-                instrumentDropdown.hide();
-                submitButton.hide();
+                controllerDropdown && controllerDropdown.hide();
+                instrumentDropdown && instrumentDropdown.hide();
+                submitButton && submitButton.hide();
                 controllerSelected = true;
                 connectMIDIController(controllerDropdown.value(), instrumentDropdown.value());
                 // if (networkMode === ONLINE) {

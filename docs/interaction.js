@@ -191,9 +191,9 @@ function controllerSelectionScreenKeyPressed(key, keyCode) {
       // if (networkMode === ONLINE) {
       //   socket.emit('remove player from room');
       // }
-      controllerDropdown.hide();
-      instrumentDropdown.hide();
-      submitButton.hide();
+      controllerDropdown && controllerDropdown.hide();
+      instrumentDropdown && instrumentDropdown.hide();
+      submitButton && submitButton.hide();
       currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;
       playerRole = GAMER;
