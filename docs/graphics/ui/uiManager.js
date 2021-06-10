@@ -602,7 +602,7 @@ class UIManager {
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();
     this.drawBeatStreakMeter();
-    if (midiManager.hasMIDIFile(levelManager.getCurrentLevel().genre)) {
+    if (midiManager.hasMIDIFile(levelManager.getCurrentLevel().genre) || platformManager.mode === MIDI_MODE) {
       this.drawPlatformGenerator();
     }
 
