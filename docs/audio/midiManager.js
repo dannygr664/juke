@@ -278,7 +278,7 @@ class MIDIManager {
   playMIDIFileForGenre(genre) {
     this.setNoteRangeForGenre(genre);
     this.fileLoaded = false;
-    MIDI.Player.timewarp = 1.0;
+    MIDI.Player.timeWarp = 1.0;
     this.baseBPM = audioManager.sounds.filter(sound => sound.soundInfo.genre === genre)[0].soundInfo.bpm;
     MIDI.Player.BPM = this.baseBPM;
     const filePath = this.genresToMIDIFilePaths[genre];
@@ -331,7 +331,7 @@ class MIDIManager {
   }
 
   updateSoundSpeed(newSpeed) {
-    MIDI.Player.BPM = this.baseBPM * newSpeed;
+    MIDI.Player.timeWarp = 1 / newSpeed;
     if (!player.isReviving && !isPaused) {
       this.resumeMIDI();
     }
