@@ -10,7 +10,7 @@ class Spaceship {
       ColorScheme.SPACESHIP_HIGHEST_VOLUME,
       ColorScheme.SPACESHIP_HIGHER_VOLUME,
       ColorScheme.SPACESHIP_LOWER_VOLUME,
-      ColorScheme.SPACESHIP_LOWEST_VOLUME
+      //ColorScheme.SPACESHIP_LOWEST_VOLUME
     ];
     this.jukeboxAnimationColors = [
       ColorScheme.BLACK
