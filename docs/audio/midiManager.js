@@ -51,6 +51,10 @@ class MIDIManager {
             // Print information about the (dis)connected MIDI controller
             console.log(e.port.name, e.port.manufacturer, e.port.state);
             this.getControllers();
+            controllerDropdown.html("");
+            for (let i = 0; i < this.controllers.length; i++) {
+              controllerDropdown.option(this.controllers[i]);
+            }
           };
           this.getControllers();
         }, function () {

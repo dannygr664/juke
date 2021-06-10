@@ -1,6 +1,9 @@
 const CURSOR_WIDTH = 20;
 const CURSOR_HEIGHT = 20;
 
+let controllerDropdown;
+let submitButton;
+
 class UIManager {
   constructor() {
     const TITLE_TEXT_SIZE = height / 5;
@@ -523,26 +526,42 @@ class UIManager {
           text('Waiting for GAMER to join...', TEXT_X, currentLevel.getYPosOfItem(1));
         } else {
           if (controllers.length === 0) {
+            controllerDropdown.hide();
+            submitButton.hide();
             textSize(CONTROLLER_TEXT_SIZE);
             text('Please (re)connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
           } else {
             text('Please select a controller.', TEXT_X, currentLevel.getYPosOfItem(0.5));
-            this.drawUpArrow(TEXT_X, currentLevel.getYPosOfItem(1));
-            textSize(CONTROLLER_TEXT_SIZE);
-            for (let i = 0; i < controllers.length; i++) {
-              text(controllers[i], TEXT_X, currentLevel.getYPosOfItem((i * 0.5) + 1.5));
+            if (!controllerDropdown) {
+              controllerDropdown = createSelect();
+              for (let i = 0; i < controllers.length; i++) {
+                controllerDropdown.option(controllers[i]);
+              }
+            } else {
+              controllerDropdown.show();
             }
-            this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem((controllers.length * 0.5) + 1.5));
+            controllerDropdown.position(TEXT_X, currentLevel.getYPosOfItem(1));
+            controllerDropdown.center('horizontal');
 
-            let currentItemSelected = currentLevel.currentItemSelected;
-            let cursorY = currentLevel.getYPosOfItem((currentItemSelected * 0.5) + 1.5);
-
-            rect(
-              CURSOR_X - CURSOR_WIDTH / 2,
-              cursorY - CURSOR_HEIGHT / 2,
-              CURSOR_WIDTH,
-              CURSOR_HEIGHT
-            );
+            if (!submitButton) {
+              submitButton = createButton('Next');
+            } else {
+              submitButton.show();
+            }
+            submitButton.position(TEXT_X, currentLevel.getYPosOfItem(2));
+            submitButton.center('horizontal');
+            submitButton.mouseClicked(() => {
+              controllerDropdown.hide();
+              submitButton.hide();
+              controllerSelected = true;
+              connectMIDIController(controllerDropdown.value());
+              // if (networkMode === ONLINE) {
+              //   socket.emit('ready');
+              // } else
+              if (networkMode === LOCAL) {
+                changeToSongSelectionScreen();
+              }
+            });
           }
         }
       } else {

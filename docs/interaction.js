@@ -191,13 +191,12 @@ function controllerSelectionScreenKeyPressed(key, keyCode) {
       // if (networkMode === ONLINE) {
       //   socket.emit('remove player from room');
       // }
+      controllerDropdown.hide();
+      submitButton.hide();
       currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;
       playerRole = GAMER;
     }
-  } else {
-    if (playerRole === MUSICIAN || networkMode === LOCAL)
-      handleControllerSelectionScreenKeyPressed(key, keyCode);
   }
 }
 
@@ -434,16 +433,13 @@ function handleMousePressed() {
         startSinglePlayerMode(genre);
       }
     }
-  } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN && midiManager.controllers.length > 0) {
-    controllerSelected = true;
-    connectMIDIController(midiManager.controllers[currentLevel.currentItemSelected]);
-    // if (networkMode === ONLINE) {
-    //   socket.emit('ready');
-    // } else
-    if (networkMode === LOCAL) {
-      changeToSongSelectionScreen();
-    }
+  } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN) {
   }
+}
+
+
+function handleControllerSelected() {
+
 }
 
 
@@ -471,19 +467,6 @@ function handleMouseMoved(yPos) {
         currentLevel.currentItemSelected = 0;
       } else {
         currentLevel.currentItemSelected = 1;
-      }
-    } else if (currentLevel.currentScreen === CONTROLLER_SELECTION_SCREEN) {
-      const DISTANCE_BETWEEN_ITEMS = currentLevel.getYPosOfItem(2) - currentLevel.getYPosOfItem(1.5);
-      let isLastItemSelected = true;
-      for (let i = 0; i < midiManager.controllers.length; i++) {
-        if (yPos <= currentLevel.getYPosOfItem((i * 0.5) + 1.5) + (DISTANCE_BETWEEN_ITEMS / 2)) {
-          currentLevel.currentItemSelected = i;
-          isLastItemSelected = false;
-          break;
-        }
-      }
-      if (isLastItemSelected) {
-        currentLevel.currentItemSelected = midiManager.controllers.length - 1;
       }
     }
   }
