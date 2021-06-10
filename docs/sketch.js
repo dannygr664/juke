@@ -106,7 +106,7 @@ function centerCanvas() {
 
 function wakeUp() {
   audioManager.startSounds(currentLevel.genre);
-  midiManager.initializeSynth();
+  midiManager.initializeSynth('synth_drum', 0);
 
   animationController.loadAnimations();
 
@@ -452,8 +452,8 @@ function changeToControllerSelectionScreen() {
 }
 
 
-function connectMIDIController(controller) {
-  midiManager.setInputController(controller);
+function connectMIDIController(controller, instrument) {
+  midiManager.setInputController(controller, instrument);
 }
 
 

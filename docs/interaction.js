@@ -192,6 +192,7 @@ function controllerSelectionScreenKeyPressed(key, keyCode) {
       //   socket.emit('remove player from room');
       // }
       controllerDropdown.hide();
+      instrumentDropdown.hide();
       submitButton.hide();
       currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;

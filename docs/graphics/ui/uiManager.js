@@ -2,6 +2,7 @@ const CURSOR_WIDTH = 20;
 const CURSOR_HEIGHT = 20;
 
 let controllerDropdown;
+let instrumentDropdown;
 let submitButton;
 
 class UIManager {
@@ -527,6 +528,7 @@ class UIManager {
         } else {
           if (controllers.length === 0) {
             controllerDropdown.hide();
+            instrumentDropdown.hide();
             submitButton.hide();
             textSize(CONTROLLER_TEXT_SIZE);
             text('Please (re)connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
@@ -534,34 +536,46 @@ class UIManager {
             text('Please select a controller.', TEXT_X, currentLevel.getYPosOfItem(0.5));
             if (!controllerDropdown) {
               controllerDropdown = createSelect();
+              controllerDropdown.position(TEXT_X, currentLevel.getYPosOfItem(1));
               for (let i = 0; i < controllers.length; i++) {
                 controllerDropdown.option(controllers[i]);
               }
             } else {
               controllerDropdown.show();
             }
-            controllerDropdown.position(TEXT_X, currentLevel.getYPosOfItem(1));
             controllerDropdown.center('horizontal');
+
+            if (!instrumentDropdown) {
+              instrumentDropdown = createSelect();
+              instrumentDropdown.position(TEXT_X, currentLevel.getYPosOfItem(1.5));
+              for (let i = 0; i < midiManager.instrumentSounds.length; i++) {
+                instrumentDropdown.option(midiManager.instrumentSounds[i]);
+              }
+            } else {
+              instrumentDropdown.show();
+            }
+            instrumentDropdown.center('horizontal');
 
             if (!submitButton) {
               submitButton = createButton('Next');
+              submitButton.position(TEXT_X, currentLevel.getYPosOfItem(2));
+              submitButton.mouseClicked(() => {
+                controllerDropdown.hide();
+                instrumentDropdown.hide();
+                submitButton.hide();
+                controllerSelected = true;
+                connectMIDIController(controllerDropdown.value(), instrumentDropdown.value());
+                // if (networkMode === ONLINE) {
+                //   socket.emit('ready');
+                // } else
+                if (networkMode === LOCAL) {
+                  changeToSongSelectionScreen();
+                }
+              });
             } else {
               submitButton.show();
             }
-            submitButton.position(TEXT_X, currentLevel.getYPosOfItem(2));
             submitButton.center('horizontal');
-            submitButton.mouseClicked(() => {
-              controllerDropdown.hide();
-              submitButton.hide();
-              controllerSelected = true;
-              connectMIDIController(controllerDropdown.value());
-              // if (networkMode === ONLINE) {
-              //   socket.emit('ready');
-              // } else
-              if (networkMode === LOCAL) {
-                changeToSongSelectionScreen();
-              }
-            });
           }
         }
       } else {

@@ -22,6 +22,10 @@ const GENRES_TO_NOTE_RANGES = {
 class MIDIManager {
   constructor() {
     this.controllers = [];
+    this.instrumentSounds = [
+      'acoustic_grand_piano',
+      'synth_drum'
+    ];
     this.midiAccess = null;
     this.spawningPlatforms = {};
     this.fileLoaded = false;
@@ -91,7 +95,7 @@ class MIDIManager {
     this.controllers = [];
   }
 
-  setInputController(controller) {
+  setInputController(controller, instrument) {
     if (this.midiAccess) {
       // Get lists of available MIDI controllers
       const inputs = this.midiAccess.inputs.values();
@@ -100,7 +104,7 @@ class MIDIManager {
         // each time there is a midi message call the onMIDIMessage function
         if (input.value.name === controller) {
           console.log(`Setting input controller to ${controller}`);
-          this.setSynthVolume(SYNTH_VOLUME);
+          this.initializeSynth(instrument, SYNTH_VOLUME);
           input.value.onmidimessage = (message) => {
             let eventType = message.data[0];
             let note = message.data[1];
@@ -151,10 +155,7 @@ class MIDIManager {
     this.setMIDIPlayerListener();
   }
 
-  initializeSynth(instrument) {
-    if (!instrument) {
-      instrument = 'acoustic_grand_piano';
-    }
+  initializeSynth(instrument, volume) {
     MIDI.loadPlugin({
       soundfontUrl: "lib/midi-js/soundfont/",
       instrument: instrument,
@@ -162,7 +163,8 @@ class MIDIManager {
         console.log(state, progress);
       },
       onsuccess: () => {
-        this.setSynthVolume(0);
+        this.setInstrument(instrument);
+        this.setSynthVolume(volume);
       }
     });
   }
@@ -201,6 +203,12 @@ class MIDIManager {
         }
       }
     });
+  }
+
+  setInstrument(instrument) {
+    for (let i = 0; i < NUM_CHANNELS; i++) {
+      MIDI.programChange(i, MIDI.GM.byName[instrument].number);
+    }
   }
 
   setSynthVolume(volume) {
