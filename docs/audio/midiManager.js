@@ -255,6 +255,7 @@ class MIDIManager {
     this.fileLoaded = false;
     this.noteMax = NOTE_MAX;
     this.noteMin = NOTE_MIN;
+    this.readyForPlaybackChange = true;
     this.getMIDIFilePaths();
   }
 
@@ -555,14 +556,22 @@ class MIDIManager {
   }
 
   pauseMIDI() {
-    if (MIDI.Player.playing && platformManager.mode === PLATFORMER_MODE) {
+    if (MIDI.Player.playing && platformManager.mode === PLATFORMER_MODE && this.readyForPlaybackChange) {
       MIDI.Player.pause();
+      this.readyForPreadyForPlaybackChangelayback = false;
+      setTimeout(() => {
+        this.readyForPlaybackChange = true;
+      }, 1000);
     }
   }
 
   resumeMIDI() {
-    if (!MIDI.Player.playing && platformManager.mode === PLATFORMER_MODE) {
+    if (!MIDI.Player.playing && platformManager.mode === PLATFORMER_MODE && this.readyForPlaybackChange) {
       MIDI.Player.resume();
+      this.readyForPlaybackChange = false;
+      setTimeout(() => {
+        this.readyForPlaybackChange = true;
+      }, 1000);
     }
   }
 
