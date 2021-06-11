@@ -1,5 +1,7 @@
 const FOREGROUND_ANIMATIONS = [0, 3, 4];
 
+const JUKEBOX_OFFSET = 100;
+
 let noiseAnim;
 let boxesAnim;
 let wipeAnim;
@@ -58,7 +60,7 @@ class AnimationController {
       ColorScheme.CLEAR
     );
     jukeboxAnim = new Moire(
-      width - 100,
+      width - JUKEBOX_OFFSET,
       150,
       width - 105,
       height,

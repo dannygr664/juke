@@ -190,7 +190,7 @@ function draw() {
 function createBoundingRectangles() {
   leftBoundingRectangle = createSprite(-140, -height * 2, 280, height * 8);
   leftBoundingRectangle.setDefaultCollider();
-  rightBoundingRectangle = createSprite(width + 140, -height * 2, 280, height * 8);
+  rightBoundingRectangle = createSprite(width + 140, -height * 2, 280 + JUKEBOX_OFFSET * 2, height * 8);
   rightBoundingRectangle.setDefaultCollider();
 }
 
