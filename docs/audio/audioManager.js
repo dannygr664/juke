@@ -446,7 +446,7 @@ class AudioManager {
       if (this.isFinalSound() && this.isSongFinished()) {
         this.waitingToChange = false;
         //incrementLevel();
-        returnToSongSelectionScreen(levelManager.getCurrentLevel().genre);
+        displayScore();
       }
       // else {
       //   if (this.isPenultimateSound() && levelManager.getCurrentLevel().genre === TITLE_GENRE) {

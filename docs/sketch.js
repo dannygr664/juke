@@ -42,6 +42,7 @@ function preload() {
   isMultiplayerMode = false;
   controllerSelected = false;
   returningToSongSelectionScreen = false;
+  displayingScore = false;
   browserSupportsMIDI = true;
   playerRole = GAMER;
   networkMode = LOCAL;
@@ -485,6 +486,13 @@ function startMultiplayerMode(genre, gameSeed) {
   }
 
   changeLevel(genre);
+}
+
+
+function displayScore() {
+  displayingScore = true;
+  handlePausing();
+  isPaused = !isPaused;
 }
 
 
