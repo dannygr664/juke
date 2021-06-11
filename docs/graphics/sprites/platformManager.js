@@ -14,6 +14,7 @@ class PlatformManager {
     this.platforms = new Group();
     this.platformYMin = height / 4;
     this.platformYMax = height;
+    this.defaultPlatformWidth = 100;
     this.platformWidth = 100;
     this.platformHeight = DEFAULT_PLATFORM_HEIGHT;
     this.minPlatformYPos = height * 0.17;
@@ -35,7 +36,7 @@ class PlatformManager {
 
   disableMIDIMode() {
     this.mode = PLATFORMER_MODE;
-    this.platformWidth = width / 8;
+    this.platformWidth = this.defaultPlatformWidth;
   }
 
   createInitialPlatform() {

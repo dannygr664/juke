@@ -333,7 +333,7 @@ function changeLevel(genre) {
       midiManager.playMIDIFileForGenre(genre);
     } else {
       if (platformManager.mode === PLATFORMER_MODE) {
-        platformManager.platformWidth = width / 8;
+        platformManager.platformWidth = platformManager.defaultPlatformWidth;
       } else {
         midiManager.setRootNoteForGenre(genre);
         midiManager.setNoteRangeForGenre(genre);
