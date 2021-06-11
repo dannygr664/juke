@@ -139,9 +139,16 @@ class PlatformManager {
     //   }
     // }
 
-    let yPos = map(meanFrequencyIndex, 0, spectrum.length, height, this.minPlatformYPos);//map(peakFrequencyIndex, 0, spectrum.length, height, 0);
+    let note = floor(map(meanFrequencyIndex % (spectrum.length / 8), 0, spectrum.length / 8, midiManager.noteMin, midiManager.noteMax));
+    let yPos = map(note, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos);
+    console.log(yPos);
 
-    let platform = this.createColoredPlatformAtHeight(ColorScheme.BLACK, yPos);
+    let platform = this.createColoredPlatformAtHeight(midiManager.getNoteColor(note), yPos);
+    midiManager.spawningPlatforms[note] = platform;
+    setTimeout(() => {
+      midiManager.spawningPlatforms[note] = null;
+    }, 500);
+
 
     return platform;
   }

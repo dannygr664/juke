@@ -631,9 +631,7 @@ class UIManager {
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();
     this.drawBeatStreakMeter();
-    if (midiManager.hasMIDIFile(levelManager.getCurrentLevel().genre) || platformManager.mode === MIDI_MODE) {
-      this.drawPlatformGenerator();
-    }
+    this.drawPlatformGenerator();
 
     const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
 
