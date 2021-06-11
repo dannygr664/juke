@@ -8,150 +8,188 @@ const MAX_NOTE_INDEX = NOTE_MAX - NOTE_MIN;
 
 const SYNTH_VOLUME = 40;
 
-const GENRES_TO_NOTE_RANGES = {
+const MIDDLE_C = 60;
+const KEYS_TO_ROOT_NOTE_NUMBERS = {
+  'C': 60,
+  'C#': 61,
+  'Db': 61,
+  'D': 62,
+  'D#': 63,
+  'Eb': 63,
+  'E': 64,
+  'F': 65,
+  'F#': 66,
+  'Gb': 66,
+  'G': 67,
+  'G#': 68,
+  'Ab': 68,
+  'A': 69,
+  'A#': 70,
+  'Bb': 70,
+  'B': 71
+};
+
+const GENRES_TO_MIDI_INFO = {
   'Spaceship': {
+    'rootNote': KEYS_TO_ROOT_NOTE_NUMBERS['G'],
     'noteMin': 30,
     'noteMax': 70
   },
   'Ethereal': {
+    'rootNote': KEYS_TO_ROOT_NOTE_NUMBERS['Eb'],
     'noteMin': 48,
     'noteMax': 60
+  },
+  'LoFi': {
+    'rootNote': KEYS_TO_ROOT_NOTE_NUMBERS['C']
+  },
+  'Chill': {
+    'rootNote': KEYS_TO_ROOT_NOTE_NUMBERS['G']
   }
+};
+
+const INSTRUMENT_SOUNDS = [
+  "acoustic_grand_piano",
+  "bright_acoustic_piano",
+  "electric_grand_piano",
+  "honkytonk_piano",
+  "electric_piano_1",
+  "electric_piano_2",
+  "harpsichord",
+  "clavinet",
+  "celesta",
+  "glockenspiel",
+  "music_box",
+  "vibraphone",
+  "marimba",
+  "xylophone",
+  "tubular_bells",
+  "dulcimer",
+  "drawbar_organ",
+  "percussive_organ",
+  "rock_organ",
+  "church_organ",
+  "reed_organ",
+  "accordion",
+  "harmonica",
+  "tango_accordion",
+  "acoustic_guitar_nylon",
+  "acoustic_guitar_steel",
+  "electric_guitar_jazz",
+  "electric_guitar_clean",
+  "electric_guitar_muted",
+  "overdriven_guitar",
+  "distortion_guitar",
+  "guitar_harmonics",
+  "acoustic_bass",
+  "electric_bass_finger",
+  "electric_bass_pick",
+  "fretless_bass",
+  "slap_bass_1",
+  "slap_bass_2",
+  "synth_bass_1",
+  "synth_bass_2",
+  "violin",
+  "viola",
+  "cello",
+  "contrabass",
+  "tremolo_strings",
+  "pizzicato_strings",
+  "orchestral_harp",
+  "timpani",
+  "string_ensemble_1",
+  "string_ensemble_2",
+  "synth_strings_1",
+  "synth_strings_2",
+  "choir_aahs",
+  "voice_oohs",
+  "synth_choir",
+  "orchestra_hit",
+  "trumpet",
+  "trombone",
+  "tuba",
+  "muted_trumpet",
+  "french_horn",
+  "brass_section",
+  "synth_brass_1",
+  "synth_brass_2",
+  "soprano_sax",
+  "alto_sax",
+  "tenor_sax",
+  "baritone_sax",
+  "oboe",
+  "english_horn",
+  "bassoon",
+  "clarinet",
+  "piccolo",
+  "flute",
+  "recorder",
+  "pan_flute",
+  "blown_bottle",
+  "shakuhachi",
+  "whistle",
+  "ocarina",
+  "lead_1_square",
+  "lead_2_sawtooth",
+  "lead_3_calliope",
+  "lead_4_chiff",
+  "lead_5_charang",
+  "lead_6_voice",
+  "lead_7_fifths",
+  "lead_8_bass__lead",
+  "pad_1_new_age",
+  "pad_2_warm",
+  "pad_3_polysynth",
+  "pad_4_choir",
+  "pad_5_bowed",
+  "pad_6_metallic",
+  "pad_7_halo",
+  "pad_8_sweep",
+  "fx_1_rain",
+  "fx_2_soundtrack",
+  "fx_3_crystal",
+  "fx_4_atmosphere",
+  "fx_5_brightness",
+  "fx_6_goblins",
+  "fx_7_echoes",
+  "fx_8_scifi",
+  "sitar",
+  "banjo",
+  "shamisen",
+  "koto",
+  "kalimba",
+  "bagpipe",
+  "fiddle",
+  "shanai",
+  "tinkle_bell",
+  "agogo",
+  "steel_drums",
+  "woodblock",
+  "taiko_drum",
+  "melodic_tom",
+  "synth_drum",
+  "reverse_cymbal",
+  "guitar_fret_noise",
+  "breath_noise",
+  "seashore",
+  "bird_tweet",
+  "telephone_ring",
+  "helicopter",
+  "applause",
+  "gunshot"
+];
+
+const SCALES_TO_NOTES = {
+  'Chromatic': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  'Pentatonic': [0, 2, 4, 7, 9]
 };
 
 class MIDIManager {
   constructor() {
     this.controllers = [];
-    this.instrumentSounds = [
-      "acoustic_grand_piano",
-      "bright_acoustic_piano",
-      "electric_grand_piano",
-      "honkytonk_piano",
-      "electric_piano_1",
-      "electric_piano_2",
-      "harpsichord",
-      "clavinet",
-      "celesta",
-      "glockenspiel",
-      "music_box",
-      "vibraphone",
-      "marimba",
-      "xylophone",
-      "tubular_bells",
-      "dulcimer",
-      "drawbar_organ",
-      "percussive_organ",
-      "rock_organ",
-      "church_organ",
-      "reed_organ",
-      "accordion",
-      "harmonica",
-      "tango_accordion",
-      "acoustic_guitar_nylon",
-      "acoustic_guitar_steel",
-      "electric_guitar_jazz",
-      "electric_guitar_clean",
-      "electric_guitar_muted",
-      "overdriven_guitar",
-      "distortion_guitar",
-      "guitar_harmonics",
-      "acoustic_bass",
-      "electric_bass_finger",
-      "electric_bass_pick",
-      "fretless_bass",
-      "slap_bass_1",
-      "slap_bass_2",
-      "synth_bass_1",
-      "synth_bass_2",
-      "violin",
-      "viola",
-      "cello",
-      "contrabass",
-      "tremolo_strings",
-      "pizzicato_strings",
-      "orchestral_harp",
-      "timpani",
-      "string_ensemble_1",
-      "string_ensemble_2",
-      "synth_strings_1",
-      "synth_strings_2",
-      "choir_aahs",
-      "voice_oohs",
-      "synth_choir",
-      "orchestra_hit",
-      "trumpet",
-      "trombone",
-      "tuba",
-      "muted_trumpet",
-      "french_horn",
-      "brass_section",
-      "synth_brass_1",
-      "synth_brass_2",
-      "soprano_sax",
-      "alto_sax",
-      "tenor_sax",
-      "baritone_sax",
-      "oboe",
-      "english_horn",
-      "bassoon",
-      "clarinet",
-      "piccolo",
-      "flute",
-      "recorder",
-      "pan_flute",
-      "blown_bottle",
-      "shakuhachi",
-      "whistle",
-      "ocarina",
-      "lead_1_square",
-      "lead_2_sawtooth",
-      "lead_3_calliope",
-      "lead_4_chiff",
-      "lead_5_charang",
-      "lead_6_voice",
-      "lead_7_fifths",
-      "lead_8_bass__lead",
-      "pad_1_new_age",
-      "pad_2_warm",
-      "pad_3_polysynth",
-      "pad_4_choir",
-      "pad_5_bowed",
-      "pad_6_metallic",
-      "pad_7_halo",
-      "pad_8_sweep",
-      "fx_1_rain",
-      "fx_2_soundtrack",
-      "fx_3_crystal",
-      "fx_4_atmosphere",
-      "fx_5_brightness",
-      "fx_6_goblins",
-      "fx_7_echoes",
-      "fx_8_scifi",
-      "sitar",
-      "banjo",
-      "shamisen",
-      "koto",
-      "kalimba",
-      "bagpipe",
-      "fiddle",
-      "shanai",
-      "tinkle_bell",
-      "agogo",
-      "steel_drums",
-      "woodblock",
-      "taiko_drum",
-      "melodic_tom",
-      "synth_drum",
-      "reverse_cymbal",
-      "guitar_fret_noise",
-      "breath_noise",
-      "seashore",
-      "bird_tweet",
-      "telephone_ring",
-      "helicopter",
-      "applause",
-      "gunshot"
-    ];
+    this.instrumentSounds = INSTRUMENT_SOUNDS;
+    this.scale = 'Chromatic';
+    this.rootNote = KEYS_TO_ROOT_NOTE_NUMBERS['C'];
     this.midiAccess = null;
     this.spawningPlatforms = {};
     this.fileLoaded = false;
@@ -221,7 +259,7 @@ class MIDIManager {
     this.controllers = [];
   }
 
-  setInputController(controller, instrument) {
+  setInputController(controller, instrument, scale) {
     if (this.midiAccess) {
       // Get lists of available MIDI controllers
       const inputs = this.midiAccess.inputs.values();
@@ -231,6 +269,7 @@ class MIDIManager {
         if (input.value.name === controller) {
           console.log(`Setting input controller to ${controller}`);
           this.initializeSynth(instrument, SYNTH_VOLUME);
+          this.scale = scale;
           input.value.onmidimessage = (message) => {
             let eventType = message.data[0];
             let note = message.data[1];
@@ -239,14 +278,15 @@ class MIDIManager {
               let frequency = midiToFreq(note);
               let velocity = message.data[2];
 
-              const mappedNote = this.mapNoteToRange(note, this.noteMin, this.noteMax);
+              const noteInScale = this.mapNoteToScale(note, this.scale);
+              const mappedNote = this.mapNoteToRange(noteInScale, this.noteMin, this.noteMax);
 
               if (!isPaused) {
                 if (this.isNoteOn(eventType) && velocity > 0) {
-                  this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(note), map(mappedNote, this.noteMin, this.noteMax, height, platformManager.minPlatformYPos));
+                  this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(noteInScale), map(mappedNote, this.noteMin, this.noteMax, height, platformManager.minPlatformYPos));
 
                   const delay = 0;
-                  MIDI.noteOn(channel, note, velocity, delay);
+                  MIDI.noteOn(channel, noteInScale, velocity, delay);
                 }
               }
 
@@ -256,7 +296,7 @@ class MIDIManager {
                 this.spawningPlatforms[mappedNote] = null;
 
                 const delay = 0;
-                MIDI.noteOff(channel, note, delay);
+                MIDI.noteOff(channel, noteInScale, delay);
               }
             }
           }
@@ -296,12 +336,26 @@ class MIDIManager {
   }
 
   setNoteRangeForGenre(genre) {
-    if (GENRES_TO_NOTE_RANGES[genre]) {
-      this.noteMin = GENRES_TO_NOTE_RANGES[genre]['noteMin'] ?? NOTE_MIN;
-      this.noteMax = GENRES_TO_NOTE_RANGES[genre]['noteMax'] ?? NOTE_MAX;
+    if (platformManager.mode === PLATFORMER_MODE) {
+      if (GENRES_TO_MIDI_INFO[genre] && GENRES_TO_MIDI_INFO[genre]['noteMin']) {
+        this.noteMin = GENRES_TO_MIDI_INFO[genre]['noteMin'];
+        this.noteMax = GENRES_TO_MIDI_INFO[genre]['noteMax'];
+      } else {
+        this.noteMin = NOTE_MIN;
+        this.noteMax = NOTE_MAX;
+      }
     } else {
-      this.noteMin = NOTE_MIN;
-      this.noteMax = NOTE_MAX;
+      const NOTES_PER_OCTAVE = 12;
+      this.noteMin = this.rootNote - NOTES_PER_OCTAVE;
+      this.noteMax = this.rootNote + NOTES_PER_OCTAVE;
+    }
+  }
+
+  setRootNoteForGenre(genre) {
+    if (GENRES_TO_MIDI_INFO[genre] && GENRES_TO_MIDI_INFO[genre]['rootNote']) {
+      this.rootNote = GENRES_TO_MIDI_INFO[genre]['rootNote'];
+    } else {
+      this.rootNote = MIDDLE_C;
     }
   }
 
@@ -385,9 +439,23 @@ class MIDIManager {
     }
   }
 
+  mapNoteToScale(note, scale) {
+    const NOTES_PER_OCTAVE = 12;
+    let octaveShift = 0;
+    const notesInScale = SCALES_TO_NOTES[scale];
+
+    octaveShift = floor((note - this.rootNote) / notesInScale.length);
+    let noteIndex = (note - this.rootNote) % notesInScale.length;
+    if (noteIndex < 0) {
+      noteIndex = notesInScale.length + noteIndex;
+    }
+    const noteInScale = this.rootNote + notesInScale[noteIndex] + octaveShift * NOTES_PER_OCTAVE;
+    return noteInScale;
+  }
+
   mapNoteToRange(note, noteMin, noteMax) {
     const NOTES_PER_OCTAVE = 12;
-    const OCTAVE_SHIFT = floor((noteMax - noteMin) / NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE;
+    const OCTAVE_SHIFT = floor((noteMax - noteMin + 1) / NOTES_PER_OCTAVE) * NOTES_PER_OCTAVE;
     let mappedNote = note;
 
     while (mappedNote < noteMin) {

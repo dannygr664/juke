@@ -193,6 +193,7 @@ function controllerSelectionScreenKeyPressed(key, keyCode) {
       // }
       controllerDropdown && controllerDropdown.hide();
       instrumentDropdown && instrumentDropdown.hide();
+      scaleDropdown && scaleDropdown.hide();
       submitButton && submitButton.hide();
       currentLevel.currentScreen = NETWORK_SELECTION_SCREEN;
       currentLevel.currentItemSelected = 0;

@@ -334,6 +334,9 @@ function changeLevel(genre) {
     } else {
       if (platformManager.mode === PLATFORMER_MODE) {
         platformManager.platformWidth = width / 8;
+      } else {
+        midiManager.setRootNoteForGenre(genre);
+        midiManager.setNoteRangeForGenre(genre);
       }
       MIDI.Player.removeListener();
       audioManager.startSounds(genre);
@@ -452,8 +455,8 @@ function changeToControllerSelectionScreen() {
 }
 
 
-function connectMIDIController(controller, instrument) {
-  midiManager.setInputController(controller, instrument);
+function connectMIDIController(controller, instrument, scale) {
+  midiManager.setInputController(controller, instrument, scale);
 }
 
 

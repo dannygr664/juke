@@ -3,6 +3,7 @@ const CURSOR_HEIGHT = 20;
 
 let controllerDropdown;
 let instrumentDropdown;
+let scaleDropdown;
 let submitButton;
 
 class UIManager {
@@ -529,6 +530,7 @@ class UIManager {
           if (controllers.length === 0) {
             controllerDropdown && controllerDropdown.hide();
             instrumentDropdown && instrumentDropdown.hide();
+            scaleDropdown && scaleDropdown.hide();
             submitButton && submitButton.hide();
             textSize(CONTROLLER_TEXT_SIZE);
             text('Please (re)connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
@@ -556,15 +558,28 @@ class UIManager {
             }
             instrumentDropdown.center('horizontal');
 
+            if (!scaleDropdown) {
+              scaleDropdown = createSelect();
+              scaleDropdown.position(TEXT_X, currentLevel.getYPosOfItem(2));
+              const SCALES = Object.keys(SCALES_TO_NOTES);
+              for (let i = 0; i < SCALES.length; i++) {
+                scaleDropdown.option(SCALES[i]);
+              }
+            } else {
+              scaleDropdown.show();
+            }
+            scaleDropdown.center('horizontal');
+
             if (!submitButton) {
               submitButton = createButton('Next');
-              submitButton.position(TEXT_X, currentLevel.getYPosOfItem(2));
+              submitButton.position(TEXT_X, currentLevel.getYPosOfItem(2.5));
               submitButton.mouseClicked(() => {
                 controllerDropdown && controllerDropdown.hide();
                 instrumentDropdown && instrumentDropdown.hide();
+                scaleDropdown && scaleDropdown.hide();
                 submitButton && submitButton.hide();
                 controllerSelected = true;
-                connectMIDIController(controllerDropdown.value(), instrumentDropdown.value());
+                connectMIDIController(controllerDropdown.value(), instrumentDropdown.value(), scaleDropdown.value());
                 // if (networkMode === ONLINE) {
                 //   socket.emit('ready');
                 // } else
@@ -766,12 +781,34 @@ class UIManager {
   drawPlatformGenerator() {
     push();
     strokeWeight(5);
-    for (let i = midiManager.noteMin; i <= midiManager.noteMax; i++) {
-      const strokeColor = midiManager.getNoteColor(i);
-      stroke(strokeColor);
-      const fillColor = midiManager.spawningPlatforms[i] ? midiManager.getNoteColor(i) : ColorScheme.WHITE;
-      fill(fillColor);
-      rect(width - 50, map(i, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos) - platformManager.platformHeight, 100, platformManager.platformHeight);
+    if (platformManager.mode === PLATFORMER_MODE) {
+      for (let i = midiManager.noteMin; i <= midiManager.noteMax; i++) {
+        const strokeColor = midiManager.getNoteColor(i);
+        stroke(strokeColor);
+        const fillColor = midiManager.spawningPlatforms[i] ? midiManager.getNoteColor(i) : ColorScheme.WHITE;
+        fill(fillColor);
+        rect(width - 50, map(i, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos) - platformManager.platformHeight, 100, platformManager.platformHeight);
+      }
+    } else {
+      const notesInScale = SCALES_TO_NOTES[midiManager.scale];
+      for (let i = 0; i <= notesInScale.length * 2 + 1; i++) {
+        const NOTES_PER_OCTAVE = 12;
+        let note;
+        if ((i % 2) === 0) {
+          note = midiManager.rootNote + notesInScale[floor(i / 2)] - NOTES_PER_OCTAVE;
+        } else {
+          if (i > notesInScale.length * 2) {
+            note = midiManager.rootNote + notesInScale[0] + NOTES_PER_OCTAVE;
+          } else {
+            note = midiManager.rootNote + notesInScale[floor(i / 2)];
+          }
+        }
+        const strokeColor = midiManager.getNoteColor(note);
+        stroke(strokeColor);
+        const fillColor = midiManager.spawningPlatforms[note] ? midiManager.getNoteColor(note) : ColorScheme.WHITE;
+        fill(fillColor);
+        rect(width - 50, map(note, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos) - platformManager.platformHeight, 100, platformManager.platformHeight);
+      }
     }
     animationController.drawJukebox();
     pop();
