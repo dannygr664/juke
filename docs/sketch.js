@@ -32,6 +32,10 @@ const MUSICIAN = 1;
 const LOCAL = 0;
 const ONLINE = 1;
 
+const STREAK_THRESHOLD_1 = 16;
+const STREAK_THRESHOLD_2 = 32;
+const STREAK_THRESHOLD_3 = 48;
+
 function preload() {
   isLoaded = false;
   isAwake = false;
@@ -78,6 +82,8 @@ function setup() {
   newBackgroundColor = backgroundColor;
   backgroundColorFadeTimer = 0;
   backgroundColorFadeTime = 0;
+  streak = 0;
+  score = 0;
 
   audioManager.loadFilter();
   audioManager.loadReverb();
@@ -100,6 +106,7 @@ function centerCanvas() {
 
 function wakeUp() {
   audioManager.startSounds(currentLevel.genre);
+  midiManager.initializeSynth('synth_drum', 0);
 
   animationController.loadAnimations();
 
@@ -172,11 +179,7 @@ function draw() {
       jukeboxManager.drawJukeboxes();
       platformManager.drawPlatforms();
 
-      player.drawEnergyMeter();
-
-      player.drawStroke();
-
-      drawSprite(player.sprite);
+      player.drawPlayer();
     }
   }
 
@@ -187,7 +190,7 @@ function draw() {
 function createBoundingRectangles() {
   leftBoundingRectangle = createSprite(-140, -height * 2, 280, height * 8);
   leftBoundingRectangle.setDefaultCollider();
-  rightBoundingRectangle = createSprite(width + 140, -height * 2, 280, height * 8);
+  rightBoundingRectangle = createSprite(width + 140, -height * 2, 280 + JUKEBOX_OFFSET * 2, height * 8);
   rightBoundingRectangle.setDefaultCollider();
 }
 
@@ -233,11 +236,25 @@ function handleCollisionsAndJumping() {
 
 function handleFalling() {
   if (player.sprite.position.y > height || player.energy < 0) {
+    streak = 0;
     player.handleFalling();
     audioManager.handleFalling();
+    midiManager.handleFalling();
     platformManager.handleFalling();
     fluidManager.handleFalling();
     jukeboxManager.handleFalling();
+  } else {
+    if (streak < STREAK_THRESHOLD_1) {
+      if (streak % 2 === 0) {
+        score++;
+      }
+    } else if (streak < STREAK_THRESHOLD_2) {
+      score++;
+    } else if (streak < STREAK_THRESHOLD_3) {
+      score += 2;
+    } else {
+      score += 10;
+    }
   }
 }
 
@@ -251,9 +268,9 @@ function revivingLoop() {
 
 
 function handleRevived() {
-  player.isReviving = false;
-  player.sprite.shapeColor = player.color;
+  player.handleRevived();
   audioManager.handleRevived();
+  midiManager.handleRevived();
   platformManager.handleRevived();
   fluidManager.handleRevived();
   jukeboxManager.handleRevived();
@@ -299,6 +316,8 @@ function returnToSongSelectionScreen(genre) {
 
 
 function changeLevel(genre) {
+  score = 0;
+  streak = 0;
   levelManager.changeLevel(genre);
   currentLevel = levelManager.getCurrentLevel();
   newBackgroundColor = currentLevel.initialBackgroundColor;
@@ -308,18 +327,36 @@ function changeLevel(genre) {
   jukeboxManager.changeLevel();
   drawMode = currentLevel.initialDrawMode;
 
-  audioManager.startSounds(genre);
+  if (genre !== TITLE_GENRE) {
+    if (platformManager.mode === PLATFORMER_MODE && midiManager.hasMIDIFile(genre)) {
+      platformManager.platformWidth = width * 2;
+      midiManager.playMIDIFileForGenre(genre);
+    } else {
+      if (platformManager.mode === PLATFORMER_MODE) {
+        platformManager.platformWidth = platformManager.defaultPlatformWidth;
+      } else {
+        midiManager.setRootNoteForGenre(genre);
+        midiManager.setNoteRangeForGenre(genre);
+      }
+      MIDI.Player.removeListener();
+      audioManager.startSounds(genre);
+    }
+  } else {
+    audioManager.startSounds(genre);
+  }
 
   if (genre !== TITLE_GENRE) {
     audioManager.updateSoundSpeed(INITIAL_SOUND_SPEED, 0);
     audioManager.updateVolume(INITIAL_VOLUME, 0);
     audioManager.updateReverb(INITIAL_REVERB);
+
     //audioManager.unloopCurrentSound();
   } else {
     audioManager.resetSoundProperties(genre);
     if (platformManager.mode === MIDI_MODE) {
       platformManager.disableMIDIMode();
     }
+    midiManager.stopMIDI();
     playerRole = GAMER;
     isMultiplayerMode = false;
     currentLevel.currentItemSelected = 0;
@@ -333,6 +370,7 @@ function changeLevel(genre) {
 function handlePausing() {
   player.handlePausing();
   audioManager.handlePausing();
+  midiManager.handlePausing();
   if (!player.isReviving) {
     platformManager.handlePausing();
     fluidManager.handlePausing();
@@ -383,6 +421,7 @@ function updateBackgroundHue(hueChange, saturationChange, fadeTime) {
 function handleUnpausing() {
   player.handleUnpausing();
   audioManager.handleUnpausing();
+  midiManager.handleUnpausing();
   if (!player.isReviving) {
     platformManager.handleUnpausing();
     fluidManager.handleUnpausing();
@@ -416,8 +455,8 @@ function changeToControllerSelectionScreen() {
 }
 
 
-function connectMIDIController(controller) {
-  midiManager.setInputController(controller);
+function connectMIDIController(controller, instrument, scale) {
+  midiManager.setInputController(controller, instrument, scale);
 }
 
 
@@ -446,4 +485,30 @@ function startMultiplayerMode(genre, gameSeed) {
   }
 
   changeLevel(genre);
+}
+
+
+function getStrokeColorFromStreak(streak) {
+  if (streak < STREAK_THRESHOLD_1) {
+    return ColorScheme.BLACK;
+  } else if (streak < STREAK_THRESHOLD_2) {
+    return ColorScheme.ETHEREAL_SAPPHIRE;
+  } else if (streak < STREAK_THRESHOLD_3) {
+    return ColorScheme.ETHEREAL_GOLD;
+  } else {
+    return ColorScheme.WHITE;
+  }
+}
+
+
+function getStrokeWeightFromStreak(streak) {
+  if (streak < STREAK_THRESHOLD_1) {
+    return 0;
+  } else if (streak < STREAK_THRESHOLD_2) {
+    return 10;
+  } else if (streak < STREAK_THRESHOLD_3) {
+    return 20;
+  } else {
+    return 30;
+  }
 }

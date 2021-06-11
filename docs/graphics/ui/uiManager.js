@@ -1,6 +1,11 @@
 const CURSOR_WIDTH = 20;
 const CURSOR_HEIGHT = 20;
 
+let controllerDropdown;
+let instrumentDropdown;
+let scaleDropdown;
+let submitButton;
+
 class UIManager {
   constructor() {
     const TITLE_TEXT_SIZE = height / 5;
@@ -102,8 +107,6 @@ class UIManager {
   }
 
   drawESCToReturn() {
-
-
     push();
     const ITEM_TEXT_SIZE = height / 35;
     textSize(ITEM_TEXT_SIZE);
@@ -212,7 +215,7 @@ class UIManager {
       textSize(SUBTITLE_TEXT_SIZE);
       text('GOAL', GOAL_X, SUBTITLE_Y);
       textSize(ITEM_TEXT_SIZE);
-      text('Reach end of section without falling to progress.', GOAL_X, SUBITEM1_Y);
+      text('Finish the song and try not to fall!', GOAL_X, SUBITEM1_Y);
 
       textAlign(CENTER, CENTER);
       textSize(HEADING_TEXT_SIZE);
@@ -525,26 +528,69 @@ class UIManager {
           text('Waiting for GAMER to join...', TEXT_X, currentLevel.getYPosOfItem(1));
         } else {
           if (controllers.length === 0) {
+            controllerDropdown && controllerDropdown.hide();
+            instrumentDropdown && instrumentDropdown.hide();
+            scaleDropdown && scaleDropdown.hide();
+            submitButton && submitButton.hide();
             textSize(CONTROLLER_TEXT_SIZE);
             text('Please (re)connect the MIDI device you wish to use.', TEXT_X, currentLevel.getYPosOfItem(0.5));
           } else {
             text('Please select a controller.', TEXT_X, currentLevel.getYPosOfItem(0.5));
-            this.drawUpArrow(TEXT_X, currentLevel.getYPosOfItem(1));
-            textSize(CONTROLLER_TEXT_SIZE);
-            for (let i = 0; i < controllers.length; i++) {
-              text(controllers[i], TEXT_X, currentLevel.getYPosOfItem((i * 0.5) + 1.5));
+            if (!controllerDropdown) {
+              controllerDropdown = createSelect();
+              controllerDropdown.position(TEXT_X, currentLevel.getYPosOfItem(1));
+              for (let i = 0; i < controllers.length; i++) {
+                controllerDropdown.option(controllers[i]);
+              }
+            } else {
+              controllerDropdown.show();
             }
-            this.drawDownArrow(TEXT_X, currentLevel.getYPosOfItem((controllers.length * 0.5) + 1.5));
+            controllerDropdown.center('horizontal');
 
-            let currentItemSelected = currentLevel.currentItemSelected;
-            let cursorY = currentLevel.getYPosOfItem((currentItemSelected * 0.5) + 1.5);
+            if (!instrumentDropdown) {
+              instrumentDropdown = createSelect();
+              instrumentDropdown.position(TEXT_X, currentLevel.getYPosOfItem(1.5));
+              for (let i = 0; i < midiManager.instrumentSounds.length; i++) {
+                instrumentDropdown.option(midiManager.instrumentSounds[i]);
+              }
+            } else {
+              instrumentDropdown.show();
+            }
+            instrumentDropdown.center('horizontal');
 
-            rect(
-              CURSOR_X - CURSOR_WIDTH / 2,
-              cursorY - CURSOR_HEIGHT / 2,
-              CURSOR_WIDTH,
-              CURSOR_HEIGHT
-            );
+            if (!scaleDropdown) {
+              scaleDropdown = createSelect();
+              scaleDropdown.position(TEXT_X, currentLevel.getYPosOfItem(2));
+              const SCALES = Object.keys(SCALES_TO_NOTES);
+              for (let i = 0; i < SCALES.length; i++) {
+                scaleDropdown.option(SCALES[i]);
+              }
+            } else {
+              scaleDropdown.show();
+            }
+            scaleDropdown.center('horizontal');
+
+            if (!submitButton) {
+              submitButton = createButton('Next');
+              submitButton.position(TEXT_X, currentLevel.getYPosOfItem(2.5));
+              submitButton.mouseClicked(() => {
+                controllerDropdown && controllerDropdown.hide();
+                instrumentDropdown && instrumentDropdown.hide();
+                scaleDropdown && scaleDropdown.hide();
+                submitButton && submitButton.hide();
+                controllerSelected = true;
+                connectMIDIController(controllerDropdown.value(), instrumentDropdown.value(), scaleDropdown.value());
+                // if (networkMode === ONLINE) {
+                //   socket.emit('ready');
+                // } else
+                if (networkMode === LOCAL) {
+                  changeToSongSelectionScreen();
+                }
+              });
+            } else {
+              submitButton.show();
+            }
+            submitButton.center('horizontal');
           }
         }
       } else {
@@ -584,6 +630,8 @@ class UIManager {
     this.drawVolumeMeter();
     this.drawSoundSpeedMeter();
     this.drawReverbMeter();
+    this.drawBeatStreakMeter();
+    this.drawPlatformGenerator();
 
     const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
 
@@ -593,7 +641,10 @@ class UIManager {
     const SONG_PROGRESS_LABEL_X = width / 2;
     const SONG_PROGRESS_LABEL_Y = 40;
 
-    const ITEM_TEXT_SIZE = height / 30;
+    const SCORE_X = width - 20;
+    const SCORE_Y = 5;
+
+    const ITEM_TEXT_SIZE = min(width / 33, 40);
 
     fill(fillColor);
 
@@ -603,6 +654,9 @@ class UIManager {
 
     textAlign(CENTER, TOP);
     text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
+
+    textAlign(RIGHT, TOP);
+    text(`SCORE: ${score}`, SCORE_X, SCORE_Y);
 
     pop();
   }
@@ -692,6 +746,69 @@ class UIManager {
     rect(70, 65, 160, 20);
     noStroke();
     fill(fillColor);
+    pop();
+  }
+
+  drawBeatStreakMeter() {
+    push();
+    const fillColor = audioManager.volume < VOLUME_MAX * 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    noStroke();
+    fill(fillColor);
+    const STREAK_X = width - 180;
+    const STREAK_Y = 45;
+    text(`Beat Streak`, STREAK_X - 110, STREAK_Y);
+    let beatStreakFillColor = getStrokeColorFromStreak(streak + STREAK_THRESHOLD_1);
+    fill(beatStreakFillColor);
+    let streakWidth = 160;
+    if (streak < STREAK_THRESHOLD_3) {
+      streakWidth = map(streak % STREAK_THRESHOLD_1, 0, STREAK_THRESHOLD_1, 0, 160);
+      rect(STREAK_X, STREAK_Y, streakWidth, 20);
+    } else {
+      for (let i = 0; i < 360; i++) {
+        fill(color(i, 100, 100));
+        rect(STREAK_X + (i / 360) * streakWidth, STREAK_Y, streakWidth / 360, 20);
+      }
+    }
+
+    stroke(fillColor);
+    fill(ColorScheme.CLEAR);
+    rect(STREAK_X, STREAK_Y, 160, 20);
+    pop();
+  }
+
+  drawPlatformGenerator() {
+    push();
+    strokeWeight(5);
+    if (platformManager.mode === PLATFORMER_MODE) {
+      for (let i = midiManager.noteMin; i <= midiManager.noteMax; i++) {
+        const strokeColor = midiManager.getNoteColor(i);
+        stroke(strokeColor);
+        const fillColor = midiManager.spawningPlatforms[i] ? midiManager.getNoteColor(i) : ColorScheme.WHITE;
+        fill(fillColor);
+        rect(width - 50, map(i, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos) - platformManager.platformHeight, 100, platformManager.platformHeight);
+      }
+    } else {
+      const notesInScale = SCALES_TO_NOTES[midiManager.scale];
+      for (let i = 0; i <= notesInScale.length * 2 + 1; i++) {
+        const NOTES_PER_OCTAVE = 12;
+        let note;
+        if ((i % 2) === 0) {
+          note = midiManager.rootNote + notesInScale[floor(i / 2)] - NOTES_PER_OCTAVE;
+        } else {
+          if (i > notesInScale.length * 2) {
+            note = midiManager.rootNote + notesInScale[0] + NOTES_PER_OCTAVE;
+          } else {
+            note = midiManager.rootNote + notesInScale[floor(i / 2)];
+          }
+        }
+        const strokeColor = midiManager.getNoteColor(note);
+        stroke(strokeColor);
+        const fillColor = midiManager.spawningPlatforms[note] ? midiManager.getNoteColor(note) : ColorScheme.WHITE;
+        fill(fillColor);
+        rect(width - 50, map(note, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos) - platformManager.platformHeight, 100, platformManager.platformHeight);
+      }
+    }
+    animationController.drawJukebox();
     pop();
   }
 }

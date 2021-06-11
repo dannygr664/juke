@@ -1,12 +1,15 @@
 const FOREGROUND_ANIMATIONS = [0, 3, 4];
 
+const JUKEBOX_OFFSET = 100;
+
 let noiseAnim;
 let boxesAnim;
 let wipeAnim;
 let linesAnim;
 let blindsAnim;
-
 let moireAnim;
+let jukeboxAnim;
+let waveformAnim;
 
 class AnimationController {
   constructor() {
@@ -49,6 +52,21 @@ class AnimationController {
       height,
       ColorScheme.BLACK_INACTIVE
     );
+    waveformAnim = new Waveform(
+      0,
+      width,
+      0,
+      height,
+      ColorScheme.CLEAR
+    );
+    jukeboxAnim = new Moire(
+      width - JUKEBOX_OFFSET,
+      150,
+      width - 105,
+      height,
+      50,
+      ColorScheme.BLACK
+    );
   }
 
   createJukeboxAnimation(xPosition, width) {
@@ -65,7 +83,7 @@ class AnimationController {
   drawJukeboxAnimation(xPosition) {
     moireAnim.x1 = xPosition;
     moireAnim.x2 = xPosition;
-    moireAnim.drawMoire();
+    moireAnim.drawMoire(0);
   }
 
   setJukeboxAnimationColor(color) {
@@ -82,6 +100,16 @@ class AnimationController {
     moireAnim.resetFadeTimer();
   }
 
+  drawJukebox() {
+    const playingSounds = audioManager.sounds
+      .filter(sound => sound.isPlaying());
+    let rms = 0;
+    if (playingSounds.length > 0) {
+      rms = playingSounds[0].amplitudeAnalyzer.getLevel();
+    }
+    jukeboxAnim.drawMoire(rms);
+  }
+
   createFluidAnimation(xPosition, yPosition, width, height, color) {
     let fluidAnim = new Blinds(
       xPosition,
@@ -95,6 +123,22 @@ class AnimationController {
   }
 
   setFluidAnimationColor(anim, color) {
+    anim.color = color;
+  }
+
+  createPlayerAnimation(xPosition, yPosition, width, height, color) {
+    let playerAnim = new Waveform(
+      xPosition,
+      xPosition + width,
+      yPosition,
+      yPosition + height,
+      color
+    );
+
+    return playerAnim;
+  }
+
+  setPlayerAnimationColor(anim, color) {
     anim.color = color;
   }
 
@@ -127,6 +171,21 @@ class AnimationController {
     audioManager.sounds
       .filter(sound => sound.isPlaying())
       .forEach(sound => { this.drawSoundAnimation(sound, x1, x2, color); });
+  }
+
+  drawPlayerAnimation(x1, x2, y1, y2, color) {
+    const playingSounds = audioManager.sounds
+      .filter(sound => sound.isPlaying());
+    let rms = 0;
+    if (playingSounds.length > 0) {
+      rms = playingSounds[0].amplitudeAnalyzer.getLevel();
+    }
+    waveformAnim.x1 = x1;
+    waveformAnim.x2 = x2;
+    waveformAnim.y1 = y1;
+    waveformAnim.y2 = y2;
+    waveformAnim.color = color;
+    waveformAnim.draw(rms);
   }
 
   drawSoundAnimation(sound, x1, x2, color) {

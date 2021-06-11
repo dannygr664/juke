@@ -12,24 +12,49 @@ class Moire {
     this.fadeTimer = 60;
   }
 
-  drawMoire() {
-    let lineHeight = dist(this.x1, this.y1, this.x2, this.y2);
+  drawMoire(rms) {
     push();
-    stroke(color(
-      hue(this.color),
-      saturation(this.color),
-      brightness(this.color),
-      map(this.fadeTimer, 0, JUKEBOX_FADE_TIME, 0, 100)
-    ));
-    strokeWeight(5);
+    fill(ColorScheme.CLEAR);
+    const strokeColor = getStrokeColorFromStreak(streak);
+    let strokeBrightness = map(rms, 0, 0.05, 50, 100);
+    if (strokeColor === ColorScheme.BLACK) {
+      strokeBrightness = 0;
+    } else if (strokeColor === ColorScheme.WHITE) {
+      strokeBrightness = 100;
+    }
+    stroke(color(hue(strokeColor), saturation(strokeColor), strokeBrightness));
+    strokeWeight(map(rms, 0, 0.05, 5, getStrokeWeightFromStreak(streak) + 10));
 
     for (var i = 0; i < this.width; i += this.width / 5) {
-      line(this.x1 + i, 0, this.x1 + i, lineHeight);
+      if (i === 4 * this.width / 5) {
+        fill(color(
+          hue(ColorScheme.ETHEREAL_SAPPHIRE),
+          saturation(ColorScheme.ETHEREAL_SAPPHIRE),
+          brightness(ColorScheme.ETHEREAL_SAPPHIRE),
+          60
+        ));
+        push();
+        noStroke();
+        rect(this.x1 + i, this.y1, width - this.x1, this.y2 - this.y1);
+        pop();
+      }
+      line(this.x1 + i, this.y1, this.x1 + i, this.y2);
+      //line(this.x1 + i, this.y1, this.x1 + i + 100, this.y1 - 100);
+      const RADIUS = 200;
+      arc(this.x1 + i + RADIUS / 2, this.y1, RADIUS, 0.75 * RADIUS - i * (5 / 3), PI, 3 * HALF_PI);
     }
     pop();
   };
 
   resetFadeTimer() {
     this.fadeTimer = JUKEBOX_FADE_TIME;
+  }
+
+  getJukeboxStrokeColor() {
+    if (audioManager.volume < VOLUME_MAX * 0.5) {
+      return ColorScheme.WHITE;
+    } else {
+      return ColorScheme.BLACK;
+    }
   }
 }
