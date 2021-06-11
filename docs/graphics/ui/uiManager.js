@@ -649,6 +649,7 @@ class UIManager {
       this.drawSoundSpeedMeter();
       this.drawReverbMeter();
       this.drawBeatStreakMeter();
+      //this.drawBeatStreak();
       this.drawPlatformGenerator();
 
       const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
@@ -678,7 +679,22 @@ class UIManager {
 
       pop();
     }
+  }
 
+  drawBeatStreak() {
+    const BEAT_STREAK_OFFSET = player.sprite.width;
+    let ITEM_TEXT_SIZE = map(streak, 0, STREAK_THRESHOLD_3, 10, min(width / 25, 60));
+    if (streak > STREAK_THRESHOLD_3) {
+      ITEM_TEXT_SIZE = min(width / 33, 60);
+    }
+    push();
+    const fillColor = audioManager.volume < VOLUME_MAX * 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
+    fill(fillColor);
+    textAlign(CENTER, TOP);
+    textSize(ITEM_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    text(`${streak} BEAT STREAK!`, beatStreakX + BEAT_STREAK_OFFSET, beatStreakY + BEAT_STREAK_OFFSET);
+    pop();
   }
 
   drawSongProgressMeter() {

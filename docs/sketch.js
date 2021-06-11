@@ -22,6 +22,9 @@ let jukeboxManager;
 let leftBoundingRectangle;
 let rightBoundingRectangle;
 
+let beatStreakX = 0;
+let beatStreakY = 0;
+
 const MIN_WIDTH = 800;
 const MAX_WIDTH = 900;
 const MIN_HEIGHT = 500;
