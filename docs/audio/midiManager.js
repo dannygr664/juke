@@ -179,7 +179,11 @@ const INSTRUMENT_SOUNDS = [
   "gunshot"
 ];
 
+// Taken from https://galactic.ink/piano/
 const SCALES_TO_NOTES = {
+  'Pentatonic Major (RECOMMENDED)': [0, 2, 4, 7, 9],
+  'Ionian (RECOMMENDED)': [0, 2, 4, 5, 7, 9, 11],
+  'Chromatic (FULL RANGE OF NOTES)': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
   'Aeolian': [0, 2, 3, 5, 7, 8, 10],
   'Altered': [0, 1, 3, 4, 6, 8, 10],
   'Altered b7': [0, 1, 3, 4, 6, 8, 9],
@@ -190,7 +194,6 @@ const SCALES_TO_NOTES = {
   'Byzantine': [0, 1, 4, 5, 7, 8, 11],
   'Chinese': [0, 4, 6, 7, 11],
   'Chinese Mongolian': [0, 2, 4, 7, 9],
-  'Chromatic': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
   'Diminished (H-W)': [0, 1, 3, 4, 6, 7, 9, 10],
   'Diminished (W-H)': [0, 2, 3, 5, 6, 8, 9, 11],
   'Dorian': [0, 2, 3, 5, 7, 9, 10],
@@ -206,7 +209,6 @@ const SCALES_TO_NOTES = {
   'Hungarian Major': [0, 3, 4, 6, 7, 9, 10],
   'Hungarian Minor': [0, 2, 3, 6, 7, 8, 11],
   'Ichikosucho': [0, 2, 4, 5, 6, 7, 9, 11],
-  'Ionian': [0, 2, 4, 5, 7, 9, 11],
   'Ionian Aug': [0, 2, 4, 5, 8, 9, 11],
   'Iwato (Japanese)': [0, 1, 5, 6, 10],
   'Kumoi': [0, 2, 3, 7, 9],
@@ -230,7 +232,6 @@ const SCALES_TO_NOTES = {
   'Oriental': [0, 1, 4, 5, 6, 9, 10],
   'Overtone': [0, 2, 4, 6, 7, 9, 10],
   'Pelog (Balinese)': [0, 1, 3, 7, 10],
-  'Pentatonic Major': [0, 2, 4, 7, 9],
   'Pentatonic Minor': [0, 3, 5, 7, 10],
   'Persian': [0, 1, 4, 5, 6, 8, 11],
   'Phrygian': [0, 1, 3, 5, 7, 8, 10],
