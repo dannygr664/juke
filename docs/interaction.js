@@ -327,10 +327,15 @@ function handlePauseOrQuitKeyPressedMessage(data) {
 
 function handlePauseOrQuitKeyPressed(key, keyCode) {
   if (keyCode === ESCAPE) {
-    if (isPaused) {
-      handleUnpausing();
+    if (displayingScore) {
+      displayingScore = false;
+      returnToSongSelectionScreen(levelManager.getCurrentLevel().genre);
     } else {
-      handlePausing();
+      if (isPaused) {
+        handleUnpausing();
+      } else {
+        handlePausing();
+      }
     }
     isPaused = !isPaused;
   } else if (isPaused) {

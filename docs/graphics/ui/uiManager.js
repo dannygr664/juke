@@ -617,47 +617,83 @@ class UIManager {
     text('[DEL — Return to Main Menu]', TEXT_X, 5 * height / 8);
   }
 
+  displayScore() {
+    const TEXT_X = width / 2;
+    const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
+    fill(fillColor);
+    push();
+    textAlign(CENTER, CENTER);
+    textFont('HelveticaNeue-Thin');
+    textSize(50);
+    fill(levelManager.getCurrentLevel().playerColor);
+    text('YOU WON!', TEXT_X, height / 2);
+    textSize(30);
+    text(`SCORE: ${score}`, TEXT_X, 9 * height / 16);
+    text('[ESC] — Return to Main Menu]', TEXT_X, 5 * height / 8);
+  }
+
   drawGameUI() {
-    if (isPaused) {
-      this.drawPauseMenu();
+    if (displayingScore) {
+      this.displayScore();
+    } else {
+      if (isPaused) {
+        this.drawPauseMenu();
+      }
+      push();
+      textAlign(LEFT, TOP)
+      textFont('HelveticaNeue-Thin');
+      textSize(20);
+
+      this.drawSongProgressMeter();
+      this.drawVolumeMeter();
+      this.drawSoundSpeedMeter();
+      this.drawReverbMeter();
+      this.drawBeatStreakMeter();
+      //this.drawBeatStreak();
+      this.drawPlatformGenerator();
+
+      const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
+
+      const AUDIO_PARAM_LABEL_X = 20
+      const AUDIO_PARAM_LABEL_Y = 95;
+
+      const SONG_PROGRESS_LABEL_X = width / 2;
+      const SONG_PROGRESS_LABEL_Y = 40;
+
+      const SCORE_X = width - 20;
+      const SCORE_Y = 5;
+
+      const ITEM_TEXT_SIZE = min(width / 33, 40);
+
+      fill(fillColor);
+
+      textAlign(LEFT, TOP);
+      textSize(ITEM_TEXT_SIZE);
+      text('AUDIO PARAMS', AUDIO_PARAM_LABEL_X, AUDIO_PARAM_LABEL_Y);
+
+      textAlign(CENTER, TOP);
+      text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
+
+      textAlign(RIGHT, TOP);
+      text(`SCORE: ${score}`, SCORE_X, SCORE_Y);
+
+      pop();
+    }
+  }
+
+  drawBeatStreak() {
+    const BEAT_STREAK_OFFSET = player.sprite.width;
+    let ITEM_TEXT_SIZE = map(streak, 0, STREAK_THRESHOLD_3, 10, min(width / 25, 60));
+    if (streak > STREAK_THRESHOLD_3) {
+      ITEM_TEXT_SIZE = min(width / 33, 60);
     }
     push();
-    textAlign(LEFT, TOP)
-    textFont('HelveticaNeue-Thin');
-    textSize(20);
-
-    this.drawSongProgressMeter();
-    this.drawVolumeMeter();
-    this.drawSoundSpeedMeter();
-    this.drawReverbMeter();
-    this.drawBeatStreakMeter();
-    this.drawPlatformGenerator();
-
-    const fillColor = audioManager.volume < 0.5 * VOLUME_MAX ? ColorScheme.WHITE : ColorScheme.BLACK;
-
-    const AUDIO_PARAM_LABEL_X = 20
-    const AUDIO_PARAM_LABEL_Y = 95;
-
-    const SONG_PROGRESS_LABEL_X = width / 2;
-    const SONG_PROGRESS_LABEL_Y = 40;
-
-    const SCORE_X = width - 20;
-    const SCORE_Y = 5;
-
-    const ITEM_TEXT_SIZE = min(width / 33, 40);
-
+    const fillColor = audioManager.volume < VOLUME_MAX * 0.5 ? ColorScheme.WHITE : ColorScheme.BLACK;
     fill(fillColor);
-
-    textAlign(LEFT, TOP);
-    textSize(ITEM_TEXT_SIZE);
-    text('AUDIO PARAMS', AUDIO_PARAM_LABEL_X, AUDIO_PARAM_LABEL_Y);
-
     textAlign(CENTER, TOP);
-    text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
-
-    textAlign(RIGHT, TOP);
-    text(`SCORE: ${score}`, SCORE_X, SCORE_Y);
-
+    textSize(ITEM_TEXT_SIZE);
+    textFont('HelveticaNeue-Thin');
+    text(`${streak} BEAT STREAK!`, beatStreakX + BEAT_STREAK_OFFSET, beatStreakY + BEAT_STREAK_OFFSET);
     pop();
   }
 

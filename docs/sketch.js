@@ -22,6 +22,9 @@ let jukeboxManager;
 let leftBoundingRectangle;
 let rightBoundingRectangle;
 
+let beatStreakX = 0;
+let beatStreakY = 0;
+
 const MIN_WIDTH = 800;
 const MAX_WIDTH = 900;
 const MIN_HEIGHT = 500;
@@ -42,6 +45,7 @@ function preload() {
   isMultiplayerMode = false;
   controllerSelected = false;
   returningToSongSelectionScreen = false;
+  displayingScore = false;
   browserSupportsMIDI = true;
   playerRole = GAMER;
   networkMode = LOCAL;
@@ -485,6 +489,13 @@ function startMultiplayerMode(genre, gameSeed) {
   }
 
   changeLevel(genre);
+}
+
+
+function displayScore() {
+  displayingScore = true;
+  handlePausing();
+  isPaused = !isPaused;
 }
 
 

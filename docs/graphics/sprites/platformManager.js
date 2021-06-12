@@ -105,6 +105,8 @@ class PlatformManager {
       % audioManager.getDurationOfBeat();
     if (oldBeatTimer > this.beatTimer) {
       streak++;
+      beatStreakX = player.sprite.position.x;
+      beatStreakY = player.sprite.position.y;
       if (this.mode === PLATFORMER_MODE && !midiManager.hasMIDIFile(levelManager.getCurrentLevel().genre)) {
         let newPlatform = this.spawnPlatform();
         this.updatePlatformSpeed(newPlatform);
