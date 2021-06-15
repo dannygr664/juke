@@ -182,6 +182,7 @@ class PlatformManager {
   handleRevived() {
     if (!isMultiplayerMode) {
       this.resumePlatforms();
+      this.spawnPlatform();
     }
   }
 
