@@ -144,7 +144,6 @@ class PlatformManager {
 
     let note = floor(map(meanFrequencyIndex % (spectrum.length / 8), 0, spectrum.length / 8, midiManager.noteMin, midiManager.noteMax));
     let yPos = map(note, midiManager.noteMin, midiManager.noteMax, height, platformManager.minPlatformYPos);
-    console.log(yPos);
 
     let platform = this.createColoredPlatformAtHeight(midiManager.getNoteColor(note), yPos);
     midiManager.spawningPlatforms[note] = platform;
@@ -183,6 +182,7 @@ class PlatformManager {
   handleRevived() {
     if (!isMultiplayerMode) {
       this.resumePlatforms();
+      this.spawnPlatform();
     }
   }
 

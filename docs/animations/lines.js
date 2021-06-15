@@ -67,7 +67,7 @@ class Lines {
       const stepSize = (drawMode === 0) ? 10 : 5;
       const diameter = (drawMode === 0) ? 10 : 5;
 
-      for (let i = 0; i <= this.x2 - this.x1; i++) {
+      for (let i = 0; i <= this.x2 - this.x1; i += 5) {
         // random number for the direction of the next step
         if (drawMode == 0) {
           direction = int(random([1, 3, 5]));

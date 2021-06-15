@@ -340,8 +340,10 @@ function handlePauseOrQuitKeyPressed(key, keyCode) {
     isPaused = !isPaused;
   } else if (isPaused) {
     if (keyCode === DELETE || keyCode === BACKSPACE) {
-      isPaused = !isPaused;
-      returnToSongSelectionScreen(levelManager.getCurrentLevel().genre);
+      if (!displayingScore) {
+        isPaused = !isPaused;
+        returnToSongSelectionScreen(levelManager.getCurrentLevel().genre);
+      }
     }
   }
 }

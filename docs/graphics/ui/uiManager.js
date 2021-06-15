@@ -200,6 +200,7 @@ class UIManager {
     const HEADING_TEXT_SIZE = height / 20;
     const ITEM_TEXT_SIZE = height / 30;
     const CONTROLS_X = 20 * width / 64;
+    const SCORING_X = width - 26 * width / 64;
     const GOAL_X = width / 2;
 
     const SUBTITLE_Y = height / 4;
@@ -208,6 +209,11 @@ class UIManager {
     const CONTROL1_Y = 22 * height / 32;
     const CONTROL2_Y = 24 * height / 32;
     const CONTROL3_Y = 26 * height / 32;
+    const SCORING_Y = 20 * height / 32;
+    const SCORING1_Y = 22 * height / 32;
+    const SCORING2_Y = 24 * height / 32;
+    const SCORING3_Y = 26 * height / 32;
+    const SCORING4_Y = 28 * height / 32;
     const PAGE_INDEX_Y = 28 * height / 32;
     if (!isPaused) {
       push();
@@ -224,6 +230,14 @@ class UIManager {
       text('ARROW KEYS — Move left/right', CONTROLS_X, CONTROL1_Y);
       text('SPACE BAR — Jump/Revive', CONTROLS_X, CONTROL2_Y);
       text('ESC — Pause', CONTROLS_X, CONTROL3_Y);
+
+      textSize(HEADING_TEXT_SIZE);
+      text('SCORING', SCORING_X, SCORING_Y);
+      textSize(ITEM_TEXT_SIZE);
+      text('Higher volume = Higher score', SCORING_X, SCORING1_Y);
+      text('Higher speed = Higher score', SCORING_X, SCORING2_Y);
+      text('Lower reverb = Higher score', SCORING_X, SCORING3_Y);
+      text('Higher beat streak = Higher score', SCORING_X, SCORING4_Y);
       // text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
       // text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
       // text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
@@ -628,7 +642,7 @@ class UIManager {
     fill(levelManager.getCurrentLevel().playerColor);
     text('YOU WON!', TEXT_X, height / 2);
     textSize(30);
-    text(`SCORE: ${score}`, TEXT_X, 9 * height / 16);
+    text(`SCORE: ${floor(score)}`, TEXT_X, 9 * height / 16);
     text('[ESC] — Return to Main Menu]', TEXT_X, 5 * height / 8);
   }
 
@@ -675,7 +689,7 @@ class UIManager {
       text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
 
       textAlign(RIGHT, TOP);
-      text(`SCORE: ${score}`, SCORE_X, SCORE_Y);
+      text(`SCORE: ${floor(score)}`, SCORE_X, SCORE_Y);
 
       pop();
     }
