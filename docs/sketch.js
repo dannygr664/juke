@@ -248,18 +248,39 @@ function handleFalling() {
     fluidManager.handleFalling();
     jukeboxManager.handleFalling();
   } else {
+    const pointMultiplier = getPointMultiplier();
     if (streak < STREAK_THRESHOLD_1) {
       if (streak % 2 === 0) {
-        score++;
+        score += pointMultiplier;
       }
     } else if (streak < STREAK_THRESHOLD_2) {
-      score++;
+      score += pointMultiplier;
     } else if (streak < STREAK_THRESHOLD_3) {
-      score += 2;
+      score += 2 * pointMultiplier;
     } else {
-      score += 10;
+      score += 10 * pointMultiplier;
     }
   }
+}
+
+
+function getPointMultiplier() {
+  return (getVolumePointMultiplier() + getSpeedPointMultiplier() + getReverbPointMultiplier()) / 3;
+}
+
+
+function getVolumePointMultiplier() {
+  return map(audioManager.volume, VOLUME_MIN, VOLUME_MAX, 0.1, 1);
+}
+
+
+function getSpeedPointMultiplier() {
+  return map(audioManager.soundSpeed, SOUND_SPEED_MIN, SOUND_SPEED_MAX, 0.1, 1);
+}
+
+
+function getReverbPointMultiplier() {
+  return map(audioManager.reverbLevel, REVERB_MIN, REVERB_MAX, 1, 0.1);
 }
 
 

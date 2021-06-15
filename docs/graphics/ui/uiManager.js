@@ -628,7 +628,7 @@ class UIManager {
     fill(levelManager.getCurrentLevel().playerColor);
     text('YOU WON!', TEXT_X, height / 2);
     textSize(30);
-    text(`SCORE: ${score}`, TEXT_X, 9 * height / 16);
+    text(`SCORE: ${floor(score)}`, TEXT_X, 9 * height / 16);
     text('[ESC] — Return to Main Menu]', TEXT_X, 5 * height / 8);
   }
 
@@ -675,7 +675,7 @@ class UIManager {
       text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
 
       textAlign(RIGHT, TOP);
-      text(`SCORE: ${score}`, SCORE_X, SCORE_Y);
+      text(`SCORE: ${floor(score)}`, SCORE_X, SCORE_Y);
 
       pop();
     }
