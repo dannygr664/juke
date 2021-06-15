@@ -305,7 +305,6 @@ class AudioManager {
     sound.amp(INITIAL_VOLUME);
     this.reverbLevel = INITIAL_REVERB;
     this.reverb.drywet(INITIAL_REVERB);
-
   }
 
   getReverbStrokeColor() {

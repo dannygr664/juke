@@ -324,7 +324,6 @@ function handleRevived() {
 function returnToSongSelectionScreen(genre) {
   returningToSongSelectionScreen = true;
   audioManager.resetSoundProperties(genre);
-  //audioManager.stopSounds();
   let wasMultiplayerMode = isMultiplayerMode;
   changeLevel(TITLE_GENRE);
   isMultiplayerMode = wasMultiplayerMode;
@@ -335,6 +334,7 @@ function returnToSongSelectionScreen(genre) {
   currentLevel.currentItemSelected =
     audioManager.songs.indexOf(songToSample);
 
+  songToSample.stop();
   audioManager.playSongSample(genre);
   returningToSongSelectionScreen = false;
 }
