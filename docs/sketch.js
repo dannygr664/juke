@@ -330,10 +330,9 @@ function returnToSongSelectionScreen(genre) {
   currentLevel.currentScreen = SONG_SELECTION_SCREEN;
   let songToSample =
     audioManager.songs.filter(song => song.soundInfo.genre === genre)[0];
-  //audioManager.resetSongProperties(songToSample);
   currentLevel.currentItemSelected =
     audioManager.songs.indexOf(songToSample);
-
+  songToSample.play();
   songToSample.stop();
   audioManager.playSongSample(genre);
   returningToSongSelectionScreen = false;
