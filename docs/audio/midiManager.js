@@ -336,10 +336,10 @@ class MIDIManager {
             let note = message.data[1];
             if (note !== undefined && (this.isNoteOn(eventType) || this.isNoteOff(eventType))) {
               let channel = this.getChannelFromEvenType(eventType);
-              let frequency = midiToFreq(note);
               let velocity = message.data[2];
 
               const noteInScale = this.mapNoteToScale(note, this.scale);
+              const frequencyAtAudioSpeed = midiToFreq(noteInScale) * audioManager.soundSpeed;
               const mappedNote = this.mapNoteToRange(noteInScale, this.noteMin, this.noteMax);
 
               if (!isPaused) {
@@ -347,7 +347,7 @@ class MIDIManager {
                   this.spawningPlatforms[mappedNote] = platformManager.createColoredPlatformAtHeight(this.getNoteColor(noteInScale), map(mappedNote, this.noteMin, this.noteMax, height, platformManager.minPlatformYPos));
 
                   const delay = 0;
-                  MIDI.noteOn(channel, noteInScale, velocity, delay);
+                  MIDI.noteOn(channel, freqToMidi(frequencyAtAudioSpeed), velocity, delay);
                 }
               }
 
