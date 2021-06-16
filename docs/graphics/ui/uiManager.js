@@ -231,13 +231,13 @@ class UIManager {
       text('SPACE BAR — Jump/Revive', CONTROLS_X, CONTROL2_Y);
       text('ESC — Pause', CONTROLS_X, CONTROL3_Y);
 
-      textSize(HEADING_TEXT_SIZE);
-      text('SCORING', SCORING_X, SCORING_Y);
-      textSize(ITEM_TEXT_SIZE);
-      text('Higher volume = Higher score', SCORING_X, SCORING1_Y);
-      text('Higher speed = Higher score', SCORING_X, SCORING2_Y);
-      text('Lower reverb = Higher score', SCORING_X, SCORING3_Y);
-      text('Higher beat streak = Higher score', SCORING_X, SCORING4_Y);
+      // textSize(HEADING_TEXT_SIZE);
+      // text('SCORING', SCORING_X, SCORING_Y);
+      // textSize(ITEM_TEXT_SIZE);
+      // text('Higher volume = Higher score', SCORING_X, SCORING1_Y);
+      // text('Higher speed = Higher score', SCORING_X, SCORING2_Y);
+      // text('Lower reverb = Higher score', SCORING_X, SCORING3_Y);
+      // text('Higher beat streak = Higher score', SCORING_X, SCORING4_Y);
       // text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
       // text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
       // text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
