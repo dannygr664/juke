@@ -199,7 +199,7 @@ class UIManager {
     const SUBTITLE_TEXT_SIZE = height / 20;
     const HEADING_TEXT_SIZE = height / 20;
     const ITEM_TEXT_SIZE = height / 30;
-    const CONTROLS_X = 20 * width / 64;
+    const CONTROLS_X = width / 2;
     const SCORING_X = width - 26 * width / 64;
     const GOAL_X = width / 2;
 
@@ -231,13 +231,13 @@ class UIManager {
       text('SPACE BAR — Jump/Revive', CONTROLS_X, CONTROL2_Y);
       text('ESC — Pause', CONTROLS_X, CONTROL3_Y);
 
-      textSize(HEADING_TEXT_SIZE);
-      text('SCORING', SCORING_X, SCORING_Y);
-      textSize(ITEM_TEXT_SIZE);
-      text('Higher volume = Higher score', SCORING_X, SCORING1_Y);
-      text('Higher speed = Higher score', SCORING_X, SCORING2_Y);
-      text('Lower reverb = Higher score', SCORING_X, SCORING3_Y);
-      text('Higher beat streak = Higher score', SCORING_X, SCORING4_Y);
+      // textSize(HEADING_TEXT_SIZE);
+      // text('SCORING', SCORING_X, SCORING_Y);
+      // textSize(ITEM_TEXT_SIZE);
+      // text('Higher volume = Higher score', SCORING_X, SCORING1_Y);
+      // text('Higher speed = Higher score', SCORING_X, SCORING2_Y);
+      // text('Lower reverb = Higher score', SCORING_X, SCORING3_Y);
+      // text('Higher beat streak = Higher score', SCORING_X, SCORING4_Y);
       // text('Pay attention to the music, and try not to fall.', TEXT_X, ITEM3_Y);
       // text('Reach the end of a musical section without falling to progress.', TEXT_X, ITEM4_Y);
       // text('Pass through the final barline to finish the song and move to the next level.', TEXT_X, ITEM5_Y);
@@ -662,7 +662,9 @@ class UIManager {
       this.drawVolumeMeter();
       this.drawSoundSpeedMeter();
       this.drawReverbMeter();
-      this.drawBeatStreakMeter();
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        this.drawBeatStreakMeter();
+      }
       //this.drawBeatStreak();
       this.drawPlatformGenerator();
 
@@ -688,8 +690,10 @@ class UIManager {
       textAlign(CENTER, TOP);
       text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
 
-      textAlign(RIGHT, TOP);
-      text(`SCORE: ${floor(score)}`, SCORE_X, SCORE_Y);
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        textAlign(RIGHT, TOP);
+        text(`SCORE: ${floor(score)}`, SCORE_X, SCORE_Y);
+      }
 
       pop();
     }
