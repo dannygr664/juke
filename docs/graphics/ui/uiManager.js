@@ -199,7 +199,7 @@ class UIManager {
     const SUBTITLE_TEXT_SIZE = height / 20;
     const HEADING_TEXT_SIZE = height / 20;
     const ITEM_TEXT_SIZE = height / 30;
-    const CONTROLS_X = 20 * width / 64;
+    const CONTROLS_X = width / 2;
     const SCORING_X = width - 26 * width / 64;
     const GOAL_X = width / 2;
 
@@ -662,7 +662,9 @@ class UIManager {
       this.drawVolumeMeter();
       this.drawSoundSpeedMeter();
       this.drawReverbMeter();
-      this.drawBeatStreakMeter();
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        this.drawBeatStreakMeter();
+      }
       //this.drawBeatStreak();
       this.drawPlatformGenerator();
 
@@ -688,8 +690,10 @@ class UIManager {
       textAlign(CENTER, TOP);
       text('SONG PROGRESS', SONG_PROGRESS_LABEL_X, SONG_PROGRESS_LABEL_Y);
 
-      textAlign(RIGHT, TOP);
-      text(`SCORE: ${floor(score)}`, SCORE_X, SCORE_Y);
+      if (levelManager.getCurrentLevel().genre !== TITLE_GENRE) {
+        textAlign(RIGHT, TOP);
+        text(`SCORE: ${floor(score)}`, SCORE_X, SCORE_Y);
+      }
 
       pop();
     }
