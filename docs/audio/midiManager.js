@@ -357,7 +357,7 @@ class MIDIManager {
                 this.spawningPlatforms[mappedNote] = null;
 
                 const delay = 0;
-                MIDI.noteOff(channel, noteInScale, delay);
+                MIDI.noteOff(channel, freqToMidi(frequencyAtAudioSpeed), delay);
               }
             }
           }
