@@ -258,7 +258,7 @@ class UIManager {
     const credits = [
       'Game Concept, Visuals, and Programming by Daniel Greenberg',
       '"Beat Cypher #3" by Jesús Pineda',
-      '"Cypher 5" by Calvin McCormack',
+      '"Escalators" by Calvin McCormack',
       '"It\'s Too Late" by Guillermo Montalvan and Daniel Greenberg',
       '"Ethereal" by Angel Rose (ft. Mateo Falgas)',
       '"Should Be Good" by Matthew Jontiff',
@@ -345,7 +345,7 @@ class UIManager {
         color: ColorScheme.RED
       },
       'Spaceship': {
-        songName: 'Cypher 5',
+        songName: 'Escalators',
         artist: 'Calvin McCormack',
         color: ColorScheme.SPACESHIP_LOWER_VOLUME
       },
